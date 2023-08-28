@@ -15,7 +15,7 @@ body {
 
 /* Playstore & Appstore Link */
 .stores {
-    height: 31rem;
+    height: 20rem;
     display: flex;
     justify-content: center;
     align-items: center;
