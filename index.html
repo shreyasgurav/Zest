@@ -12,11 +12,10 @@
     <!-- Add Swiper's CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
     <!--FONT AWESOME-->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-<!--GOOGLE FONTS-->
-<link rel="preconnect" href="https://fonts.gstatic.com">
-<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Play&display=swap" rel="stylesheet"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!--GOOGLE FONTS-->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Play&display=swap" rel="stylesheet"> 
 </head>
 
 <body>
@@ -50,13 +49,13 @@
                     <a href="#">About</a>
                 </li>
                 <li>
-                    <a href="#">Events</a>
+                    <a href="events.html">Events</a>
                 </li>
                 <li>
-                    <a href="#">Workshop</a>
+                    <a href="workshops.html">Workshops</a>
                 </li>
                 <li>
-                    <a href="#">Contact</a>
+                    <a href="#">Councils</a>
                 </li>
                 <li>
                     <a href="#" id="add-event-link">Add Events</a>
@@ -122,12 +121,11 @@
             </div>
           </div>
           <div class="slide swiper-slide">
-            <img src="images/Mark Event 3.webp" alt="" class="image" />
+            <img src="images/Clubs (1).png" alt="" class="image" />
             <div class="image-data">
               <span class="text">Join clubs.</span>
               <h2>
-                Join College Clubs <br />
-                & Work with Like-minded People
+                Work with Like-minded People
               </h2>
               
             </div>
@@ -236,19 +234,16 @@
     <!-- Footer -->
     <footer>
         <div class="footer">
-        <div class="row">
-        <a href="#"><i class="fa fa-facebook"></i></a>
-        <a href="#/"><i class="fa fa-instagram"></i></a>
+        <div class="row">  
+        <a href="https://www.instagram.com/zestbiz/"><i class="fa fa-instagram"></i></a>
         <a href="#"><i class="fa fa-youtube"></i></a>
-        <a href="#"><i class="fa fa-twitter"></i></a>
         </div>
         
         <div class="row">
         <ul>
         <li><a href="#">Contact us</a></li>
         <li><a href="#">Our Services</a></li>
-        <li><a href="#">Privacy Policy</a></li>
-        <li><a href="#">Terms & Conditions</a></li>
+        <li><a href="#">About Us</a></li>
         </ul>
         </div>
         
@@ -316,6 +311,8 @@
         const addEventPopup = document.getElementById('add-event-popup');
         const closePopup = addEventPopup.querySelector('.close');
         const addEventForm = document.getElementById('add-event-form');
+        const eventBoxContainer = document.querySelector('.event-box-container');
+        const workshopBoxContainer = document.querySelector('.workshop-box-container');
 
         addEventLink.addEventListener('click', (e) => {
             e.preventDefault();
@@ -328,10 +325,35 @@
 
         addEventForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            // Here you would typically handle the form submission,
-            // such as sending the data to a server or updating the page
-            console.log('Form submitted');
+            
+            const formData = new FormData(addEventForm);
+            const eventType = formData.get('event-type');
+            
+            const newBox = document.createElement('div');
+            newBox.className = eventType === 'event' ? 'event-box' : 'workshop-box';
+            
+            const imageFile = formData.get('event-image');
+            const imageUrl = URL.createObjectURL(imageFile);
+            
+            newBox.innerHTML = `
+                <img src="${imageUrl}" alt="${formData.get('event-title')}">
+                <div class="${eventType === 'event' ? 'event-info' : 'workshop-info'}">
+                    <h3>${formData.get('event-title')}</h3>
+                    <p>Date: ${formData.get('event-date')}</p>
+                    <p>Time: ${formData.get('event-time')}</p>
+                    <p>Venue: ${formData.get('event-venue')}</p>
+                </div>
+                <button class="book-now-btn">Book Now</button>
+            `;
+            
+            if (eventType === 'event') {
+                eventBoxContainer.appendChild(newBox);
+            } else {
+                workshopBoxContainer.appendChild(newBox);
+            }
+            
             addEventPopup.style.display = 'none';
+            addEventForm.reset();
         });
 
         window.addEventListener('click', (e) => {
