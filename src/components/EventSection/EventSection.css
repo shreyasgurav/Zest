@@ -1,0 +1,60 @@
+.event-section {
+    flex: 1;
+    margin-top: 50px;
+}
+
+.keen-slider {
+    padding: 10px;
+    background-color: rgb(242, 242, 242);
+}
+
+.upcoming-events-heading {
+    flex: 1;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 17px;
+    margin-bottom: 17px;
+    color: #333;
+    margin-left: 50px;
+    font-family: "Architects Daughter", cursive;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.event-section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.see-all-link {
+    color: #2997ff;
+    text-decoration: none;
+    font-size: 16px;
+    margin-left: 10px;
+    transition: color 0.3s;
+}
+
+.see-all-link:hover {
+    color: #1a73e8;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .see-all-link {
+        font-size: 14px;
+    }
+}
+
+.no-events-message {
+    text-align: center; /* Center the message */
+    font-size: 18px; /* Font size */
+    color: #666; /* Color for the message */
+    margin-top: 17px; /* Space above the message */
+    font-family: 'Arial', sans-serif; /* Font family */
+    padding: 165px;
+    background-color: rgb(238, 238, 238);
+}
+
