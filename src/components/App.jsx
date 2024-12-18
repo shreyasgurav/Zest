@@ -1,0 +1,39 @@
+import React, { useState } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Header from "./Header/header";
+import EventSection from "./EventSection/EventSection";
+import WorkshopSection from "./WorkshopSection/WorkshopSection";
+import Footer from "./Footer/footer";
+import EventProfile from "./EventProfile/EventProfile";
+import WorkshopProfile from "./WorkshopProfile/WorkshopProfile";
+import UserProfile from "./UserProfile/UserProfile";
+
+function App() {
+    const [events, setEvents] = useState([]);
+    const [workshops, setWorkshops] = useState([]);
+
+    const handleEventSubmit = (eventData) => {
+        if (eventData.type === 'workshop') {
+            setWorkshops(prevWorkshops => [...prevWorkshops, { ...eventData, id: Date.now() }]);
+        } else {
+            setEvents(prevEvents => [...prevEvents, { ...eventData, id: Date.now() }]);
+        }
+    };
+
+    return (
+        <Router>
+            <div className="App">
+                <Header onEventSubmit={handleEventSubmit} />
+                <Routes>
+                    <Route path="/" element={<><EventSection events={events} /><WorkshopSection workshops={workshops} /></>} />
+                    <Route path="/event/:id" element={<EventProfile events={events} />} />
+                    <Route path="/workshop/:id" element={<WorkshopProfile workshops={workshops} />} />
+                    <Route path="/user-profile" element={<UserProfile />} />
+                </Routes>
+                <Footer />
+            </div>
+        </Router>
+    );
+}
+
+export default App;

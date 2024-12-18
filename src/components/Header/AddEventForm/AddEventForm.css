@@ -1,0 +1,165 @@
+/* src/components/Header/AddEventForm/AddEventForm.css */
+
+/* Overlay for the modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7); /* Darker semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it appears above other content */
+}
+
+/* Modal content styling */
+.event-form-popup {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    width: 450px;
+    max-height: 80vh;  /* Fixed height */
+    overflow-y: auto;  /* Enable scrolling */
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Custom scrollbar */
+.event-form-popup::-webkit-scrollbar {
+    width: 8px;
+}
+
+.event-form-popup::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.event-form-popup::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.event-form-popup::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Modal title styling */
+.modal-title {
+    font-size: 24px; /* Larger font size for title */
+    margin-bottom: 20px; /* Space below title */
+    color: #333; /* Darker text color */
+    text-align: center; /* Centered title */
+}
+
+/* Form group styling */
+.form-group {
+    margin-bottom: 20px; /* Space between form groups */
+}
+
+label {
+    display: block; /* Block display for labels */
+    margin-bottom: 15px; /* Space below labels */
+    font-weight: bold; /* Bold labels */
+    color: #555; /* Darker label color */
+}
+
+input[type="text"],
+input[type="datetime-local"],
+input[type="file"],
+input[type="url"],
+select {
+    width: 100%; /* Full width inputs */
+    padding: 12px; /* Padding inside inputs */
+    border: 1px solid #ccc; /* Border for inputs */
+    border-radius: 5px; /* Rounded corners for inputs */
+    box-sizing: border-box; /* Include padding in width */
+    font-size: 16px; /* Font size for inputs */
+    transition: border-color 0.3s; /* Smooth transition for border color */
+}
+
+input[type="text"]:focus,
+input[type="datetime-local"]:focus {
+    border-color: #007bff; /* Change border color on focus */
+    outline: none; /* Remove default outline */
+}
+
+/* Add this with your other input styles */
+textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 16px;
+    transition: border-color 0.3s;
+    resize: vertical;
+    min-height: 100px;
+    font-family: inherit;
+}
+
+textarea:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+/* Button styling */
+.form-actions {
+    display: flex; /* Flexbox for button alignment */
+    justify-content: space-between; /* Space between buttons */
+    margin-top: 20px; /* Space above buttons */
+}
+
+/* Common button styles */
+button {
+    padding: 12px 20px; /* Increased padding for a better look */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    font-size: 16px; /* Larger font size */
+    cursor: pointer; /* Pointer cursor */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transition */
+    margin: 10px;
+}
+
+/* Cancel button styling */
+.cancel-btn {
+    background-color: #f44336; /* Red background for cancel button */
+    color: white; /* White text */
+}
+
+.cancel-btn:hover {
+    background-color: #d32f2f; /* Darker red on hover */
+    transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+/* Submit button styling */
+.submit-btn {
+    background-color: #007bff; /* Blue background for submit button */
+    color: white; /* White text */
+}
+
+.submit-btn:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+.event-form-popup h2 {
+    margin-bottom: 15px;
+}
+
+.event-form-popup p {
+    margin-bottom: 15;
+    margin-bottom: 5px;
+}
