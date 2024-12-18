@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/Zest/static/css/main.73c9e957.css",
+    "main.js": "/Zest/static/js/main.da750d4d.js",
+    "static/media/zest-logo.png": "/Zest/static/media/zest-logo.123f3ec9c36ef228fa05.png",
+    "index.html": "/Zest/index.html",
+    "main.73c9e957.css.map": "/Zest/static/css/main.73c9e957.css.map",
+    "main.da750d4d.js.map": "/Zest/static/js/main.da750d4d.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.73c9e957.css",
+    "static/js/main.da750d4d.js"
+  ]
+}
