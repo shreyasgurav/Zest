@@ -7,6 +7,7 @@ import Footer from "./Footer/footer";
 import EventProfile from "./EventProfile/EventProfile";
 import WorkshopProfile from "./WorkshopProfile/WorkshopProfile";
 import UserProfile from "./UserProfile/UserProfile";
+import CouncilProfile from "./CouncilProfile/CouncilProfile";
 
 function App() {
     const [events, setEvents] = useState([]);
@@ -29,6 +30,7 @@ function App() {
                     <Route path="/event/:id" element={<EventProfile events={events} />} />
                     <Route path="/workshop/:id" element={<WorkshopProfile workshops={workshops} />} />
                     <Route path="/user-profile" element={<UserProfile />} />
+                    <Route path="/council-profile" element={<CouncilProfile />} />
                 </Routes>
                 <Footer />
             </div>

@@ -15,6 +15,11 @@ function PersonLogo() {
         setShowDropdown(false);
     };
 
+    const handleCouncilClick = () => {
+        navigate('/council-profile');
+        setShowDropdown(false);
+    };
+
     return (
         <div className="person-logo-container">
             <svg
@@ -36,7 +41,7 @@ function PersonLogo() {
             {showDropdown && (
                 <div className="person-dropdown">
                     <div className="dropdown-item" onClick={handleUserClick}>User</div>
-                    <div className="dropdown-item">Council</div>
+                    <div className="dropdown-item" onClick={handleCouncilClick}>Council</div>
                 </div>
             )}
         </div>
