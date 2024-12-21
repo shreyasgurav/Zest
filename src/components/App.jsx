@@ -8,6 +8,7 @@ import EventProfile from "./EventProfile/EventProfile";
 import WorkshopProfile from "./WorkshopProfile/WorkshopProfile";
 import UserProfile from "./UserProfile/UserProfile";
 import CouncilProfile from "./CouncilProfile/CouncilProfile";
+import "./App.css";
 
 function App() {
     const [events, setEvents] = useState([]);
@@ -24,15 +25,24 @@ function App() {
     return (
         <Router>
             <div className="App">
-                <Header onEventSubmit={handleEventSubmit} />
-                <Routes>
-                    <Route path="/" element={<><EventSection events={events} /><WorkshopSection workshops={workshops} /></>} />
-                    <Route path="/event/:id" element={<EventProfile events={events} />} />
-                    <Route path="/workshop/:id" element={<WorkshopProfile workshops={workshops} />} />
-                    <Route path="/user-profile" element={<UserProfile />} />
-                    <Route path="/council-profile" element={<CouncilProfile />} />
-                </Routes>
-                <Footer />
+                <div className="app-container">
+                    <Header onEventSubmit={handleEventSubmit} />
+                    <main className="main-content">
+                        <Routes>
+                            <Route path="/" element={
+                                <>
+                                    <EventSection events={events} />
+                                    <WorkshopSection workshops={workshops} />
+                                </>
+                            } />
+                            <Route path="/event/:id" element={<EventProfile events={events} />} />
+                            <Route path="/workshop/:id" element={<WorkshopProfile workshops={workshops} />} />
+                            <Route path="/user-profile" element={<UserProfile />} />
+                            <Route path="/council-profile" element={<CouncilProfile />} />
+                        </Routes>
+                    </main>
+                    <Footer />
+                </div>
             </div>
         </Router>
     );

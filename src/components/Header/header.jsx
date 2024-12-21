@@ -47,7 +47,7 @@ const Header = ({ onEventSubmit }) => { // Accept onAddEvent as a prop
                         </div>
                     </li>
                     <li>
-                        <a href="#" className="link-logo">
+                        <a href="" className="link-logo">
                             <img className='link-logo' src={logo} alt="" />
                         </a>
                     </li>
@@ -58,7 +58,7 @@ const Header = ({ onEventSubmit }) => { // Accept onAddEvent as a prop
 
                 <ul className={`desktop-nav ${isNavActive ? 'show' : ''}`}>
                     <li>
-                        <a href="#" className="link-logo">
+                        <a href="" className="link-logo">
                             <img className='link-logo' src={logo} alt="" />
                         </a>
                     </li>
