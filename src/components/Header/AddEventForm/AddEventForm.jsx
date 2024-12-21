@@ -1,107 +1,151 @@
-// src/components/Header/AddEventForm/AddEventForm.jsx
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import "./AddEventForm.css";
 
 const AddEventForm = ({ onClose, onSubmit }) => {
     const [eventData, setEventData] = useState({
         eventImage: null,
-        eventTitle: '',
-        eventDateTime: '',
-        eventVenue: '',
-        eventRegistrationLink: '',
-        type: 'event', // Default type
-        hostingClub: '',
-        aboutEvent: '',
+        eventTitle: "",
+        eventDateTime: "",
+        eventVenue: "",
+        eventRegistrationLink: "",
+        type: "event", // Default type
+        hostingClub: "",
+        aboutEvent: "",
     });
 
     const handleEventChange = (e) => {
         const { name, value } = e.target;
         setEventData({
             ...eventData,
-            [name]: value
+            [name]: value,
         });
     };
 
     const handleEventSubmit = (e) => {
         e.preventDefault();
-        if (eventData.type === 'workshop') {
-            onSubmit({
-                ...eventData,
-                isWorkshop: true
-            });
-        } else {
-            onSubmit(eventData);
-        }
+        const eventDetails = eventData.type === "workshop" ? { ...eventData, isWorkshop: true } : eventData;
+        onSubmit(eventDetails);
         onClose();
     };
 
     return (
-        <div className="event-form-popup">
-            <form onSubmit={handleEventSubmit}>
-                <h2>Add Event/Workshop</h2>
-                <label>
-                    <p>Type:</p>
-                    <select 
-                        name="type" 
-                        value={eventData.type} 
-                        onChange={handleEventChange}
-                        required
-                    >
-                        <option value="event">Event</option>
-                        <option value="workshop">Workshop</option>
-                    </select>
-                </label>
-                <label>
-                    <p>Event Profile Image:</p>
-                    <input type="file" name="eventImage" onChange={(e) => setEventData({ ...eventData, eventImage: e.target.files[0] })} required />
-                </label>
-                <label>
-                    <p>Event Title:</p>
-                    <input type="text" name="eventTitle" value={eventData.eventTitle} onChange={handleEventChange} required />
-                </label>
-                <label>
-                    <p>Event Date and Time:</p>
-                    <input type="datetime-local" name="eventDateTime" value={eventData.eventDateTime} onChange={handleEventChange} required />
-                </label>
-                <label>
-                    <p>Event Venue:</p>
-                    <input type="text" name="eventVenue" value={eventData.eventVenue} onChange={handleEventChange} required />
-                </label>
-                <label>
-                    <p>Event Registration Link:</p>
-                    <input 
-                        type="url" 
-                        name="eventRegistrationLink" 
-                        value={eventData.eventRegistrationLink} 
-                        onChange={handleEventChange} 
-                        required 
-                        placeholder="https://example.com/register" 
-                    />
-                </label>
-                <label>
-                    <p>Hosting Club:</p>
-                    <input 
-                        type="text" 
-                        name="hostingClub" 
-                        value={eventData.hostingClub} 
-                        onChange={handleEventChange} 
-                        required 
-                    />
-                </label>
-                <label>
-                    <p>About Event</p>
-                    <textarea
-                        name="aboutEvent"
-                        value={eventData.aboutEvent}
-                        onChange={handleEventChange}
-                        required
-                        placeholder="Write a description about your event..."
-                        rows="4"
-                    />
-                </label>
-                <button type="submit">Submit</button>
-                <button type="button" onClick={onClose}>Cancel</button>
-            </form>
+        <div className="modal-overlay">
+            <div className="event-form-popup">
+                <form onSubmit={handleEventSubmit}>
+                    <h2 className="modal-title">Add Event or Workshop</h2>
+
+                    <div className="form-group">
+                        <label htmlFor="type">Type</label>
+                        <select
+                            id="type"
+                            name="type"
+                            value={eventData.type}
+                            onChange={handleEventChange}
+                            required
+                        >
+                            <option value="event">Event</option>
+                            <option value="workshop">Workshop</option>
+                        </select>
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="eventImage">Event Profile Image</label>
+                        <input
+                            type="file"
+                            id="eventImage"
+                            name="eventImage"
+                            onChange={(e) => setEventData({ ...eventData, eventImage: e.target.files[0] })}
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="eventTitle">Event Title</label>
+                        <input
+                            type="text"
+                            id="eventTitle"
+                            name="eventTitle"
+                            value={eventData.eventTitle}
+                            onChange={handleEventChange}
+                            placeholder="Enter event title"
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="eventDateTime">Event Date and Time</label>
+                        <input
+                            type="datetime-local"
+                            id="eventDateTime"
+                            name="eventDateTime"
+                            value={eventData.eventDateTime}
+                            onChange={handleEventChange}
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="eventVenue">Event Venue</label>
+                        <input
+                            type="text"
+                            id="eventVenue"
+                            name="eventVenue"
+                            value={eventData.eventVenue}
+                            onChange={handleEventChange}
+                            placeholder="Enter event venue"
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="eventRegistrationLink">Event Registration Link</label>
+                        <input
+                            type="url"
+                            id="eventRegistrationLink"
+                            name="eventRegistrationLink"
+                            value={eventData.eventRegistrationLink}
+                            onChange={handleEventChange}
+                            placeholder="https://example.com/register"
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="hostingClub">Hosting Club</label>
+                        <input
+                            type="text"
+                            id="hostingClub"
+                            name="hostingClub"
+                            value={eventData.hostingClub}
+                            onChange={handleEventChange}
+                            placeholder="Enter hosting club"
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="aboutEvent">About Event</label>
+                        <textarea
+                            id="aboutEvent"
+                            name="aboutEvent"
+                            value={eventData.aboutEvent}
+                            onChange={handleEventChange}
+                            placeholder="Write a brief description of the event..."
+                            rows="4"
+                            required
+                        ></textarea>
+                    </div>
+
+                    <div className="form-actions">
+                        <button type="submit" className="submit-btn">
+                            Submit
+                        </button>
+                        <button type="button" className="cancel-btn" onClick={onClose}>
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     );
 };

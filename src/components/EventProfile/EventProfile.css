@@ -1,12 +1,12 @@
+/* Styles for Event Profile Page */
+
 .event-profile-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     margin: 20px;
-    flex-wrap: wrap;
     margin-top: 70px;
-    flex: 1;
 }
 
 .event-content {
@@ -15,6 +15,8 @@
     justify-content: center;
     flex-wrap: wrap;
     width: 100%;
+    max-width: 1200px; /* Centering content with a max width */
+    margin: 0 auto; /* Ensures the content stays centered */
 }
 
 .event-image {
@@ -41,6 +43,7 @@
     overflow: hidden;
     max-width: 500px;
     flex: 1;
+    text-align: left; /* Ensures text aligns properly */
 }
 
 .event-info {
@@ -93,62 +96,6 @@
     background-color: #0056b3;
 }
 
-@media (max-width: 768px) {
-    .event-profile-container {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .event-content {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .event-info-box {
-        margin-left: 0;
-        margin-top: 20px;
-        max-width: 800px;
-        width: 100%;
-        text-align: center;
-    }
-
-    .event-image {
-        max-width: 100%;
-        width: 100%;
-        height: 300px;
-        min-width: unset;
-    }
-
-    .event-image img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .about-event {
-        text-align: center;
-    }
-
-    .buy-now-container {
-        position: static;
-        margin: 10px auto;
-        justify-content: center;
-        gap: 20px;
-        box-shadow: none;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        width: calc(100% - 20px);
-    }
-
-    .buy-now-button {
-        margin: 0 auto;
-    }
-
-    .mobile-only {
-        display: block;
-    }
-}
-
 .about-event {
     margin-top: 40px;
     padding: 20px;
@@ -172,49 +119,47 @@
     line-height: 1.6;
 }
 
-.buy-now-container {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-}
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .event-content {
+        flex-direction: column;
+        align-items: center;
+    }
 
-.buy-now-container.above-footer {
-    position: static;
-    margin-top: 30px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 100%;
-}
+    .event-info-box {
+        margin-left: 0;
+        margin-top: 20px;
+        max-width: 800px;
+        width: 100%;
+        text-align: center;
+    }
 
-.buy-now-button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
+    .event-image {
+        max-width: 100%;
+        width: 100%;
+        height: auto;
+        min-width: unset;
+    }
 
-.buy-now-button:hover {
-    background-color: #0056b3;
+    .about-event {
+        text-align: center;
+    }
+
+    .event-info h2 {
+        font-size: 20px;
+    }
+
+    .event-detail {
+        font-size: 14px;
+    }
+
+    .book-now-button {
+        width: 100%;
+        padding: 10px;
+    }
 }
 
 .footer {
     height: 200px;
     width: 100%;
-}
-
-@media (min-width: 769px) {
-    .mobile-only {
-        display: none;
-    }
 }

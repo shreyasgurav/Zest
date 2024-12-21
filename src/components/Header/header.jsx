@@ -62,7 +62,6 @@ const Header = ({ onEventSubmit }) => { // Accept onAddEvent as a prop
                             <img className='link-logo' src={logo} alt="" />
                         </a>
                     </li>
-                    <li><a href="#">About</a></li>
                     <li><a href="#">Events</a></li>
                     <li><a href="#">Workshops</a></li>
                     <li><a href="#">Councils</a></li>

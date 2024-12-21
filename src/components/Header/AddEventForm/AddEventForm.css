@@ -1,4 +1,4 @@
-/* src/components/Header/AddEventForm/AddEventForm.css */
+/* AddEventForm.css */
 
 /* Overlay for the modal */
 .modal-overlay {
@@ -7,32 +7,37 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.7); /* Darker semi-transparent background */
+    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000; /* Ensure it appears above other content */
+    animation: fadeInOverlay 0.3s ease-in-out;
 }
 
 /* Modal content styling */
 .event-form-popup {
-    background-color: #ffffff;
+    background-color: #ffffff; /* White background for the modal */
     border-radius: 10px;
-    padding: 20px;
-    width: 450px;
-    max-height: 80vh;  /* Fixed height */
-    overflow-y: auto;  /* Enable scrolling */
+    width: 90%; /* Responsive width */
+    max-width: 450px; /* Max width */
+    max-height: 80vh; /* Constrain height */
+    overflow-y: auto; /* Enable scrolling if content overflows */
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    padding: 20px; /* Padding around the content */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: fadeInModal 0.3s ease-in-out;
 }
 
-/* Custom scrollbar */
+/* Scrollbar styling */
 .event-form-popup::-webkit-scrollbar {
     width: 8px;
 }
 
 .event-form-popup::-webkit-scrollbar-track {
     background: #f1f1f1;
-    border-radius: 4px;
 }
 
 .event-form-popup::-webkit-scrollbar-thumb {
@@ -44,8 +49,88 @@
     background: #555;
 }
 
-/* Fade-in animation */
-@keyframes fadeIn {
+/* Modal title styling */
+.modal-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Form group styling */
+.form-group {
+    width: 100%; /* Full width for inputs */
+    margin-bottom: 20px; /* Spacing between fields */
+}
+
+label {
+    display: block; /* Ensure label is above the input */
+    margin-bottom: 8px; /* Space below label */
+    font-weight: bold;
+    color: #555;
+}
+
+input,
+select,
+textarea {
+    width: 100%; /* Full width */
+    padding: 12px; /* Padding inside input */
+    border: 1px solid #ccc; /* Border for inputs */
+    border-radius: 5px; /* Rounded corners */
+    font-size: 16px; /* Font size for inputs */
+    transition: border-color 0.3s ease; /* Smooth border transition */
+    box-sizing: border-box;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: #000; /* Simple black border on focus */
+    outline: none; /* Remove default outline */
+}
+
+/* Textarea styling */
+textarea {
+    resize: vertical; /* Allow vertical resizing */
+    min-height: 100px;
+    font-family: inherit; /* Match font with rest of the form */
+}
+
+/* Form actions (buttons) */
+.form-actions {
+    display: flex; /* Align buttons side by side */
+    justify-content: space-between; /* Space out buttons */
+    width: 100%; /* Stretch to full width */
+    margin-top: 20px;
+}
+
+/* Button styles */
+button {
+    padding: 12px 20px;
+    border: 1px solid #ccc; /* Simple border */
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    background: #f9f9f9; /* Subtle background */
+}
+
+button:hover {
+    transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+/* Animations */
+@keyframes fadeInOverlay {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInModal {
     from {
         opacity: 0;
         transform: translateY(-20px);
@@ -56,110 +141,14 @@
     }
 }
 
-/* Modal title styling */
-.modal-title {
-    font-size: 24px; /* Larger font size for title */
-    margin-bottom: 20px; /* Space below title */
-    color: #333; /* Darker text color */
-    text-align: center; /* Centered title */
-}
+/* Responsive design */
+@media (max-width: 768px) {
+    .event-form-popup {
+        width: 95%; /* Adjust width for smaller screens */
+    }
 
-/* Form group styling */
-.form-group {
-    margin-bottom: 20px; /* Space between form groups */
-}
-
-label {
-    display: block; /* Block display for labels */
-    margin-bottom: 15px; /* Space below labels */
-    font-weight: bold; /* Bold labels */
-    color: #555; /* Darker label color */
-}
-
-input[type="text"],
-input[type="datetime-local"],
-input[type="file"],
-input[type="url"],
-select {
-    width: 100%; /* Full width inputs */
-    padding: 12px; /* Padding inside inputs */
-    border: 1px solid #ccc; /* Border for inputs */
-    border-radius: 5px; /* Rounded corners for inputs */
-    box-sizing: border-box; /* Include padding in width */
-    font-size: 16px; /* Font size for inputs */
-    transition: border-color 0.3s; /* Smooth transition for border color */
-}
-
-input[type="text"]:focus,
-input[type="datetime-local"]:focus {
-    border-color: #007bff; /* Change border color on focus */
-    outline: none; /* Remove default outline */
-}
-
-/* Add this with your other input styles */
-textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-    font-size: 16px;
-    transition: border-color 0.3s;
-    resize: vertical;
-    min-height: 100px;
-    font-family: inherit;
-}
-
-textarea:focus {
-    border-color: #007bff;
-    outline: none;
-}
-
-/* Button styling */
-.form-actions {
-    display: flex; /* Flexbox for button alignment */
-    justify-content: space-between; /* Space between buttons */
-    margin-top: 20px; /* Space above buttons */
-}
-
-/* Common button styles */
-button {
-    padding: 12px 20px; /* Increased padding for a better look */
-    border: none; /* No border */
-    border-radius: 5px; /* Rounded corners */
-    font-size: 16px; /* Larger font size */
-    cursor: pointer; /* Pointer cursor */
-    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transition */
-    margin: 10px;
-}
-
-/* Cancel button styling */
-.cancel-btn {
-    background-color: #f44336; /* Red background for cancel button */
-    color: white; /* White text */
-}
-
-.cancel-btn:hover {
-    background-color: #d32f2f; /* Darker red on hover */
-    transform: scale(1.05); /* Slightly enlarge on hover */
-}
-
-/* Submit button styling */
-.submit-btn {
-    background-color: #007bff; /* Blue background for submit button */
-    color: white; /* White text */
-}
-
-.submit-btn:hover {
-    background-color: #0056b3; /* Darker blue on hover */
-    transform: scale(1.05); /* Slightly enlarge on hover */
-}
-
-.event-form-popup h2 {
-    margin-bottom: 15px;
-}
-
-.event-form-popup p {
-    margin-bottom: 15;
-    margin-bottom: 5px;
+    button {
+        font-size: 14px; /* Adjust button font size */
+        padding: 10px 15px; /* Adjust padding */
+    }
 }
