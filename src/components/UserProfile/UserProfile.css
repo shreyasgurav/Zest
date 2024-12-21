@@ -14,8 +14,8 @@
 .profile-avatar {
     width: 100px;
     height: 100px;
-    background-color: #f0f0f0;
     border-radius: 50%;
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -38,6 +38,11 @@
     padding: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-bottom: 30px;
+}
+
+.info-icon {
+    margin-right: 15px;
+    color: #007bff;
 }
 
 .info-item {
@@ -113,4 +118,24 @@
     color: #666;
     font-size: 0.9rem;
     margin-top: 5px;
+}
+
+.avatar-image {
+    width: 100%;
+    height: auto;
+}
+
+.club-name {
+    font-weight: bold;
+    color: #000000;
+    font-size: 1em;
+    margin-top: 5px;
+}
+
+.club-logo {
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    margin-right: 10px;
+    object-fit: cover;
 }
