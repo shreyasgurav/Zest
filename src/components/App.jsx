@@ -15,28 +15,43 @@ function App() {
     const [workshops, setWorkshops] = useState([]);
 
     const handleEventSubmit = (eventData) => {
-        if (eventData.type === 'workshop') {
-            setWorkshops(prevWorkshops => [...prevWorkshops, { ...eventData, id: Date.now() }]);
+        if (eventData.type === "workshop") {
+            setWorkshops((prevWorkshops) => [
+                ...prevWorkshops,
+                { ...eventData, id: Date.now() },
+            ]);
         } else {
-            setEvents(prevEvents => [...prevEvents, { ...eventData, id: Date.now() }]);
+            setEvents((prevEvents) => [
+                ...prevEvents,
+                { ...eventData, id: Date.now() },
+            ]);
         }
     };
 
     return (
-        <Router>
+        <Router basename="/Zest">
             <div className="App">
                 <div className="app-container">
                     <Header onEventSubmit={handleEventSubmit} />
                     <main className="main-content">
                         <Routes>
-                            <Route path="/" element={
-                                <>
-                                    <EventSection events={events} />
-                                    <WorkshopSection workshops={workshops} />
-                                </>
-                            } />
-                            <Route path="/event/:id" element={<EventProfile events={events} />} />
-                            <Route path="/workshop/:id" element={<WorkshopProfile workshops={workshops} />} />
+                            <Route
+                                path="/"
+                                element={
+                                    <>
+                                        <EventSection events={events} />
+                                        <WorkshopSection workshops={workshops} />
+                                    </>
+                                }
+                            />
+                            <Route
+                                path="/event/:id"
+                                element={<EventProfile events={events} />}
+                            />
+                            <Route
+                                path="/workshop/:id"
+                                element={<WorkshopProfile workshops={workshops} />}
+                            />
                             <Route path="/user-profile" element={<UserProfile />} />
                             <Route path="/council-profile" element={<CouncilProfile />} />
                         </Routes>

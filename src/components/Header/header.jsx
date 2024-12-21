@@ -73,7 +73,7 @@ const Header = ({ onEventSubmit }) => { // Accept onAddEvent as a prop
                         <a href="#" className="link-search" onClick={toggleSearch}></a>
                     </li>
                     <li>
-                        <a href="#" className="link-Profile-logo"><PersonLogo/></a>
+                        <a className="link-Profile-logo"><PersonLogo/></a>
                     </li>
                 </ul>
             </nav>
