@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { HashRouter as Router, Route, Routes } from "react-router-dom";
 import Header from "./Header/header";
 import EventSection from "./EventSection/EventSection";
 import WorkshopSection from "./WorkshopSection/WorkshopSection";
@@ -29,7 +29,7 @@ function App() {
     };
 
     return (
-        <Router basename="/Zest">
+        <Router>
             <div className="App">
                 <div className="app-container">
                     <Header onEventSubmit={handleEventSubmit} />

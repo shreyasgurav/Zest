@@ -6,7 +6,7 @@ import Header from '../Header/header';
 
 function CouncilProfile() {
     const council = {
-        name: "E-Cell BloomBox KJSCE",
+        name: "BloomBox KJSCE",
         username: "bloomboxkjsce",
         college: "KJ Somaiya College of Engineering",
         profilePhoto: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcV_ezdsSQwKkvHWeIPzjLptERpKN5bfYD2w&s",
