@@ -52,7 +52,7 @@ const Header = ({ onEventSubmit }) => { // Accept onAddEvent as a prop
                         </a>
                     </li>
                     <li>
-                        <a href="#" className="link-Profile-logo"><PersonLogo /></a>
+                        <a className="link-Profile-logo"><PersonLogo /></a>
                     </li>
                 </ul>
 
@@ -67,7 +67,7 @@ const Header = ({ onEventSubmit }) => { // Accept onAddEvent as a prop
                     <li><a href="#">Councils</a></li>
                     <li><a href="#">Groups</a></li>
                     <li>
-                        <a href="#" className="link-add-event" onClick={toggleEventForm}>List Events</a> {/* Add Event link */}
+                        <a className="link-add-event" onClick={toggleEventForm}>List Events</a> {/* Add Event link */}
                     </li>
                     <li>
                         <a href="#" className="link-search" onClick={toggleSearch}></a>

@@ -45,6 +45,10 @@ nav .desktop-nav li a {
     white-space: nowrap;
 }
 
+.link-add-event {
+    cursor: pointer;
+}
+
 nav .desktop-nav li a:hover {
     opacity: 1;
 }

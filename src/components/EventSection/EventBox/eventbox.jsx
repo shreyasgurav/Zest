@@ -15,6 +15,7 @@ function Eventbox({ event }) {
             <div className="event-box">
                 {event.eventImage && <img src={URL.createObjectURL(event.eventImage)} alt="Event" />}
                 <div className="event-info">
+                    <p className="hosting-club">By {event.hostingClub}</p>
                     <h3>{event.eventTitle}</h3>
                     <p>Date: {new Date(event.eventDateTime).toLocaleDateString()}</p>
                     <p>Time: {new Date(event.eventDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>

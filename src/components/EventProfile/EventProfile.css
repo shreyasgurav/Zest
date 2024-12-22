@@ -15,8 +15,8 @@
     justify-content: center;
     flex-wrap: wrap;
     width: 100%;
-    max-width: 1200px; /* Centering content with a max width */
-    margin: 0 auto; /* Ensures the content stays centered */
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .event-image {
@@ -43,7 +43,7 @@
     overflow: hidden;
     max-width: 500px;
     flex: 1;
-    text-align: left; /* Ensures text aligns properly */
+    text-align: left;
 }
 
 .event-info {
@@ -97,6 +97,7 @@
 }
 
 .about-event {
+    text-align: center;
     margin-top: 40px;
     padding: 20px;
     border: 1px solid #ddd;
@@ -104,7 +105,6 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     max-width: 1000px;
     width: 100%;
-    text-align: center;
 }
 
 .about-event h3 {
@@ -124,25 +124,21 @@
     .event-content {
         flex-direction: column;
         align-items: center;
+        margin: 0 auto;
+        text-align: center;
     }
 
     .event-info-box {
         margin-left: 0;
         margin-top: 20px;
-        max-width: 800px;
-        width: 100%;
-        text-align: center;
+        max-width: 100%;
+        width: 90%;
     }
 
     .event-image {
-        max-width: 100%;
-        width: 100%;
+        max-width: 90%;
+        width: 90%;
         height: auto;
-        min-width: unset;
-    }
-
-    .about-event {
-        text-align: center;
     }
 
     .event-info h2 {
@@ -155,7 +151,13 @@
 
     .book-now-button {
         width: 100%;
-        padding: 10px;
+        padding: 12px;
+    }
+
+    .about-event {
+        width: 90%;
+        margin-top: 20px;
+        text-align: center;
     }
 }
 
