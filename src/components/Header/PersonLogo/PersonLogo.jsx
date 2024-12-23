@@ -1,27 +1,51 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { useAuth0 } from "@auth0/auth0-react";
 import "./PersonLogo.css";
 
 function PersonLogo() {
+    const { user, isAuthenticated, isLoading, loginWithRedirect, logout } = useAuth0();
     const [showDropdown, setShowDropdown] = useState(false);
-    const navigate = useNavigate();
+    const dropdownRef = useRef(null); // Create a ref for the dropdown
 
+    // Logout handler with redirection
+    const handleLogout = () => {
+        logout({ returnTo: window.location.origin });
+    };
+
+    const logoutWithRedirect = () =>
+        logout({
+            logoutParams: {
+                returnTo: window.location.origin,
+            }
+        });
+
+    // Toggle the dropdown
     const handleClick = () => {
-        setShowDropdown(!showDropdown);
+        setShowDropdown(prev => !prev);
     };
 
-    const handleUserClick = () => {
-        navigate('/user-profile');
-        setShowDropdown(false);
+    // Close dropdown when clicking outside
+    const handleClickOutside = (event) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+            setShowDropdown(false);
+        }
     };
 
-    const handleCouncilClick = () => {
-        navigate('/council-profile');
-        setShowDropdown(false);
-    };
+    // Add event listener for clicks outside the dropdown
+    useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
+    // Show loading state
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
 
     return (
-        <div className="person-logo-container">
+        <div className="person-logo-container" ref={dropdownRef}>
             <svg
                 width="18"
                 height="17"
@@ -38,10 +62,28 @@ function PersonLogo() {
                     clipRule="evenodd"
                 />
             </svg>
+
             {showDropdown && (
                 <div className="person-dropdown">
-                    <div className="dropdown-item" onClick={handleUserClick}>User</div>
-                    <div className="dropdown-item" onClick={handleCouncilClick}>Council</div>
+                    {!isAuthenticated && (
+                        <div className="dropdown-item" onClick={() => loginWithRedirect()}>
+                            Login
+                        </div>
+                    )}
+
+                    {isAuthenticated && (
+                        <div className="dropdown-item" >
+                            Profile
+                        </div>
+                    )}
+
+                    {isAuthenticated && (
+                        <div className="dropdown-item" onClick={() => logoutWithRedirect()}>
+                            Logout
+                        </div>
+                    )}
+
+
                 </div>
             )}
         </div>
@@ -49,4 +91,3 @@ function PersonLogo() {
 }
 
 export default PersonLogo;
-  
