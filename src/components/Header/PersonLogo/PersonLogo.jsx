@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
+import { useNavigate } from 'react-router-dom';
 import "./PersonLogo.css";
 
 function PersonLogo() {
     const { user, isAuthenticated, isLoading, loginWithRedirect, logout } = useAuth0();
     const [showDropdown, setShowDropdown] = useState(false);
     const dropdownRef = useRef(null); // Create a ref for the dropdown
+    const navigate = useNavigate();
 
     // Logout handler with redirection
     const handleLogout = () => {
@@ -72,18 +74,16 @@ function PersonLogo() {
                     )}
 
                     {isAuthenticated && (
-                        <div className="dropdown-item" >
+                        <div className="dropdown-item" onClick={() => navigate('/user-profile')}>
                             Profile
                         </div>
                     )}
 
                     {isAuthenticated && (
-                        <div className="dropdown-item" onClick={() => logoutWithRedirect()}>
+                        <div className="dropdown-item" onClick={logoutWithRedirect}>
                             Logout
                         </div>
                     )}
-
-
                 </div>
             )}
         </div>

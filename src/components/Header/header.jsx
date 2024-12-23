@@ -6,6 +6,7 @@ import PersonLogo from "./PersonLogo/PersonLogo";
 import "./header.css";
 import { useNavigate } from 'react-router-dom';
 
+
 const Header = ({ onEventSubmit }) => { // Accept onAddEvent as a prop
     const [isSearchVisible, setSearchVisible] = useState(false);
     const [isNavActive, setNavActive] = useState(false);
@@ -73,7 +74,7 @@ const Header = ({ onEventSubmit }) => { // Accept onAddEvent as a prop
                         <a href="#" className="link-search" onClick={toggleSearch}></a>
                     </li>
                     <li>
-                        <a className="link-Profile-logo"><PersonLogo/></a>
+                    <a className="link-Profile-logo"><PersonLogo /></a>
                     </li>
                 </ul>
             </nav>

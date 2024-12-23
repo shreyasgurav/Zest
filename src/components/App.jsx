@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { HashRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Header from "./Header/header";
 import EventSection from "./EventSection/EventSection";
 import WorkshopSection from "./WorkshopSection/WorkshopSection";
