@@ -2,7 +2,6 @@ import React from 'react';
 import './CouncilProfile.css';
 import { FaGraduationCap } from 'react-icons/fa';
 import { FaUniversity } from 'react-icons/fa';
-import Header from '../Header/header';
 
 function CouncilProfile() {
     const council = {
@@ -19,7 +18,6 @@ function CouncilProfile() {
 
     return (
         <div className="page-container">
-            <Header />
             <div className="council-profile-container">
                 <div className="profile-header">
                     <div className="profile-avatar">

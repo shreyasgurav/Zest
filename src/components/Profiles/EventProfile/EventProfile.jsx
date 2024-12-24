@@ -30,7 +30,11 @@ function EventProfile({ events }) {
         <div className="event-profile-container">
             <div className="event-content">
                 <div className="event-image">
-                    {eventImage && <img src={URL.createObjectURL(eventImage)} alt={eventTitle} />}
+                    {eventImage ? (
+                        <img src={eventImage} alt={eventTitle} />
+                    ) : (
+                        <div className="no-image">No Image Available</div>
+                    )}
                 </div>
                 <div className="event-info-box">
                     <div className="event-info">

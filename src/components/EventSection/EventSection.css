@@ -1,11 +1,7 @@
+/* General Event Section Styling */
 .event-section {
     flex: 1;
     margin-top: 50px;
-}
-
-.keen-slider {
-    padding: 10px;
-    background-color: rgb(242, 242, 242);
 }
 
 .upcoming-events-heading {
@@ -49,12 +45,52 @@
 }
 
 .no-events-message {
-    text-align: center; /* Center the message */
-    font-size: 18px; /* Font size */
-    color: #666; /* Color for the message */
-    margin-top: 17px; /* Space above the message */
-    font-family: 'Arial', sans-serif; /* Font family */
+    text-align: center;
+    font-size: 18px;
+    color: #666;
+    margin-top: 17px;
+    font-family: 'Arial', sans-serif;
     padding: 165px;
     background-color: rgb(238, 238, 238);
 }
 
+/* Embla Carousel Styling */
+.embla {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+}
+
+.embla__viewport {
+    overflow: hidden;
+    width: 100%;
+}
+
+.embla__container {
+    display: flex; /* Ensures horizontal layout */
+    align-items: center; /* Vertically aligns items */
+    gap: 10px; /* Space between slides */
+}
+
+.embla__slide {
+    flex: 0 0 auto; /* Prevent shrinking or growing */
+    width: 250px; /* Fixed width for event boxes */
+    box-sizing: border-box; /* Ensures padding is included in the width */
+}
+
+/* Optional: Event Box Styling */
+.eventbox {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    text-align: center;
+}
+
+/* Removed Arrows and Dots */
+.embla__controls,
+.embla__buttons,
+.embla__dots {
+    display: none;
+}

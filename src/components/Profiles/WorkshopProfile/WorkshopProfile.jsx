@@ -59,7 +59,6 @@ function WorkshopProfile({ workshops }) {
             </div>
             <div className={`buy-now-container mobile-only ${isFooterVisible ? 'above-footer' : ''}`}>
                 <span>{price && `₹${price} Onwards`}</span>
-                <button className="buy-now-button">Book Now</button>
             </div>
         </div>
     );

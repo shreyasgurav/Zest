@@ -2,7 +2,6 @@ import React from 'react';
 import './UserProfile.css';
 import { FaGraduationCap, FaUniversity } from 'react-icons/fa';
 import { useAuth0 } from "@auth0/auth0-react";
-import Header from '../Header/header';
 
 function UserProfile() {
     const { user, isAuthenticated, isLoading } = useAuth0();
@@ -13,7 +12,6 @@ function UserProfile() {
 
     return (
         <div className="page-container">
-            <Header />
             <div className="user-profile-container">
                 <div className="profile-header">
                     <div className="profile-avatar">
@@ -34,11 +32,11 @@ function UserProfile() {
                 <div className="profile-info">
                     <div className="info-item">
                         <FaUniversity className="info-icon" />
-                        <span>KJ Somaiya College of Engineering</span>
+                        <span>College Name</span>
                     </div>
                     <div className="info-item">
                         <FaGraduationCap className="info-icon" />
-                        <span>AI and Data Science - 2nd Year</span>
+                        <span>Course name - Year of study</span>
                     </div>
                     <div className="info-item">
                         <img 
@@ -46,7 +44,7 @@ function UserProfile() {
                             alt="E-Cell Bloombox KJSCE logo" 
                             className="club-logo" 
                         />
-                        <span className="club-name">E-Cell Bloombox KJSCE</span>
+                        <span className="club-name">Council you are in.</span>
                     </div>
                 </div>
 

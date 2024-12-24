@@ -1,11 +1,9 @@
-// src/components/Header/header.jsx
 import logo from './header-images/zest-logo.png';
 import React, { useState } from 'react';
 import AddEventForm from './AddEventForm/AddEventForm'; // Import the new component
 import PersonLogo from "./PersonLogo/PersonLogo";
 import "./header.css";
-import { useNavigate } from 'react-router-dom';
-
+import { useNavigate, Link } from 'react-router-dom';
 
 const Header = ({ onEventSubmit }) => { // Accept onAddEvent as a prop
     const [isSearchVisible, setSearchVisible] = useState(false);
@@ -48,9 +46,9 @@ const Header = ({ onEventSubmit }) => { // Accept onAddEvent as a prop
                         </div>
                     </li>
                     <li>
-                        <a href="" className="link-logo">
-                            <img className='link-logo' src={logo} alt="" />
-                        </a>
+                        <Link to="/" className="link-logo">
+                            <img className='link-logo' src={logo} alt="Zest Logo" />
+                        </Link>
                     </li>
                     <li>
                         <a className="link-Profile-logo"><PersonLogo /></a>
@@ -59,9 +57,9 @@ const Header = ({ onEventSubmit }) => { // Accept onAddEvent as a prop
 
                 <ul className={`desktop-nav ${isNavActive ? 'show' : ''}`}>
                     <li>
-                        <a href="" className="link-logo">
-                            <img className='link-logo' src={logo} alt="" />
-                        </a>
+                        <Link to="/" className="link-logo">
+                            <img className='link-logo' src={logo} alt="Zest Logo" />
+                        </Link>
                     </li>
                     <li><a href="#">Events</a></li>
                     <li><a href="#">Workshops</a></li>
@@ -74,7 +72,7 @@ const Header = ({ onEventSubmit }) => { // Accept onAddEvent as a prop
                         <a href="#" className="link-search" onClick={toggleSearch}></a>
                     </li>
                     <li>
-                    <a className="link-Profile-logo"><PersonLogo /></a>
+                        <a className="link-Profile-logo"><PersonLogo /></a>
                     </li>
                 </ul>
             </nav>

@@ -1,43 +1,79 @@
 // src/components/EventSection/EventSection.jsx
 import React from "react";
-import { useKeenSlider } from "keen-slider/react";
-import "keen-slider/keen-slider.min.css";
+import useEmblaCarousel from "embla-carousel-react";
+import { DotButton, useDotButton } from "./EmblaCarouselDotButton";
+import {
+  PrevButton,
+  NextButton,
+  usePrevNextButtons,
+} from "./EmblaCarouselArrowButtons";
 import Eventbox from "./EventBox/eventbox";
 import "./EventSection.css";
 
 const EventSection = ({ events = [], onSelectEvent }) => {
-  const [sliderRef] = useKeenSlider({
-    breakpoints: {
-      "(min-width: 250px)": {
-        slides: { perView: 2, spacing: 5 },
-      },
-      "(min-width: 690px)": {
-        slides: { perView: 3, spacing: 5 },
-      },
-      "(min-width: 1000px)": {
-        slides: { perView: 4, spacing: 10 },
-      },
-    },
-    slides: { perView: 1 },
-    mode: "free",
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    align: "center",
+    containScroll: "trimSnaps",
+    draggable: true,
   });
+
+  const { selectedIndex, scrollSnaps, onDotButtonClick } =
+    useDotButton(emblaApi);
+
+  const {
+    prevBtnDisabled,
+    nextBtnDisabled,
+    onPrevButtonClick,
+    onNextButtonClick,
+  } = usePrevNextButtons(emblaApi);
 
   return (
     <div className="event-section">
       <div className="event-section-heading">
         <h1 className="upcoming-events-heading">Upcoming Events</h1>
-        <a href="/all-events" className="see-all-link">See All</a>
+        <a href="/all-events" className="see-all-link">
+          See All
+        </a>
       </div>
       {events.length === 0 ? (
         <div className="no-events-message">No events available.</div>
       ) : (
-        <div ref={sliderRef} className="keen-slider">
-          {events.map((event, index) => (
-            <div key={index} className="keen-slider__slide number-slide1">
-              <Eventbox event={event} onSelect={onSelectEvent} />
+        <section className="embla">
+          <div className="embla__viewport" ref={emblaRef}>
+            <div className="embla__container">
+              {events.map((event, index) => (
+                <div className="embla__slide" key={index}>
+                  <Eventbox event={event} onSelect={onSelectEvent} />
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          </div>
+
+          <div className="embla__controls">
+            <div className="embla__buttons">
+              <PrevButton
+                onClick={onPrevButtonClick}
+                disabled={prevBtnDisabled}
+              />
+              <NextButton
+                onClick={onNextButtonClick}
+                disabled={nextBtnDisabled}
+              />
+            </div>
+
+            <div className="embla__dots">
+              {scrollSnaps.map((_, index) => (
+                <DotButton
+                  key={index}
+                  onClick={() => onDotButtonClick(index)}
+                  className={"embla__dot".concat(
+                    index === selectedIndex ? " embla__dot--selected" : ""
+                  )}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
       )}
     </div>
   );
