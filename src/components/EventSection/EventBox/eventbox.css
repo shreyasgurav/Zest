@@ -59,7 +59,7 @@
 
 .event-info p {
     font-size: 13px;
-    margin: 5px 0;
+    margin: 5px;
     color: #666;
 }
 
@@ -88,8 +88,8 @@
 /* Responsive Adjustments */
 @media (max-width: 768px) {
     .event-box {
-        max-width: 200px; /* Adjust width for smaller screens */
-        height: 280px; /* Adjust height for smaller screens */
+        max-width: 170px; /* Adjust width for smaller screens */
+        height: 250px; /* Adjust height for smaller screens */
     }
 
     .event-info h3 {
@@ -107,12 +107,16 @@
     .event-info p:nth-of-type(3) { /* Assuming the time is the third <p> element */
         display: none; /* Hide the time paragraph */
     }
+    
+    .event-box button {
+        display: none;
+    }
 }
 
 @media (max-width: 480px) {
     .event-box {
-        max-width: 180px; /* Further adjust for very small screens */
-        height: 250px;
+        max-width: 150px; /* Adjust width for smaller screens */
+        height: 240px; /* Adjust height for smaller screens */
     }
 
     .event-info h3 {
@@ -123,9 +127,8 @@
         font-size: 11px;
     }
 
-    .book-now-btn {
-        font-size: 12px;
-        padding: 8px; /* Smaller padding on very small screens */
+    .event-box button {
+        display: none;
     }
 }
 

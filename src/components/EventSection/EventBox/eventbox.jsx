@@ -13,11 +13,12 @@ function Eventbox({ event }) {
     return (
         <div className="event-box-container" onClick={handleSelect}>
             <div className="event-box">
-                {event.eventImage ? (
-                    <img src={event.eventImage} alt="Event" />
-                ) : (
-                    <div className="no-image">No Image Available</div>
-                )}
+              {event.eventImage ? (
+                 <img src={event.eventImage} alt="Event" />
+                  ) : (
+                 <img src="/path/to/placeholder.jpg" alt="Placeholder" />
+                    )}
+
                 <div className="event-info">
                     <p className="hosting-club">By {event.hostingClub}</p>
                     <h3>{event.eventTitle}</h3>

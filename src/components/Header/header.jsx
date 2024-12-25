@@ -4,12 +4,15 @@ import AddEventForm from './AddEventForm/AddEventForm'; // Import the new compon
 import PersonLogo from "./PersonLogo/PersonLogo";
 import "./header.css";
 import { useNavigate, Link } from 'react-router-dom';
+import { useAuth0 } from '@auth0/auth0-react'; // Auth0 hook
 
-const Header = ({ onEventSubmit }) => { // Accept onAddEvent as a prop
+const Header = ({ onEventSubmit }) => {
     const [isSearchVisible, setSearchVisible] = useState(false);
     const [isNavActive, setNavActive] = useState(false);
     const [isEventFormVisible, setEventFormVisible] = useState(false); // New state for event form visibility
     const navigate = useNavigate();
+
+    const { user, isAuthenticated } = useAuth0(); // Get user and authentication state from Auth0
 
     const toggleSearch = () => {
         setSearchVisible(!isSearchVisible);
@@ -65,9 +68,11 @@ const Header = ({ onEventSubmit }) => { // Accept onAddEvent as a prop
                     <li><a href="#">Workshops</a></li>
                     <li><a href="#">Councils</a></li>
                     <li><a href="#">Groups</a></li>
-                    <li>
-                        <a className="link-add-event" onClick={toggleEventForm}>List Events</a> {/* Add Event link */}
-                    </li>
+                    {isAuthenticated && user?.email === 'shrreyasgurav@gmail.com' && ( // Show button only for the specific user
+                        <li>
+                            <a className="link-add-event" onClick={toggleEventForm}>List Events</a>
+                        </li>
+                    )}
                     <li>
                         <a href="#" className="link-search" onClick={toggleSearch}></a>
                     </li>
