@@ -1,4 +1,3 @@
-// src/components/EventSection/EventSection.jsx
 import React from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { DotButton, useDotButton } from "./EmblaCarouselDotButton";
@@ -10,15 +9,16 @@ import {
 import Eventbox from "./EventBox/eventbox";
 import "./EventSection.css";
 
-const EventSection = ({ events = [], onSelectEvent }) => {
+const EventSection = ({ events = [] }) => {
   const [emblaRef, emblaApi] = useEmblaCarousel({
-    align: "center",
+    align: "start",
     containScroll: "trimSnaps",
     draggable: true,
+    slidesToScroll: 1,
+    loop: false,
   });
 
-  const { selectedIndex, scrollSnaps, onDotButtonClick } =
-    useDotButton(emblaApi);
+  const { selectedIndex, scrollSnaps, onDotButtonClick } = useDotButton(emblaApi);
 
   const {
     prevBtnDisabled,
@@ -41,11 +41,11 @@ const EventSection = ({ events = [], onSelectEvent }) => {
         <section className="embla">
           <div className="embla__viewport" ref={emblaRef}>
             <div className="embla__container">
-              {events.map((event, index) => (
-                <div className="embla__slide" key={index}>
-                  <Eventbox event={event} onSelect={onSelectEvent} />
+             {events.map((event) => (
+                <div className="embla__slide" key={event.id}>
+                 <Eventbox event={event} />
                 </div>
-              ))}
+))}
             </div>
           </div>
 

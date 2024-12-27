@@ -1,5 +1,6 @@
 /* Container for Event Boxes */
 .event-box-container {
+    max-width: 250px;
     display: flex;
     flex-wrap: wrap;
     gap: 35px;
@@ -25,7 +26,6 @@
     justify-content: space-between;
     align-items: stretch;
     box-sizing: border-box; /* Ensure proper sizing */
-    padding: 0; /* Remove extra padding interfering with layout */
 }
 
 /* Hover Effect for Event Box */
@@ -87,6 +87,11 @@
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {
+
+    .event-box-container {
+        max-width: 200px;
+    }
+
     .event-box {
         max-width: 170px; /* Adjust width for smaller screens */
         height: 250px; /* Adjust height for smaller screens */
@@ -132,7 +137,6 @@
     }
 }
 
-/* Add this to your existing eventbox.css */
 .hosting-club {
     font-size: 14px; /* Adjust font size */
     color: #555; /* Color for the hosting club text */
