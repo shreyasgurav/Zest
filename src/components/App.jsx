@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { HashRouter as Router, Route, Routes } from "react-router-dom";
+import AuthenticationHandler from "./AuthenticationHandler";
+import SetupProfile from "./SetupProfile/SetupProfile";
 import Header from "./Header/header";
 import EventSection from "./EventSection/EventSection";
 import WorkshopSection from "./WorkshopSection/WorkshopSection";
@@ -68,6 +70,7 @@ function App() {
         <Router>
             <div className="App">
                 <div className="app-container">
+                <AuthenticationHandler /> 
                 <Header onEventSubmit={fetchEvents} />
                     <main className="main-content">
                         <Routes>
@@ -93,6 +96,7 @@ function App() {
                             <Route path="/about-us" element={<AboutUs />} />
                             <Route path="/our-services" element={<OurServices />} />
                             <Route path="/contact-us" element={<ContactUs />} />
+                            <Route path="/setup-profile" element={<SetupProfile />} />
                         </Routes>
                     </main>
                     <Footer />
