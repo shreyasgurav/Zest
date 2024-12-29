@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { HashRouter as Router, Route, Routes } from "react-router-dom";
-import AuthenticationHandler from "./AuthenticationHandler";
-import SetupProfile from "./SetupProfile/SetupProfile";
+import { HashRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
 import Header from "./Header/header";
 import EventSection from "./EventSection/EventSection";
 import WorkshopSection from "./WorkshopSection/WorkshopSection";
@@ -13,11 +12,14 @@ import CouncilProfile from "./Profiles/CouncilProfile/CouncilProfile";
 import AboutUs from "./Footer/AboutUs/AboutUs";
 import OurServices from "./Footer/OurServices/OurServices";
 import ContactUs from "./Footer/ContactUs/ContactUs";
-import "./App.css";
+import { ProfileGuard } from "./ProfileGuard";
+import ProfileCompletionForm from "./ProfileCompletionForm/ProfileCompletionForm";
+
 
 function App() {
     const [events, setEvents] = useState([]);
     const [workshops, setWorkshops] = useState([]);
+    const { isAuthenticated, isLoading } = useAuth0();
 
     useEffect(() => {
         fetchEvents();
@@ -29,7 +31,6 @@ function App() {
             if (!response.ok) throw new Error('Failed to fetch events');
             const data = await response.json();
             
-            // Transform the data to match your eventbox format
             const formattedEvents = data.map(event => ({
                 id: event.id,
                 eventImage: event.event_image,
@@ -42,6 +43,7 @@ function App() {
             }));
     
             setEvents(formattedEvents.filter(event => event.type === "event"));
+            setWorkshops(formattedEvents.filter(event => event.type === "workshop"));
         } catch (error) {
             console.error("Error fetching events:", error);
         }
@@ -58,7 +60,6 @@ function App() {
             });
 
             if (response.ok) {
-                // Refresh events list
                 fetchEvents();
             }
         } catch (error) {
@@ -66,14 +67,18 @@ function App() {
         }
     };
 
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
+
     return (
         <Router>
             <div className="App">
                 <div className="app-container">
-                <AuthenticationHandler /> 
-                <Header onEventSubmit={fetchEvents} />
+                    <Header onEventSubmit={fetchEvents} />
                     <main className="main-content">
                         <Routes>
+                            {/* Public routes */}
                             <Route
                                 path="/"
                                 element={
@@ -83,20 +88,71 @@ function App() {
                                     </>
                                 }
                             />
-                            <Route
-                                path="/event/:id"
-                                element={<EventProfile events={events} />}
-                            />
-                            <Route
-                                path="/workshop/:id"
-                                element={<WorkshopProfile workshops={workshops} />}
-                            />
-                            <Route path="/user-profile" element={<UserProfile />} />
-                            <Route path="/council-profile" element={<CouncilProfile />} />
                             <Route path="/about-us" element={<AboutUs />} />
                             <Route path="/our-services" element={<OurServices />} />
                             <Route path="/contact-us" element={<ContactUs />} />
-                            <Route path="/setup-profile" element={<SetupProfile />} />
+                            
+                            {/* Protected routes */}
+                            <Route
+                                path="/complete-profile"
+                                element={
+                                    isAuthenticated ? (
+                                        <ProfileCompletionForm />
+                                    ) : (
+                                        <Navigate to="/" replace />
+                                    )
+                                }
+                            />
+
+                            {/* Routes that require completed profile */}
+                            <Route
+                                path="/user-profile"
+                                element={
+                                    isAuthenticated ? (
+                                        <ProfileGuard>
+                                            <UserProfile />
+                                        </ProfileGuard>
+                                    ) : (
+                                        <Navigate to="/" replace />
+                                    )
+                                }
+                            />
+                            <Route
+                                path="/council-profile"
+                                element={
+                                    isAuthenticated ? (
+                                        <ProfileGuard>
+                                            <CouncilProfile />
+                                        </ProfileGuard>
+                                    ) : (
+                                        <Navigate to="/" replace />
+                                    )
+                                }
+                            />
+                            <Route
+                                path="/event/:id"
+                                element={
+                                    isAuthenticated ? (
+                                        <ProfileGuard>
+                                            <EventProfile events={events} />
+                                        </ProfileGuard>
+                                    ) : (
+                                        <Navigate to="/" replace />
+                                    )
+                                }
+                            />
+                            <Route
+                                path="/workshop/:id"
+                                element={
+                                    isAuthenticated ? (
+                                        <ProfileGuard>
+                                            <WorkshopProfile workshops={workshops} />
+                                        </ProfileGuard>
+                                    ) : (
+                                        <Navigate to="/" replace />
+                                    )
+                                }
+                            />
                         </Routes>
                     </main>
                     <Footer />
