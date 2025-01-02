@@ -1,0 +1,164 @@
+/* Wrapper for the popup */
+.auth-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;  /* Changed to viewport height */
+    background: rgba(0, 0, 0, 0.2); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* Glass morphism effect for the inner container */
+.auth-inner {
+    width: 100%;
+    max-width: 400px;
+    background: rgba(49, 49, 49, 0.5);  /* Very light background */
+    border-radius: 8px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    position: relative;
+}
+
+/* Make sure the content inside auth-inner remains clear */
+.auth-inner * {
+    color: #ffffff;  /* Ensure text is visible */
+}
+
+/* Rest of your CSS remains the same */
+
+/* Animation for the popup */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Styling for the toggle link */
+.toggle-link {
+    margin-top: 20px;
+    text-align: center;
+}
+
+
+
+.toggle-link p {
+    font-size: 14px;
+    color: #b1b1b1;
+    margin: 0;
+}
+
+.toggle-link .link {
+    color: #007bff;
+    cursor: pointer;
+    text-decoration: underline;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.toggle-link .link:hover {
+    color: #0056b3;
+}
+
+/* Close button */
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #333;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.close-button:hover {
+    color: #000;
+}
+
+
+
+form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+form input,
+form button {
+    width: 90%; /* Takes up most of the form width */
+    min-width: 280px;
+    margin-bottom: 15px;
+    padding: 12px;
+    box-sizing: border-box;
+}
+
+form input {
+    background-color: rgb(174, 174, 174);
+    border: 1px solid #b2b2b2;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+form button {
+    background-color: #0f1454;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+@media screen and (max-width: 480px) {
+    .auth-inner {
+        width: 95%;
+        padding: 15px;
+    }
+
+    form input,
+    form button {
+        width: 95%;
+        min-width: unset;
+    }
+}
+
+form h3 {
+    margin-bottom: 10px;
+}
+
+form button:hover {
+    background-color: #0056b3;
+}
+
+.continue-p {
+    margin-bottom: 10px;
+    color: #696969;
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #696969;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.close-button:hover {
+    color: #b6b6b6;
+}
