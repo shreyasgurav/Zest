@@ -34,12 +34,12 @@ function PersonLogo() {
 
     const handleLogout = async () => {
         try {
-            await signOut(auth);
-            setShowDropdown(false);
-            navigate('/');
-        } catch (error) {
-            console.error("Logout error:", error);
-        }
+            await auth.signOut();
+            window.location.href = "/";
+            console.log("User logged out successfully!");
+          } catch (error) {
+            console.error("Error logging out:", error.message);
+          }
     };
 
     return (
@@ -69,7 +69,7 @@ function PersonLogo() {
                         </div>
                     ) : (
                         <>
-                            <div className="dropdown-item" onClick={() => navigate('/user-profile')}>
+                            <div className="dropdown-item" onClick={() => navigate('/profile')}>
                                 Profile
                             </div>
                             <div className="dropdown-item" onClick={handleLogout}>

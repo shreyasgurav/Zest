@@ -29,21 +29,9 @@
 
 .profile-header h2 {
     margin: 0;
-    color: #8c8c8c;
+    color: #b2b1b1;
 }
 
-.username {
-    color: white;
-    opacity: 0.3;
-}
-
-.profile-info {
-    background-color: white;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 30px;
-}
 
 .info-icon {
     margin-right: 15px;
@@ -66,7 +54,7 @@
 }
 
 .registered-events {
-    background-color: white;
+    background-color: rgb(40, 40, 40, 0.3);
     border-radius: 8px;
     padding: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -74,7 +62,7 @@
 
 .registered-events h3 {
     margin: 0 0 20px;
-    color: #333;
+    color: #c2c2c2;
 }
 
 .events-list {
@@ -84,7 +72,7 @@
 
 .event-item {
     padding: 15px;
-    border: 1px solid #eee;
+    border: 1px solid #3f3f3f;
     border-radius: 6px;
     transition: transform 0.2s;
 }
@@ -92,15 +80,16 @@
 .event-item:hover {
     transform: translateY(-2px);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
 }
 
 .event-item h4 {
     margin: 0 0 5px;
-    color: #333;
+    color: #d3d3d3;
 }
 
 .event-item span {
-    color: #666;
+    color: #cccccc;
     font-size: 0.9em;
 }
 

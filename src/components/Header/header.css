@@ -459,6 +459,9 @@ nav .desktop-nav li a:hover {
         display: flex;
         align-items: center;
         cursor: pointer;
+        padding: 10px;  /* Creates a larger clickable area */
+        margin: -10px;  /* Offsets the padding to maintain visual positioning */
+        box-sizing: content-box;
     }
 
     nav .menu-icon {
@@ -500,6 +503,7 @@ nav .desktop-nav li a:hover {
         transition-delay: 0ms, 160ms;
         transition-duration: 200ms;
     }
+
 
     /* Bag Icon Animation */
 

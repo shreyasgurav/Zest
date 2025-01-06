@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { auth, db } from "./firebase";
 import { doc, getDoc } from "firebase/firestore";
+import "./profile.css";
 
 function Profile() {
   const [userDetails, setUserDetails] = useState(null);
@@ -22,40 +23,43 @@ function Profile() {
     fetchUserData();
   }, []);
 
-  async function handleLogout() {
-    try {
-      await auth.signOut();
-      window.location.href = "/login";
-      console.log("User logged out successfully!");
-    } catch (error) {
-      console.error("Error logging out:", error.message);
-    }
-  }
   return (
-    <div>
+  <div>
       {userDetails ? (
-        <>
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <img
+     
+    <div className="page-container">
+      <div className="user-profile-container">
+          <div className="profile-header">
+            <div className="profile-avatar">
+            <img className="avatar-image"
               src={userDetails.photo}
-              width={"40%"}
               style={{ borderRadius: "50%" }}
             />
+            </div>
+              <h2>{userDetails.firstName}</h2>
           </div>
-          <h3>Welcome {userDetails.firstName} 🙏🙏</h3>
-          <div>
-            <p>Email: {userDetails.email}</p>
-            <p>First Name: {userDetails.firstName}</p>
-            {/* <p>Last Name: {userDetails.lastName}</p> */}
-          </div>
-          <button className="btn btn-primary" onClick={handleLogout}>
-            Logout
-          </button>
-        </>
+
+          <div className="registered-events">
+                    <h3>Attended Events</h3>
+                    <div className="events-list">
+                        {[
+                            { id: 1, title: "Example Workshop", date: "2025-02-06" },
+                            { id: 2, title: "Steve Jobs Speaker Session", date: "2024-03-25" }
+                        ].map(event => (
+                            <div key={event.id} className="event-item">
+                                <h4>{event.title}</h4>
+                                <span>{new Date(event.date).toLocaleDateString()}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+      </div>
+    </div>
       ) : (
         <p>Loading...</p>
       )}
-    </div>
+  </div>
+  
   );
 }
 export default Profile;

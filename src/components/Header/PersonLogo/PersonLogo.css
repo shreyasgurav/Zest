@@ -7,8 +7,8 @@
     position: absolute;
     top: 100%;
     right: 0;
-    background-color: rgb(170, 170, 170);
-    opacity: 1;
+    background-color: rgb(33, 33, 33);
+    opacity: 0.8;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     min-width: 120px;
@@ -20,7 +20,7 @@
     padding: 12px 16px;
     cursor: pointer;
     transition: background-color 0.2s;
-    color: black;
+    color: rgb(193, 190, 190);
 }
 
 .dropdown-item:first-child {
@@ -33,6 +33,6 @@
 
 .dropdown-item:hover {
     border-radius: 8px 8px 8px 8px;
-    background-color: #f5f5f5;
-    opacity: 0.6;
+    background-color: rgb(65, 65, 65);
+    opacity: 1;
 }

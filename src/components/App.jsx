@@ -6,11 +6,11 @@ import WorkshopSection from "./WorkshopSection/WorkshopSection";
 import Footer from "./Footer/footer";
 import EventProfile from "./Profiles/EventProfile/EventProfile";
 import WorkshopProfile from "./Profiles/WorkshopProfile/WorkshopProfile";
-import UserProfile from "./Profiles/UserProfile/UserProfile";
 import CouncilProfile from "./Profiles/CouncilProfile/CouncilProfile";
 import AboutUs from "./Footer/AboutUs/AboutUs";
 import OurServices from "./Footer/OurServices/OurServices";
 import ContactUs from "./Footer/ContactUs/ContactUs";
+import Profile from "./Header/PersonLogo/components/profile";
 import "./App.css"
 
 
@@ -90,11 +90,10 @@ function App() {
 
 
                             {/* Routes that require completed profile */}
-                            <Route path="/user-profile" element={<UserProfile />} />
                             <Route path="/council-profile" element={<CouncilProfile />} />
                             <Route path="/event-profile/:id" element={<EventProfile events={events} />} />
-
-                            <Route path="/workshop/:id" element={<WorkshopProfile workshops={workshops} />} />
+                            <Route path="/workshop-profile/:id" element={<WorkshopProfile workshops={workshops} />} />
+                            <Route path="/profile" element={<Profile />} />
                         </Routes>
                     </main>
                     <Footer />

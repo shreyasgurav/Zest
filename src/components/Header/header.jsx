@@ -1,6 +1,7 @@
 import logo from './header-images/zest-logo.png';
-import React, { useState } from 'react';
-import AddEventForm from './AddEventForm/AddEventForm'; // Import the new component
+import React, { useState, useEffect } from 'react';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import AddEventForm from './AddEventForm/AddEventForm';
 import PersonLogo from "./PersonLogo/PersonLogo";
 import "./header.css";
 import { useNavigate, Link } from 'react-router-dom';
@@ -8,29 +9,49 @@ import { useNavigate, Link } from 'react-router-dom';
 const Header = ({ onEventSubmit }) => {
     const [isSearchVisible, setSearchVisible] = useState(false);
     const [isNavActive, setNavActive] = useState(false);
-    const [isEventFormVisible, setEventFormVisible] = useState(false); // New state for event form visibility
+    const [isEventFormVisible, setEventFormVisible] = useState(false);
+    const [userEmail, setUserEmail] = useState(null);
     const navigate = useNavigate();
+    
+    useEffect(() => {
+        const auth = getAuth();
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                setUserEmail(user.email);
+            } else {
+                setUserEmail(null);
+            }
+        });
+
+        // Cleanup subscription on unmount
+        return () => unsubscribe();
+    }, []);
 
     const toggleSearch = () => {
         setSearchVisible(!isSearchVisible);
         if (!isSearchVisible) {
-            setNavActive(false); // Close nav when search is opened
+            setNavActive(false);
         }
     };
 
     const toggleNav = () => {
         setNavActive(!isNavActive);
         if (isNavActive) {
-            setSearchVisible(false); // Close search when nav is opened
+            setSearchVisible(false);
         }
     };
 
     const toggleEventForm = () => {
-        setEventFormVisible(!isEventFormVisible); // Toggle event form visibility
+        setEventFormVisible(!isEventFormVisible);
     };
 
     const handleProfileClick = () => {
-        navigate('/user-profile'); // Redirect to user profile page
+        navigate('/user-profile');
+    };
+
+    // Function to check if user has admin privileges
+    const isAdmin = () => {
+        return userEmail === "shrreyasgurav@gmail.com";
     };
 
     return (
@@ -65,10 +86,11 @@ const Header = ({ onEventSubmit }) => {
                     <li><a href="#">Workshops</a></li>
                     <li><a href="#">Experiences</a></li>
                     <li><a href="#">Leisures</a></li>
-                    <li>
+                    {isAdmin() && (
+                        <li>
                             <a className="link-add-event" onClick={toggleEventForm}>List Events</a>
                         </li>
-                   
+                    )}
                     <li>
                         <a href="#" className="link-search" onClick={toggleSearch}></a>
                     </li>
@@ -78,9 +100,8 @@ const Header = ({ onEventSubmit }) => {
                 </ul>
             </nav>
 
-            {/* Event Form Popup */}
             {isEventFormVisible && (
-                <AddEventForm onClose={toggleEventForm} onSubmit={onEventSubmit} /> // Pass onAddEvent function
+                <AddEventForm onClose={toggleEventForm} onSubmit={onEventSubmit} />
             )}
         </div>
     );

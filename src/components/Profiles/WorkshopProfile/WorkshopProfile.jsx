@@ -29,8 +29,12 @@ function WorkshopProfile({ workshops }) {
     return (
         <div className="event-profile-container">
             <div className="event-content">
-                <div className="event-image">
-                    {eventImage && <img src={URL.createObjectURL(eventImage)} alt={eventTitle} />}
+            <div className="event-image">
+                    {eventImage ? (
+                        <img src={eventImage} alt={eventTitle} />
+                    ) : (
+                        <div className="no-image">No Image Available</div>
+                    )}
                 </div>
                 <div className="event-info-box">
                     <div className="event-info">
@@ -45,7 +49,7 @@ function WorkshopProfile({ workshops }) {
                         <div className="event-detail">
                             <FaMapMarkerAlt /> {eventVenue}
                         </div>
-                        <div className="event-price desktop-only">
+                        <div className="event-price">
                             <button className="book-now-button" onClick={() => window.open(eventRegistrationLink, "_blank")}>Book Now</button>
                         </div>
                     </div>
@@ -56,9 +60,6 @@ function WorkshopProfile({ workshops }) {
                 <p>
                     {workshop.aboutEvent || "Join us for an engaging workshop designed to enhance your skills and creativity. Don't miss out on this opportunity!"}
                 </p>
-            </div>
-            <div className={`buy-now-container mobile-only ${isFooterVisible ? 'above-footer' : ''}`}>
-                <span>{price && `₹${price} Onwards`}</span>
             </div>
         </div>
     );

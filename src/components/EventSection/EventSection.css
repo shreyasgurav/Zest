@@ -43,8 +43,10 @@
     .see-all-link {
         font-size: 14px;
     }
-
     
+    .embla__container {
+        grid-column-gap: 20px;
+    }
 }
 
 .no-events-message {
@@ -70,15 +72,23 @@
 }
 
 .embla__container {
-    display: flex; /* Ensures horizontal layout */
-    align-items: center; /* Vertically aligns items */
+    display: flex;
+    align-items: center;
 }
 
 .embla__slide {
-    flex: 0 0 auto; /* Prevent shrinking or growing */
-    width: 250px; /* Fixed width for event boxes */
-    box-sizing: border-box; /* Ensures padding is included in the width */
+    flex: 0 0 50% auto;
+    width: 250px;
 }
+
+.embla__slide:nth-child(1) {
+    margin-left: 5%;
+  }
+
+
+  .embla__slide:last-child {
+    margin-right: 5%;
+  }
 
 
 /* Removed Arrows and Dots */
