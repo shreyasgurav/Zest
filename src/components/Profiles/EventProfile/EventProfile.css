@@ -24,17 +24,17 @@
     margin-right: 20px;
     max-width: 400px;
     min-width: 300px;
-    height: 400px;
+    aspect-ratio: 1 / 1;  /* This ensures square aspect ratio */
     overflow: hidden;
-    border-radius: 12px; /* Added curved corners to container */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15); /* Added shadow to container */
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
 }
 
 .event-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 12px; /* Added curved corners to image */
+    border-radius: 12px;
 }
 
 .event-info-box {
@@ -145,15 +145,15 @@
         margin-right: 0;
         max-width: 90%;
         width: 90%;
-        height: 300px;
+        aspect-ratio: 1 / 1;  /* Maintain square aspect ratio in mobile */
         margin-bottom: 20px;
-        line-height: 0; /* Added to remove any line-height space */
-        font-size: 0; /* Added to remove any font space */
+        line-height: 0;
+        font-size: 0;
     }
 
     .event-image img {
         border-radius: 12px;
-        vertical-align: top; /* Added to remove bottom space */
+        vertical-align: top;
     }
 
     .event-info h2 {

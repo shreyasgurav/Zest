@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { HashRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import Header from "./Header/header";
-import EventSection from "./EventSection/EventSection";
-import WorkshopSection from "./WorkshopSection/WorkshopSection";
+import EventSection from "./Sections/EventSection/EventSection";
+import WorkshopSection from "./Sections/WorkshopSection/WorkshopSection";
+import ExperiencesSection from "./Sections/ExperiencesSection/ExperiencesSection";
 import Footer from "./Footer/footer";
 import EventProfile from "./Profiles/EventProfile/EventProfile";
 import WorkshopProfile from "./Profiles/WorkshopProfile/WorkshopProfile";
+import ExperiencesProfile from "./Profiles/ExperiecesProfile/ExperiencesProfile";
 import CouncilProfile from "./Profiles/CouncilProfile/CouncilProfile";
 import AboutUs from "./Footer/AboutUs/AboutUs";
 import OurServices from "./Footer/OurServices/OurServices";
@@ -13,10 +15,10 @@ import ContactUs from "./Footer/ContactUs/ContactUs";
 import Profile from "./Header/PersonLogo/components/profile";
 import "./App.css"
 
-
 function App() {
     const [events, setEvents] = useState([]);
     const [workshops, setWorkshops] = useState([]);
+    const [experiences, setExperiences] = useState([]);
 
     useEffect(() => {
         fetchEvents();
@@ -36,11 +38,13 @@ function App() {
                 eventDateTime: event.event_date_time,
                 eventVenue: event.event_venue,
                 eventRegistrationLink: event.event_registration_link,
-                type: event.event_type
+                type: event.event_type,
+                aboutEvent: event.about_event
             }));
     
             setEvents(formattedEvents.filter(event => event.type === "event"));
             setWorkshops(formattedEvents.filter(event => event.type === "workshop"));
+            setExperiences(formattedEvents.filter(event => event.type === "experiences"));
         } catch (error) {
             console.error("Error fetching events:", error);
         }
@@ -64,8 +68,6 @@ function App() {
         }
     };
 
-
-
     return (
         <Router>
             <div className="App">
@@ -73,13 +75,13 @@ function App() {
                     <Header onEventSubmit={fetchEvents} />
                     <main className="main-content">
                         <Routes>
-                            {/* Public routes */}
                             <Route
                                 path="/"
                                 element={
                                     <>
                                         <EventSection events={events} />
                                         <WorkshopSection workshops={workshops} />
+                                        <ExperiencesSection experiences={experiences} />
                                     </>
                                 }
                             />
@@ -87,12 +89,10 @@ function App() {
                             <Route path="/our-services" element={<OurServices />} />
                             <Route path="/contact-us" element={<ContactUs />} />
                             
-
-
-                            {/* Routes that require completed profile */}
                             <Route path="/council-profile" element={<CouncilProfile />} />
                             <Route path="/event-profile/:id" element={<EventProfile events={events} />} />
                             <Route path="/workshop-profile/:id" element={<WorkshopProfile workshops={workshops} />} />
+                            <Route path="/experiences-profile/:id" element={<ExperiencesProfile experiences={experiences} />} />
                             <Route path="/profile" element={<Profile />} />
                         </Routes>
                     </main>

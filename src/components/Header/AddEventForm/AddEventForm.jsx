@@ -43,7 +43,10 @@ const AddEventForm = ({ onClose, onSubmit }) => {
       const data = await response.json();
 
       if (response.ok) {
-        setSuccessMessage(`${eventData.event_type === 'workshop' ? 'Workshop' : 'Event'} added successfully!`);
+        const typeText = 
+          eventData.event_type === 'workshop' ? 'Workshop' : 
+          eventData.event_type === 'experiences' ? 'Experiences' : 'Event';
+        setSuccessMessage(`${typeText} added successfully!`);
         if (onSubmit) onSubmit();
         onClose();
       } else {
@@ -79,6 +82,7 @@ const AddEventForm = ({ onClose, onSubmit }) => {
               <option value="">Select Event Type</option>
               <option value="event">Event</option>
               <option value="workshop">Workshop</option>
+              <option value="experiences">Experiences</option>
             </select>
           </div>
 
