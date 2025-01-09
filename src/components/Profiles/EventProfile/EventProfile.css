@@ -1,0 +1,177 @@
+/* Styles for Event Profile Page */
+
+.event-profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 20px;
+    margin-top: 90px;
+}
+
+.event-content {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.event-image {
+    flex: 1;
+    margin-right: 20px;
+    max-width: 400px;
+    min-width: 300px;
+    aspect-ratio: 1 / 1;  /* This ensures square aspect ratio */
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.event-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.event-info-box {
+    border: 1px solid #5f5f5f;
+    background-color: rgb(40, 40, 40, 0.5);
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    max-width: 500px;
+    flex: 1;
+    text-align: left;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.event-info {
+    padding: 20px;
+}
+
+.event-info h2 {
+    color: rgb(170, 170, 170);
+    margin: 0 0 10px;
+    font-size: 24px;
+    border-bottom: 1px solid rgb(167, 167, 167);
+    padding-bottom: 5px;
+}
+
+.hosting-club {
+    font-size: 16px;
+    color: #555;
+    margin-top: 5px;
+    font-style: italic;
+}
+
+.event-detail {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    color: #838383;
+}
+
+.event-detail svg {
+    margin-right: 8px;
+}
+
+.event-price {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+.book-now-button {
+    padding: 10px 20px;
+    background-color: #373737;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.book-now-button:hover {
+    background-color: #828282;
+}
+
+.about-event {
+    text-align: center;
+    background-color: rgb(40, 40, 40, 0.5);
+    margin-top: 40px;
+    padding: 20px;
+    border: 1px solid #777777;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 900px;
+    width: 100%;
+}
+
+.about-event h3 {
+    margin-bottom: 10px;
+    font-size: 20px;
+    color: #aeadad;
+}
+
+.about-event p {
+    font-size: 16px;
+    color: #6a6969;
+    line-height: 1.6;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .event-content {
+        flex-direction: column;
+        align-items: center;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .event-info-box {
+        margin-left: 0;
+        margin-top: 20px;
+        max-width: 100%;
+        width: 90%;
+    }
+
+    .event-image {
+        margin-right: 0;
+        max-width: 90%;
+        width: 90%;
+        aspect-ratio: 1 / 1;  /* Maintain square aspect ratio in mobile */
+        margin-bottom: 20px;
+        line-height: 0;
+        font-size: 0;
+    }
+
+    .event-image img {
+        border-radius: 12px;
+        vertical-align: top;
+    }
+
+    .event-info h2 {
+        font-size: 20px;
+    }
+
+    .event-detail {
+        font-size: 14px;
+    }
+
+    .book-now-button {
+        width: 100%;
+        padding: 12px;
+    }
+
+    .about-event {
+        width: 90%;
+        margin-top: 20px;
+        text-align: center;
+    }
+}
