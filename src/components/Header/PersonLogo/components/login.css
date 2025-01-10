@@ -1,10 +1,13 @@
+
+
+
 .phone-login {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     width: 100%;
     max-width: 400px;
-    margin: 0 auto;
+    margin-top: 20px;
 }
 
 .phone-no-text {
@@ -19,7 +22,7 @@
     display: flex;
     align-items: center;
     background-color: #1c1c1c;
-    color: #ffffff;
+    color: #000000;
     border: 1px solid #333;
     border-radius: 10px;
     padding: 12px 16px;
@@ -31,6 +34,10 @@
     transition: all 0.3s ease;
     width: 270px; /* Matched with Google button */
     margin-bottom: 15px;
+}
+
+PhoneInput {
+    color: black;
 }
 
 .phone-no-input:focus {
@@ -67,7 +74,7 @@
     flex-direction: column;
     width: 100%;
     max-width: 400px;
-    margin: 0 auto;
+    margin-top: 20px;
 }
 
 .otp-label {

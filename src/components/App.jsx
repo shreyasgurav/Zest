@@ -8,12 +8,13 @@ import Footer from "./Footer/footer";
 import EventProfile from "./Profiles/EventProfile/EventProfile";
 import WorkshopProfile from "./Profiles/WorkshopProfile/WorkshopProfile";
 import ExperiencesProfile from "./Profiles/ExperiecesProfile/ExperiencesProfile";
-import CouncilProfile from "./Profiles/CouncilProfile/CouncilProfile";
+import CouncilProfile from "./Profiles/OrganizationProfile/OrganisationProfile";
 import AboutUs from "./Footer/AboutUs/AboutUs";
 import OurServices from "./Footer/OurServices/OurServices";
 import ContactUs from "./Footer/ContactUs/ContactUs";
 import Profile from "./Header/PersonLogo/components/profile";
 import "./App.css"
+import OrganisationProfile from "./Profiles/OrganizationProfile/OrganisationProfile";
 
 function App() {
     const [events, setEvents] = useState([]);
@@ -94,6 +95,8 @@ function App() {
                             <Route path="/workshop-profile/:id" element={<WorkshopProfile workshops={workshops} />} />
                             <Route path="/experiences-profile/:id" element={<ExperiencesProfile experiences={experiences} />} />
                             <Route path="/profile" element={<Profile />} />
+                            <Route path="/org-profile" element={<OrganisationProfile />} />
+
                         </Routes>
                     </main>
                     <Footer />

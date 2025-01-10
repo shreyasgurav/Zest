@@ -65,7 +65,9 @@
 }
 
 .login-heading {
-    margin-bottom: 10px;
+    color: white;
+    opacity: 0.8;
+    margin-bottom: 20px;
 }
 
 .login-continue-header {
@@ -75,7 +77,8 @@
 
 .login-continue-text {
     margin-bottom: 10px;
-    color: #696969;
+    color: #ffffff;
+    opacity: 0.7;
 }
 
 .login-close-btn {
@@ -110,11 +113,7 @@
     background-color: rgba(255, 255, 255, 0.2);
 }
 
-.login-divider-text {
-    color: #b1b1b1;
-    font-size: 12px;
-    padding: 0 10px;
-}
+
 
 @media screen and (max-width: 480px) {
     .login-modal-inner {
@@ -126,4 +125,68 @@
         width: 95%;
         min-width: unset;
     }
+}
+
+
+/* Add these styles to your LoginPopup.css */
+
+.org-question-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.org-question-text {
+    font-size: 16px;
+    color: #ffffff;
+    opacity: 0.9;
+    margin: 0;
+}
+
+.org-flow-button {
+    background-color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    padding: 10px;
+    color: #ffffff;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    max-width: 250px;
+}
+
+.org-flow-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.org-flow-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.org-create-button {
+    background-color: #007bff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    color: #ffffff;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    max-width: 250px;
+}
+
+.org-create-button:hover {
+    background-color: #0056b3;
+}
+
+.create-org-info {
+    color: white;
+    opacity: 0.8;
+    margin-bottom: 20px;
 }

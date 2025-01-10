@@ -1,0 +1,321 @@
+.org-profile-container {
+    max-width: 1128px; /* LinkedIn's max width */
+    margin: 0 auto;
+    padding: 0;
+    color: white;
+    margin-top: 50px;
+  }
+  
+  .org-banner-section {
+    position: relative;
+    width: 100%;
+    padding-top: 20%; 
+  }
+  
+  .org-banner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    border-radius: 10px;
+  }
+  
+  .banner-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center; /* Centers the image */
+  }
+  
+  .org-profile-image-container {
+    position: absolute;
+    bottom: -50px;
+    left: 24px;
+    width: 150px;
+    height: 150px;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 4px solid black;
+    z-index: 2;
+  }
+  
+  .org-profile-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .org-details-section {
+    padding: 60px 24px 24px;
+  }
+  
+  .org-main-info {
+    margin-bottom: 20px;
+  }
+  
+  .org-name {
+    font-size: 30px;
+    font-weight: 900;
+    margin: 0 0 8px 0;
+    color: white;
+  }
+  
+  .org-username {
+    display: block;
+    font-size: 16px;
+    color: #8899a6;
+    margin-bottom: 12px;
+  }
+  
+  .category-tag {
+    display: inline-block;
+    padding: 6px 12px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    font-size: 14px;
+    color: #8899a6;
+  }
+  
+  .org-bio {
+    margin: 20px 0;
+    max-width: 600px;
+    line-height: 1.5;
+    color: #e1e1e1;
+  }
+  
+  .org-stats {
+    display: flex;
+    gap: 40px;
+    margin: 30px 0;
+  }
+  
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .stat-number {
+    font-size: 20px;
+    font-weight: 700;
+    color: white;
+  }
+  
+  .stat-label {
+    font-size: 14px;
+    color: #8899a6;
+  }
+  
+  .subscribe-button {
+    padding: 10px 24px;
+    background-color: #292929;
+    color: white;
+    border: none;
+    border-radius: 15px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .subscribe-button:hover {
+    background-color: #494949;
+  }
+
+  .org-profile-divider {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    margin: 50px 0;
+    gap: 10px;
+}
+
+  .org-profile-divider-line {
+    flex-grow: 1;
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+  
+  /* Tablet and smaller desktop screens */
+  @media (max-width: 1128px) {
+    .org-banner-section {
+      padding-top: 26.5%; /* Maintains aspect ratio */
+    }
+  }
+  
+  /* Mobile screens */
+  @media (max-width: 768px) {
+    .org-banner-section {
+      padding-top: 35%; /* Slightly taller aspect ratio for mobile */
+    }
+
+    .org-banner {
+        border-radius: 0;
+    }
+  
+    .org-profile-image-container {
+      width: 120px;
+      height: 120px;
+      bottom: -40px;
+      left: 16px;
+    }
+  
+    .org-details-section {
+      padding: 50px 16px 16px;
+    }
+  
+    .org-name {
+      font-size: 20px;
+    }
+  
+    .org-stats {
+      gap: 20px;
+    }
+  
+    .stat-number {
+      font-size: 18px;
+    }
+  }
+  
+  /* Small mobile screens */
+  @media (max-width: 480px) {
+    .org-banner-section {
+      padding-top: 40%; /* Even taller aspect ratio for small screens */
+    }
+
+    .org-banner {
+        border-radius: 0;
+    }
+  
+    .org-profile-image-container {
+      width: 100px;
+      height: 100px;
+      bottom: -35px;
+      left: 16px;
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  /* Events Section Styles */
+.events-section {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: 30px;
+  }
+  
+  .events-nav {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    padding: 20px 0;
+  }
+  
+  .event-nav-button {
+    background: none;
+    border: none;
+    color: #8899a6;
+    font-size: 16px;
+    font-weight: 900;
+    padding: 10px 0;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.3s;
+  }
+  
+  .event-nav-button.active {
+    color: white;
+  }
+  
+  .event-nav-button.active::after {
+    content: '';
+    position: absolute;
+    top: -21px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: #ffffff;
+  }
+  
+  .events-container {
+    padding: 32px 24px;
+  }
+  
+  .events-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+  }
+  
+  .event-card {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.2s;
+  }
+  
+  .event-card:hover {
+    transform: translateY(-4px);
+  }
+  
+  .event-image {
+    width: 100%;
+    height: 160px;
+    overflow: hidden;
+  }
+  
+  .event-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .event-details {
+    padding: 16px;
+  }
+  
+  .event-details h3 {
+    margin: 0 0 12px 0;
+    font-size: 18px;
+    color: white;
+  }
+  
+  .profile-event-info {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 8px;
+    color: #8899a6;
+    font-size: 14px;
+  }
+  
+  .event-attendees {
+    color: #1d9bf0;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  @media (max-width: 768px) {
+    .events-nav {
+      gap: 20px;
+    }
+  
+    .events-container {
+      padding: 24px 16px;
+    }
+  
+    .events-grid {
+      grid-template-columns: 1fr;
+    }
+  }
