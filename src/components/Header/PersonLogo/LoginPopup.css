@@ -134,15 +134,35 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: center;
     gap: 10px;
 }
 
 .org-question-text {
-    font-size: 16px;
+    font-size: 13px;
     color: #ffffff;
     opacity: 0.9;
     margin: 0;
 }
+
+.continue-org-btn {
+    background-color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    padding: 7px;
+    color: #ffffff;
+    font-size: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    max-width: 150px;
+}
+
+.continue-org-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.5);   
+}
+
 
 .org-flow-button {
     background-color: transparent;
@@ -189,4 +209,11 @@
     color: white;
     opacity: 0.8;
     margin-bottom: 20px;
+}
+
+.verify-title {
+    display: flex;
+    justify-content: center;
+    color: white;
+    opacity: 0.8;
 }

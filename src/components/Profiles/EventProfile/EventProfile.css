@@ -19,7 +19,7 @@
     margin: 0 auto;
 }
 
-.event-image {
+.event-profile-image {
     flex: 1;
     margin-right: 20px;
     max-width: 400px;
@@ -30,7 +30,7 @@
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
 }
 
-.event-image img {
+.event-profile-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;

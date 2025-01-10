@@ -21,9 +21,8 @@
 .phone-no-input {
     display: flex;
     align-items: center;
-    background-color: #1c1c1c;
+    background-color: black;
     color: #000000;
-    border: 1px solid #333;
     border-radius: 10px;
     padding: 12px 16px;
     font-family: Arial, sans-serif;
@@ -33,12 +32,9 @@
     outline: none;
     transition: all 0.3s ease;
     width: 270px; /* Matched with Google button */
-    margin-bottom: 15px;
+    margin-bottom: 5px;
 }
 
-PhoneInput {
-    color: black;
-}
 
 .phone-no-input:focus {
     border-color: #454545;
@@ -150,3 +146,43 @@ PhoneInput {
         width: 120px;
     }
 }
+
+/* Override react-phone-number-input default styles */
+.PhoneInput {
+  background-color: black;
+  margin-bottom: 15px;
+}
+
+.PhoneInput input {
+  background-color: black;
+  color: white; /* Making text white for better contrast */
+  border: 1px solid #333; /* Adding subtle border */
+  padding: 8px;
+  border-radius: 4px;
+  width: 200px;
+}
+
+/* Style the country select button */
+.PhoneInputCountry {
+  background-color: black;
+  padding: 8px;
+}
+
+/* Style the country select dropdown */
+.PhoneInputCountrySelect option {
+  background-color: black;
+  color: white;
+}
+
+/* Style for the country flag and arrow */
+.PhoneInputCountryIcon {
+  opacity: 0.8;
+}
+
+/* Hover states */
+.PhoneInput input:hover,
+.PhoneInput input:focus {
+  border-color: #666;
+  outline: none;
+}
+

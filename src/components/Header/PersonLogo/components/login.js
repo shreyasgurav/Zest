@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
-import { auth } from "./firebase";
+import { doc, setDoc } from "firebase/firestore";  // Add this import
+import { auth, db } from "./firebase";  // Update this import to include db
 import { toast } from "react-toastify";
 import "./login.css";
 import { useNavigate } from "react-router-dom";
@@ -71,6 +72,7 @@ function Login({ onLoginSuccess }) {
     }
   };
 
+
   const verifyOtp = async (e) => {
     e.preventDefault();
     if (!otp || otp.length !== 6) {
@@ -82,9 +84,26 @@ function Login({ onLoginSuccess }) {
     try {
       const result = await window.confirmationResult.confirm(otp);
       if (result.user) {
-        toast.success("Phone number verified!");
-        onLoginSuccess?.();
-        navigate("/org-profile");
+        // Create organization document here
+        try {
+          const organizationRef = doc(db, 'organizations', result.user.uid);
+          await setDoc(organizationRef, {
+            phoneNumber: result.user.phoneNumber,
+            createdAt: new Date().toISOString(),
+            name: '',
+            username: '',
+            bio: '',
+            bannerImage: '',
+            profileImage: ''
+          });
+          
+          toast.success("Phone number verified!");
+          onLoginSuccess?.();
+          navigate("/org-profile");
+        } catch (dbError) {
+          console.error("Error creating organization:", dbError);
+          toast.error("Error creating organization profile");
+        }
       }
     } catch (error) {
       console.error(error);
@@ -92,7 +111,7 @@ function Login({ onLoginSuccess }) {
     } finally {
       setLoading(false);
     }
-  };
+};
 
   return (
     <div className="login-form">
