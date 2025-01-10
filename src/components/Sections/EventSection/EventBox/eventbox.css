@@ -1,0 +1,149 @@
+/* Container for Event Boxes */
+.event-box-container {
+    max-width: 250px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+/* Individual Event Box */
+.event-box {
+    background-color: rgb(44, 44, 44, 0.3);
+    border: 0.2px solid #1f1f1f;
+    border-radius: 8px;
+    overflow: hidden;
+    width: 100%;
+    max-width: 230px;
+    height: auto;
+    max-height: 350px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch;
+    box-sizing: border-box;
+}
+
+/* Hover Effect for Event Box */
+.event-box:hover {
+    box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.3);
+    border: 0.2px solid #3f3f3f;
+    cursor: pointer;
+}
+
+/* Event Image */
+.event-box img {
+    width: 230px;
+    height: 230px;
+    object-fit: cover;
+    border-radius: 8px 8px 0 0;
+}
+
+/* Event Information */
+.event-info {
+    padding: 10px;
+    flex-grow: 1;
+    overflow: hidden;
+    text-align: center;
+}
+
+.event-info h3 {
+    font-size: 16px;
+    margin-bottom: 8px;
+    color: #e5e5e5;
+}
+
+.event-info p {
+    font-size: 13px;
+    margin: 5px;
+    color: #666;
+}
+
+/* DateTime Container */
+.datetime-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    margin: 5px 0;
+}
+
+.datetime-container p {
+    margin: 0;
+    color: #666;
+}
+
+.datetime-divider {
+    width: 1px;
+    height: 14px;
+    background-color: #979797;
+}
+
+/* Venue with Icon */
+.venue-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.venue-container svg {
+    width: 14px;
+    height: 14px;
+    fill: #666;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .event-box-container {
+        max-width: 200px;
+        padding: 4px;
+    }
+
+    .event-box {
+        max-width: 170px;
+        height: 250px;
+    }
+
+    .event-box img {
+        width: 170px;
+        height: 170px;
+    }
+
+    .event-info h3 {
+        font-size: 14px;
+    }
+
+    .event-info p {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .event-box {
+        max-width: 150px;
+        height: 240px;
+    }
+
+    .event-box img {
+        width: 150px;
+        height: 150px;
+    }
+
+    .event-info h3 {
+        font-size: 12px;
+    }
+
+    .event-info p {
+        font-size: 11px;
+    }
+}
+
+.hosting-club {
+    font-size: 14px;
+    color: #ffffff;
+    margin-bottom: 5px;
+    font-style: italic;
+}

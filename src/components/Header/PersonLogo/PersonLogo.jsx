@@ -1,34 +1,56 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { auth } from './components/firebase';
+import { signOut } from "firebase/auth";
+import LoginPopup from './LoginPopup';
 import { useNavigate } from 'react-router-dom';
 import "./PersonLogo.css";
 
 function PersonLogo() {
     const [showDropdown, setShowDropdown] = useState(false);
+    const [isPopupOpen, setPopupOpen] = useState(false);
+    const [user, setUser] = useState(null);
+    const dropdownRef = useRef(null);
     const navigate = useNavigate();
 
-    const handleClick = () => {
-        setShowDropdown(!showDropdown);
+    useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged((currentUser) => {
+            setUser(currentUser);
+        });
+        return () => unsubscribe();
+    }, []);
+
+    useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
+    const handleClickOutside = (event) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+            setShowDropdown(false);
+        }
     };
 
-    const handleUserClick = () => {
-        navigate('/user-profile');
-        setShowDropdown(false);
-    };
-
-    const handleCouncilClick = () => {
-        navigate('/council-profile');
-        setShowDropdown(false);
+    const handleLogout = async () => {
+        try {
+            await auth.signOut();
+            window.location.href = "/";
+            console.log("User logged out successfully!");
+          } catch (error) {
+            console.error("Error logging out:", error.message);
+          }
     };
 
     return (
-        <div className="person-logo-container">
+        <div className="person-logo-container" ref={dropdownRef}>
             <svg
                 width="18"
                 height="17"
                 viewBox="0 0 15 15"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
-                onClick={handleClick}
+                onClick={() => setShowDropdown(prev => !prev)}
                 style={{ cursor: 'pointer' }}
             >
                 <path
@@ -38,10 +60,32 @@ function PersonLogo() {
                     clipRule="evenodd"
                 />
             </svg>
+
             {showDropdown && (
                 <div className="person-dropdown">
-                    <div className="dropdown-item" onClick={handleUserClick}>User</div>
-                    <div className="dropdown-item" onClick={handleCouncilClick}>Council</div>
+                    {!user ? (
+                        <div className="dropdown-item" onClick={() => setPopupOpen(true)}>
+                            Login
+                        </div>
+                    ) : (
+                        <>
+                            <div className="dropdown-item" onClick={() => navigate('/profile')}>
+                                Profile
+                            </div>
+                            <div className="dropdown-item" onClick={handleLogout}>
+                                Logout
+                            </div>
+                        </>
+                    )}
+                </div>
+            )}
+
+            {isPopupOpen && !user && (
+                <div className="login-popup-overlay">
+                    <div className="login-popup-content">
+                       
+                        <LoginPopup onClose={() => setPopupOpen(false)} />
+                    </div>
                 </div>
             )}
         </div>
@@ -49,4 +93,3 @@ function PersonLogo() {
 }
 
 export default PersonLogo;
-  

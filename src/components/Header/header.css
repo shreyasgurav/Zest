@@ -1,7 +1,9 @@
 /* Desktop Nav */
 
 .nav-container {
-    background: rgb(38, 39, 61);
+    background: none;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px); /* For Safari support */
     height: 44px;
     z-index: 300;
     position: fixed;
@@ -10,8 +12,16 @@
     right: 0;
 }
 
+/* Fallback for browsers that don't support backdrop-filter */
+@supports not (backdrop-filter: blur(8px)) {
+    .nav-container {
+        background: rgba(6, 9, 63, 0.9);
+    }
+}
+
 .nav-container nav {
-    width: 1000px;
+    max-width: 1000px;
+    width: 100%;
     margin: 0 auto;
     padding: 0 8px;
     height: 100%;
@@ -19,17 +29,37 @@
 
 nav .desktop-nav {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
     list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    gap: 20px; /* Add consistent gap between items */
+}
+
+nav .desktop-nav li {
+    display: flex;
+    align-items: center;
+    /* Remove the padding that was causing shrinking */
+    padding: 0;
 }
 
 nav .desktop-nav li a {
     color: #fff;
     text-decoration: none;
-    font-size: 14px;
-    opacity: 0.8;
+    font-size: 14px; /* Keep fixed font size */
+    opacity: 0.6;
     transition: opacity 400ms;
+    white-space: nowrap;
+}
+
+nav .desktop-nav li .link-Profile-logo {
+    opacity: 1;
+}
+
+.link-add-event {
+    cursor: pointer;
 }
 
 nav .desktop-nav li a:hover {
@@ -341,7 +371,6 @@ nav .desktop-nav li a:hover {
 @media (max-width: 1100px) {
     .nav-container nav {
         width: 100%;
-        padding: 0 32px;
     }
 }
 
@@ -410,10 +439,18 @@ nav .desktop-nav li a:hover {
         display: flex;
         width: 100%;
         justify-content: space-between;
+        align-items: center;
         list-style: none;
         z-index: 1000;
+        padding: 0;
+        margin: 0;
+        width: 100%;
     }
 
+    nav .mobile-nav li {
+        margin-left: 20px;
+        margin-right: 20px;
+    }
 
 
     nav .menu-icon-container {
@@ -422,7 +459,9 @@ nav .desktop-nav li a:hover {
         display: flex;
         align-items: center;
         cursor: pointer;
-
+        padding: 10px;  /* Creates a larger clickable area */
+        margin: -10px;  /* Offsets the padding to maintain visual positioning */
+        box-sizing: content-box;
     }
 
     nav .menu-icon {
@@ -464,6 +503,7 @@ nav .desktop-nav li a:hover {
         transition-delay: 0ms, 160ms;
         transition-duration: 200ms;
     }
+
 
     /* Bag Icon Animation */
 

@@ -1,42 +1,42 @@
-/* src/components/Header/AddEventForm/AddEventForm.css */
-
-/* Overlay for the modal */
-.modal-overlay {
+/* AddEventForm.css */
+.event-modal-overlay {  /* Changed from modal-overlay */
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.7); /* Darker semi-transparent background */
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000; /* Ensure it appears above other content */
+    z-index: 1000;
 }
 
-/* Modal content styling */
 .event-form-popup {
-    background-color: #ffffff;
-    border-radius: 10px;
-    padding: 20px;
-    width: 450px;
-    max-height: 80vh;  /* Fixed height */
-    overflow-y: auto;  /* Enable scrolling */
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 450px;
+    background: rgba(49, 49, 49, 0.5);
+    border-radius: 12px;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    padding: 25px;
+    position: relative;
+    backdrop-filter: blur(10px);
+    margin-bottom: 7%;
+    margin-right: 60%;
 }
 
-/* Custom scrollbar */
 .event-form-popup::-webkit-scrollbar {
     width: 8px;
 }
 
 .event-form-popup::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
+    background: #2d2d2d;
 }
 
 .event-form-popup::-webkit-scrollbar-thumb {
-    background: #888;
+    background: #444;
     border-radius: 4px;
 }
 
@@ -44,122 +44,136 @@
     background: #555;
 }
 
-/* Fade-in animation */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.event-form-title {  /* Changed from modal-title */
+    font-size: 24px;
+    font-weight: bold;
+    color: #e4e4e4;
+    margin-bottom: 20px;
+    text-align: center;
 }
 
-/* Modal title styling */
-.modal-title {
-    font-size: 24px; /* Larger font size for title */
-    margin-bottom: 20px; /* Space below title */
-    color: #333; /* Darker text color */
-    text-align: center; /* Centered title */
+.event-form-group {  /* Changed from form-group */
+    width: 100%;
+    margin-bottom: 20px;
 }
 
-/* Form group styling */
-.form-group {
-    margin-bottom: 20px; /* Space between form groups */
+.event-form-label {  /* Added specific class for labels */
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #e4e4e4;
 }
 
-label {
-    display: block; /* Block display for labels */
-    margin-bottom: 15px; /* Space below labels */
-    font-weight: bold; /* Bold labels */
-    color: #555; /* Darker label color */
-}
-
-input[type="text"],
-input[type="datetime-local"],
-input[type="file"],
-input[type="url"],
-select {
-    width: 100%; /* Full width inputs */
-    padding: 12px; /* Padding inside inputs */
-    border: 1px solid #ccc; /* Border for inputs */
-    border-radius: 5px; /* Rounded corners for inputs */
-    box-sizing: border-box; /* Include padding in width */
-    font-size: 16px; /* Font size for inputs */
-    transition: border-color 0.3s; /* Smooth transition for border color */
-}
-
-input[type="text"]:focus,
-input[type="datetime-local"]:focus {
-    border-color: #007bff; /* Change border color on focus */
-    outline: none; /* Remove default outline */
-}
-
-/* Add this with your other input styles */
-textarea {
+.event-form-input,
+.event-form-select,
+.event-form-textarea {  /* Added specific classes */
     width: 100%;
     padding: 12px;
-    border: 1px solid #ccc;
+    border: 1px solid #444;
     border-radius: 5px;
-    box-sizing: border-box;
     font-size: 16px;
-    transition: border-color 0.3s;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+    background-color: #2d2d2d;
+    color: #e4e4e4;
+}
+
+.event-form-input:focus,
+.event-form-select:focus,
+.event-form-textarea:focus {
+    border-color: #666;
+    outline: none;
+    background-color: #363636;
+}
+
+.event-form-input::placeholder,
+.event-form-textarea::placeholder {
+    color: #888;
+}
+
+.event-form-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23e4e4e4%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px top 50%;
+    background-size: 12px auto;
+    padding-right: 40px;
+}
+
+.event-form-textarea {
     resize: vertical;
     min-height: 100px;
     font-family: inherit;
 }
 
-textarea:focus {
-    border-color: #007bff;
-    outline: none;
+.event-form-submit-btn,
+.event-form-cancel-btn {  /* Changed from submit-btn, cancel-btn */
+    height: 35px;
+    width: 200px;
+    padding: 6px 10px;
+    border: 1px solid #444;
+    border-radius: 10px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #e4e4e4;
+    background-color: #1c1c1c;
 }
 
-/* Button styling */
-.form-actions {
-    display: flex; /* Flexbox for button alignment */
-    justify-content: space-between; /* Space between buttons */
-    margin-top: 20px; /* Space above buttons */
+.event-form-actions {  /* Changed from form-actions */
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
 }
 
-/* Common button styles */
-button {
-    padding: 12px 20px; /* Increased padding for a better look */
-    border: none; /* No border */
-    border-radius: 5px; /* Rounded corners */
-    font-size: 16px; /* Larger font size */
-    cursor: pointer; /* Pointer cursor */
-    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transition */
-    margin: 10px;
-}
-
-/* Cancel button styling */
-.cancel-btn {
-    background-color: #f44336; /* Red background for cancel button */
-    color: white; /* White text */
-}
-
-.cancel-btn:hover {
-    background-color: #d32f2f; /* Darker red on hover */
-    transform: scale(1.05); /* Slightly enlarge on hover */
-}
-
-/* Submit button styling */
-.submit-btn {
-    background-color: #007bff; /* Blue background for submit button */
-    color: white; /* White text */
-}
-
-.submit-btn:hover {
-    background-color: #0056b3; /* Darker blue on hover */
-    transform: scale(1.05); /* Slightly enlarge on hover */
-}
-
-.event-form-popup h2 {
+.event-form-success-message {  /* Changed from success-message */
+    color: #4caf50;
+    text-align: center;
     margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: rgba(76, 175, 80, 0.1);
 }
 
-.event-form-popup p {
-    margin-bottom: 15;
-    margin-bottom: 5px;
+.event-form-error-message {  /* Changed from error-message */
+    color: #f44336;
+    text-align: center;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: rgba(244, 67, 54, 0.1);
+}
+
+@media (max-width: 768px) {
+    .event-form-popup {
+        width: 95%;
+        margin: 0 auto;
+        max-height: 70vh;
+        position: relative;
+        margin-bottom: 40%;
+        margin-right: 20%;
+    }
+
+    .event-form-submit-btn,
+    .event-form-cancel-btn {
+        font-size: 14px;
+        padding: 10px 15px;
+        min-width: 100px;
+    }
+
+    .event-form-title {
+        font-size: 20px;
+    }
+
+    .event-form-input,
+    .event-form-select,
+    .event-form-textarea {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .event-form-label {
+        font-size: 14px;
+    }
 }

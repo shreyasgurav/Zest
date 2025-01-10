@@ -1,0 +1,34 @@
+.about-us-container {
+    padding: 20px;
+    margin-top: 100px;
+    font-family: 'Roboto', sans-serif;
+    background: none;
+}
+
+.about-us-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: rgb(40, 40, 40, 0.3);
+}
+
+.about-us-content h2 {
+    margin-bottom: 20px;
+    font-size: 2em;
+    color: #848383;
+    margin-bottom: 20px;
+}
+
+.about-us-content p {
+    margin-bottom: 15px;
+    line-height: 1.6;
+    font-size: 1.1em;
+    margin: 25px;
+    color: #555;
+}
+
+
+
+
