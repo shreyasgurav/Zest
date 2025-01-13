@@ -1,24 +1,39 @@
 import React, { useState, useEffect } from 'react';
-import { auth, db } from '../../../firebase';
-import { doc, getDoc } from 'firebase/firestore';
-import EditOrganizationProfile from './EditOrganizationProfile/EditOrganizationProfile';
+import { auth, db, storage } from '../../../firebase';
+import { doc, getDoc, updateDoc, collection, query, where, getDocs } from 'firebase/firestore';
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { toast } from 'react-toastify';
 import './OrganisationProfile.css';
 
 function OrganisationProfile() {
-  const [activeTab, setActiveTab] = useState('upcoming');
   const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
+  const [activeTab, setActiveTab] = useState('upcoming');
   const [orgDetails, setOrgDetails] = useState({
     name: "",
     username: "",
     category: "",
     bio: "",
     phoneNumber: "",
-    bannerImage: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAJQAlAMBIgACEQEDEQH/xAAWAAEBAQAAAAAAAAAAAAAAAAAAAQb/xAAWEAEBAQAAAAAAAAAAAAAAAAAAAUH/xAAVAQEBAAAAAAAAAAAAAAAAAAAAAv/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/ANOApIAAAAqACouAIAKgAAAAACwBAAAAAAFSACkNAAARQEAAAAAAAAAAAAVAFEUAAEAAAAAAAAAAFQAAFEUCAAAAgAAAAAAAKABUVABQEBQAQFEAAABQEUABAFRQEVFAAAABAAAAFQBQAAAQUBFQAVIoAAAAIAAAAACggLBAAUBFRQAAAAKi0ARUABQQAFRQEVFAABAAUQAVFAEUCoqAAAAAAAKgCiAAAAACgBQAEAAAAAAAAAFgAP/Z",
-    profileImage: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAJQAlAMBIgACEQEDEQH/xAAWAAEBAQAAAAAAAAAAAAAAAAAAAQb/xAAWEAEBAQAAAAAAAAAAAAAAAAAAAUH/xAAVAQEBAAAAAAAAAAAAAAAAAAAAAv/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/ANOApIAAAAqACouAIAKgAAAAACwBAAAAAAFSACkNAAARQEAAAAAAAAAAAAVAFEUAAEAAAAAAAAAAFQAAFEUCAAAAgAAAAAAAKABUVABQEBQAQFEAAABQEUABAFRQEVFAAAABAAAAFQBQAAAQUBFQAVIoAAAAIAAAAACggLBAAUBFRQAAAAKi0ARUABQQAFRQEVFAABAAUQAVFAEUCoqAAAAAAAKgCiAAAAACgBQAEAAAAAAAAAFgAP/Z"
+    bannerImage: "",
+    profileImage: ""
+  });
+  
+  const [formData, setFormData] = useState({
+    name: "",
+    username: "",
+    category: "",
+    bio: "",
+    phoneNumber: "",
+    bannerImage: "",
+    profileImage: ""
   });
 
-  // Define events data
+  const [isCheckingUsername, setIsCheckingUsername] = useState(false);
+  const [usernameError, setUsernameError] = useState("");
+  const [phoneError, setPhoneError] = useState("");
+  const [uploadProgress, setUploadProgress] = useState({ profile: 0, banner: 0 });
+
   const upcomingEvents = [
     {
       id: 1,
@@ -61,36 +76,162 @@ function OrganisationProfile() {
     const fetchOrgData = async () => {
       try {
         setIsLoading(true);
-        const unsubscribe = auth.onAuthStateChanged(async (user) => {
-          if (user) {
-            const docRef = doc(db, "organizations", user.uid);
-            const docSnap = await getDoc(docRef);
+        const user = auth.currentUser;
+        if (user) {
+          const docRef = doc(db, "organizations", user.uid);
+          const docSnap = await getDoc(docRef);
+          
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            setOrgDetails(data);
+            setFormData(data);
             
-            if (docSnap.exists()) {
-              const data = docSnap.data();
-              setOrgDetails(prevDetails => ({
-                ...prevDetails,
-                ...data
-              }));
-            } else {
-              console.log("No such organization!");
+            // If only phone number exists, go into edit mode
+            if (data.phoneNumber && !data.name && !data.username) {
+              setIsEditing(true);
             }
           }
-          setIsLoading(false);
-        });
-        
-        return unsubscribe;
+        }
+        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching organization data:", error);
         setIsLoading(false);
+        toast.error("Error loading organization data");
       }
     };
 
     fetchOrgData();
   }, []);
 
+  const checkUsernameAvailability = async (username) => {
+    if (username.length < 3) {
+      setUsernameError("Username must be at least 3 characters");
+      return false;
+    }
+
+    try {
+      const q = query(
+        collection(db, 'organizations'),
+        where("username", "==", username.toLowerCase())
+      );
+      
+      const querySnapshot = await getDocs(q);
+      return querySnapshot.empty || 
+             (querySnapshot.docs.length === 1 && 
+              querySnapshot.docs[0].id === auth.currentUser?.uid);
+    } catch (error) {
+      console.error("Error checking username:", error);
+      return false;
+    }
+  };
+
+  const handleUsernameChange = async (e) => {
+    const newUsername = e.target.value.replace(/[^a-zA-Z0-9_]/g, '').toLowerCase();
+    setFormData({ ...formData, username: newUsername });
+    setUsernameError("");
+    
+    if (newUsername.length >= 3) {
+      setIsCheckingUsername(true);
+      const isAvailable = await checkUsernameAvailability(newUsername);
+      setIsCheckingUsername(false);
+      
+      if (!isAvailable && newUsername !== orgDetails.username) {
+        setUsernameError("Username is already taken");
+      }
+    }
+  };
+
+  const handlePhoneChange = (e) => {
+    const value = e.target.value.replace(/\D/g, '').slice(0, 10);
+    setFormData({ ...formData, phoneNumber: value });
+    setPhoneError(value.length === 10 ? "" : "Phone number must be 10 digits");
+  };
+
+  const handleImageUpload = async (file, type) => {
+    if (!file) return null;
+
+    try {
+      const storageRef = ref(storage, `organizations/${auth.currentUser.uid}/${type}/${file.name}`);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      return new Promise((resolve, reject) => {
+        uploadTask.on(
+          'state_changed',
+          (snapshot) => {
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            setUploadProgress(prev => ({
+              ...prev,
+              [type.toLowerCase()]: progress
+            }));
+          },
+          (error) => {
+            console.error(`Error uploading ${type} image:`, error);
+            toast.error(`Error uploading ${type} image`);
+            reject(null);
+          },
+          async () => {
+            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+            resolve(downloadURL);
+          }
+        );
+      });
+    } catch (error) {
+      console.error(`Error uploading ${type} image:`, error);
+      return null;
+    }
+  };
+
+  const handleUpdateProfile = async () => {
+    try {
+      const user = auth.currentUser;
+      if (!user) return;
+
+      if (!formData.name.trim() || !formData.username) {
+        toast.error("Name and username are required");
+        return;
+      }
+
+      if (usernameError) {
+        toast.error("Please fix username errors");
+        return;
+      }
+
+      if (phoneError) {
+        toast.error("Please fix phone number errors");
+        return;
+      }
+
+      const orgRef = doc(db, "organizations", user.uid);
+      await updateDoc(orgRef, {
+        ...formData,
+        username: formData.username.toLowerCase(),
+        updatedAt: new Date().toISOString()
+      });
+
+      setOrgDetails(formData);
+      setIsEditing(false);
+      toast.success("Profile updated successfully!");
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      toast.error("Error updating profile");
+    }
+  };
+
+  const handleFileChange = async (e, type) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const url = await handleImageUpload(file, type);
+      if (url) {
+        setFormData(prev => ({
+          ...prev,
+          [type === 'profile' ? 'profileImage' : 'bannerImage']: url
+        }));
+      }
+    }
+  };
+
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div className="loading-spinner">Loading...</div>;
   }
 
   return (
@@ -102,6 +243,14 @@ function OrganisationProfile() {
             alt="Organization Banner"
             className="banner-image"
           />
+          {isEditing && (
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => handleFileChange(e, 'banner')}
+              className="banner-upload"
+            />
+          )}
         </div>
         <div className="org-profile-image-container">
           <img 
@@ -109,28 +258,120 @@ function OrganisationProfile() {
             alt="Organization Profile"
             className="org-profile-image"
           />
+          {isEditing && (
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => handleFileChange(e, 'profile')}
+              className="profile-upload"
+            />
+          )}
         </div>
       </div>
 
       <div className="org-details-section">
         {isEditing ? (
-          <EditOrganizationProfile 
-            orgDetails={orgDetails}
-            setOrgDetails={setOrgDetails}
-            setIsEditing={setIsEditing}
-          />
+          <div className="edit-profile-container">
+            <div className="input-group">
+              <label>Organization Name* :</label>
+              <input
+                type="text"
+                value={formData.name}
+                onChange={(e) => setFormData({...formData, name: e.target.value})}
+                className="profile-input"
+                placeholder="Enter organization name"
+                required
+              />
+            </div>
+
+            <div className="input-group">
+              <label>Username* :</label>
+              <div className="username-input-container">
+                <span className="username-at-symbol">@</span>
+                <input
+                  type="text"
+                  value={formData.username}
+                  onChange={handleUsernameChange}
+                  className="username-input"
+                  placeholder="username"
+                  required
+                />
+              </div>
+              {isCheckingUsername && <span className="checking">Checking availability...</span>}
+              {usernameError && <span className="error">{usernameError}</span>}
+            </div>
+
+            <div className="input-group">
+              <label>Phone Number:</label>
+              <input
+                type="tel"
+                value={formData.phoneNumber}
+                onChange={handlePhoneChange}
+                className="profile-input"
+                placeholder="Enter phone number"
+                maxLength="10"
+              />
+              {phoneError && <span className="error">{phoneError}</span>}
+            </div>
+
+            <div className="input-group">
+              <label>Category :</label>
+              <input
+                type="text"
+                value={formData.category}
+                onChange={(e) => setFormData({...formData, category: e.target.value})}
+                className="profile-input"
+                placeholder="Enter organization category"
+              />
+            </div>
+
+            <div className="input-group">
+              <label>Bio :</label>
+              <textarea
+                value={formData.bio}
+                onChange={(e) => setFormData({...formData, bio: e.target.value})}
+                className="profile-input bio-input"
+                placeholder="Tell us about your organization"
+                maxLength={200}
+              />
+            </div>
+
+            <div className="button-group">
+              <button 
+                className="save-cancel-button"
+                onClick={handleUpdateProfile}
+                disabled={isCheckingUsername || !!usernameError || !!phoneError}
+              >
+                Save
+              </button>
+              <button 
+                className="save-cancel-button" 
+                onClick={() => {
+                  setIsEditing(false);
+                  setFormData(orgDetails);
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
         ) : (
           <>
             <div className="org-main-info">
-              <h1 className="org-name">{orgDetails.name || "Organization Name"}</h1>
-              <span className="org-username">@{orgDetails.username || "username"}</span>
+              <h1 className="org-name">{orgDetails.name}</h1>
+              <span className="org-username">@{orgDetails.username}</span>
               {orgDetails.category && (
-                <span className="category-tag">{orgDetails.category || "catagory"}</span>
+                <span className="category-tag">{orgDetails.category}</span>
+              )}
+              {orgDetails.phoneNumber && (
+                <div className="org-phone">
+                  <span>📱 {orgDetails.phoneNumber.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3')}</span>
+                </div>
               )}
             </div>
 
             <div className="org-bio">
-              <p>{orgDetails.bio || "Bio of the organisation"}</p>
+              <p>{orgDetails.bio}</p>
             </div>
 
             <button className="edit-profile-button" onClick={() => setIsEditing(true)}>
