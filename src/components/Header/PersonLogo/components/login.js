@@ -13,35 +13,61 @@ function Login() {
   const [showOtp, setShowOtp] = useState(false);
   const [loading, setLoading] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
-  const recaptchaVerifier = useRef(null);
+  const [recaptchaReady, setRecaptchaReady] = useState(false);
+  const recaptchaContainerRef = useRef(null);
 
+  // Initialize reCAPTCHA when component mounts
   useEffect(() => {
-    const setupRecaptcha = () => {
-      if (!window.recaptchaVerifier) {
-        try {
-          window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+    let mounted = true;
+
+    const initRecaptcha = async () => {
+      try {
+        // Clean up any existing instances
+        if (window.recaptchaVerifier) {
+          window.recaptchaVerifier.clear();
+          window.recaptchaVerifier = null;
+        }
+
+        // Create new instance
+        window.recaptchaVerifier = new RecaptchaVerifier(
+          auth,
+          'recaptcha-container',
+          {
             size: 'normal',
             callback: () => {
               console.log("reCAPTCHA verified");
+              if (mounted) {
+                setRecaptchaReady(true);
+              }
             },
             'expired-callback': () => {
-              window.recaptchaVerifier = null;
-              toast.error("reCAPTCHA expired. Please refresh the page.");
+              if (mounted) {
+                setRecaptchaReady(false);
+                toast.error("reCAPTCHA expired. Please refresh.");
+              }
             }
-          });
-          window.recaptchaVerifier.render();
-        } catch (error) {
-          console.error("Error setting up reCAPTCHA:", error);
-          toast.error("Error setting up verification. Please refresh the page.");
+          }
+        );
+
+        // Render the reCAPTCHA
+        await window.recaptchaVerifier.render();
+      } catch (error) {
+        console.error("reCAPTCHA initialization error:", error);
+        if (mounted) {
+          toast.error("Error initializing verification. Please refresh.");
         }
       }
     };
 
+    // Wait for DOM to be ready
     const timer = setTimeout(() => {
-      setupRecaptcha();
+      if (document.getElementById('recaptcha-container')) {
+        initRecaptcha();
+      }
     }, 1000);
 
     return () => {
+      mounted = false;
       clearTimeout(timer);
       if (window.recaptchaVerifier) {
         window.recaptchaVerifier.clear();
@@ -59,13 +85,17 @@ function Login() {
 
   const handleSendOtp = async (e) => {
     e.preventDefault();
-    console.log("Sending OTP to:", phoneNumber);
+
+    if (!recaptchaReady) {
+      toast.error("Please wait for verification to initialize");
+      return;
+    }
 
     if (timeLeft > 0) {
       toast.error(`Please wait ${timeLeft} seconds before trying again`);
       return;
     }
-    
+
     if (!phoneNumber) {
       toast.error("Please enter a phone number");
       return;
@@ -75,47 +105,37 @@ function Login() {
     try {
       const formattedPhone = phoneNumber.startsWith('+') ? phoneNumber : `+91${phoneNumber}`;
       
-      if (window.recaptchaVerifier) {
-        window.recaptchaVerifier.clear();
+      // Get a new reCAPTCHA verifier instance if needed
+      if (!window.recaptchaVerifier) {
+        throw new Error("Verification not initialized");
       }
 
-      window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-        size: 'normal',
-        callback: () => {
-          console.log("reCAPTCHA verified");
-        },
-        'expired-callback': () => {
-          window.recaptchaVerifier = null;
-          toast.error("reCAPTCHA expired. Please try again.");
-        }
-      });
-
-      await window.recaptchaVerifier.render();
-      console.log("Sending OTP...");
-      
       const confirmationResult = await signInWithPhoneNumber(
-        auth, 
-        formattedPhone, 
+        auth,
+        formattedPhone,
         window.recaptchaVerifier
       );
-      
+
       window.confirmationResult = confirmationResult;
       setShowOtp(true);
       setTimeLeft(30);
       toast.success("OTP sent successfully!");
     } catch (error) {
       console.error("Error sending OTP:", error);
+      
       if (error.code === 'auth/too-many-requests') {
         toast.error("Too many attempts. Please try again later.");
         setTimeLeft(60);
       } else {
-        toast.error(error.message || "Error sending OTP. Please try again.");
+        toast.error("Error sending OTP. Please refresh and try again.");
       }
-      
+
+      // Reset reCAPTCHA
       if (window.recaptchaVerifier) {
         window.recaptchaVerifier.clear();
         window.recaptchaVerifier = null;
       }
+      setRecaptchaReady(false);
     } finally {
       setLoading(false);
     }
@@ -123,26 +143,25 @@ function Login() {
 
   const verifyOtp = async (e) => {
     e.preventDefault();
-    console.log("Starting OTP verification");
 
     if (!otp || otp.length !== 6) {
       toast.error("Please enter a valid 6-digit OTP");
       return;
     }
 
+    if (!window.confirmationResult) {
+      toast.error("Session expired. Please request a new OTP.");
+      setShowOtp(false);
+      return;
+    }
+
     setLoading(true);
     try {
-      console.log("Confirming OTP...");
       const result = await window.confirmationResult.confirm(otp);
-      console.log("OTP confirmed, creating organization document");
-
+      
       if (result.user) {
-        const user = result.user;
-        console.log("User authenticated:", user.uid);
-
-        // Create the organization document
         const orgData = {
-          uid: user.uid,
+          uid: result.user.uid,
           phoneNumber: phoneNumber,
           name: "",
           username: "",
@@ -163,21 +182,14 @@ function Login() {
           }
         };
 
-        try {
-          // Set the document with merge option to handle existing documents
-          await setDoc(doc(db, "Organisations", user.uid), orgData, { merge: true });
-          console.log("Organization document created successfully");
-          
-          toast.success("Login successful!");
-          window.location.href = "/#/org-profile";
-        } catch (error) {
-          console.error("Error creating organization document:", error);
-          toast.error("Error creating profile. Please try again.");
-        }
+        await setDoc(doc(db, "Organisations", result.user.uid), orgData, { merge: true });
+        toast.success("Login successful!");
+        window.location.href = "/#/fetch";
       }
     } catch (error) {
       console.error("Error verifying OTP:", error);
-      toast.error("Invalid OTP. Please try again.");
+      toast.error("Invalid OTP or session expired. Please try again.");
+      setShowOtp(false);
     } finally {
       setLoading(false);
     }
@@ -201,9 +213,11 @@ function Login() {
             <button 
               type="submit" 
               className="send-otp-button"
-              disabled={loading || timeLeft > 0}
+              disabled={loading || timeLeft > 0 || !recaptchaReady}
             >
-              {loading ? "Sending..." : timeLeft > 0 ? `Wait ${timeLeft}s` : "Send OTP"}
+              {loading ? "Sending..." : 
+               !recaptchaReady ? "Verifying..." :
+               timeLeft > 0 ? `Wait ${timeLeft}s` : "Send OTP"}
             </button>
           </div>
         </form>

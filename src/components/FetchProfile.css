@@ -1,6 +1,14 @@
+
+
+.org-profile {
+    margin-top: 100px;
+    color: white;
+}
+
+
 .org-profile-container {
     max-width: 1128px; /* LinkedIn's max width */
-    margin: 0 auto;
+    margin-top: 100px;
     padding: 0;
     color: white;
     margin-top: 50px;

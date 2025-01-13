@@ -15,6 +15,7 @@ import ContactUs from "./Footer/ContactUs/ContactUs";
 import Profile from "./Header/PersonLogo/components/profile";
 import "./App.css"
 import OrganisationProfile from "./Profiles/OrganizationProfile/OrganisationProfile";
+import FetchProfile from "./FetchProfile";
 
 function App() {
     const [events, setEvents] = useState([]);
@@ -96,6 +97,7 @@ function App() {
                             <Route path="/experiences-profile/:id" element={<ExperiencesProfile experiences={experiences} />} />
                             <Route path="/profile" element={<Profile />} />
                             <Route path="/org-profile" element={<OrganisationProfile />} />
+                            <Route path="/fetch" element={<FetchProfile />} />
 
                         </Routes>
                     </main>

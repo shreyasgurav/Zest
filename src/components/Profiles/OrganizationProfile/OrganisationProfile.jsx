@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { auth, db, storage } from '../../../firebase';
-import { doc, getDoc, updateDoc, collection, query, where, getDocs } from 'firebase/firestore';
+import { auth } from '../../../firebase';
+import { doc, getDoc, setDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { toast } from 'react-toastify';
+import { db, storage } from '../../../firebase';
 import './OrganisationProfile.css';
 
 function OrganisationProfile() {
@@ -31,7 +32,6 @@ function OrganisationProfile() {
 
   const [isCheckingUsername, setIsCheckingUsername] = useState(false);
   const [usernameError, setUsernameError] = useState("");
-  const [phoneError, setPhoneError] = useState("");
   const [uploadProgress, setUploadProgress] = useState({ profile: 0, banner: 0 });
 
   const upcomingEvents = [
@@ -78,15 +78,20 @@ function OrganisationProfile() {
         setIsLoading(true);
         const user = auth.currentUser;
         if (user) {
-          const docRef = doc(db, "organizations", user.uid);
+          const docRef = doc(db, "Organisations", user.uid);
           const docSnap = await getDoc(docRef);
           
           if (docSnap.exists()) {
             const data = docSnap.data();
-            setOrgDetails(data);
-            setFormData(data);
+            setOrgDetails({
+              ...data,
+              phoneNumber: data.phoneNumber || ''
+            });
+            setFormData({
+              ...data,
+              phoneNumber: data.phoneNumber || ''
+            });
             
-            // If only phone number exists, go into edit mode
             if (data.phoneNumber && !data.name && !data.username) {
               setIsEditing(true);
             }
@@ -99,7 +104,7 @@ function OrganisationProfile() {
         toast.error("Error loading organization data");
       }
     };
-
+  
     fetchOrgData();
   }, []);
 
@@ -111,7 +116,7 @@ function OrganisationProfile() {
 
     try {
       const q = query(
-        collection(db, 'organizations'),
+        collection(db, "Organisations"),
         where("username", "==", username.toLowerCase())
       );
       
@@ -139,12 +144,6 @@ function OrganisationProfile() {
         setUsernameError("Username is already taken");
       }
     }
-  };
-
-  const handlePhoneChange = (e) => {
-    const value = e.target.value.replace(/\D/g, '').slice(0, 10);
-    setFormData({ ...formData, phoneNumber: value });
-    setPhoneError(value.length === 10 ? "" : "Phone number must be 10 digits");
   };
 
   const handleImageUpload = async (file, type) => {
@@ -181,6 +180,19 @@ function OrganisationProfile() {
     }
   };
 
+  const handleFileChange = async (e, type) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const url = await handleImageUpload(file, type);
+      if (url) {
+        setFormData(prev => ({
+          ...prev,
+          [type === 'profile' ? 'profileImage' : 'bannerImage']: url
+        }));
+      }
+    }
+  };
+
   const handleUpdateProfile = async () => {
     try {
       const user = auth.currentUser;
@@ -196,17 +208,12 @@ function OrganisationProfile() {
         return;
       }
 
-      if (phoneError) {
-        toast.error("Please fix phone number errors");
-        return;
-      }
-
-      const orgRef = doc(db, "organizations", user.uid);
-      await updateDoc(orgRef, {
+      const orgRef = doc(db, "Organisations", user.uid);
+      await setDoc(orgRef, {
         ...formData,
         username: formData.username.toLowerCase(),
         updatedAt: new Date().toISOString()
-      });
+      }, { merge: true });
 
       setOrgDetails(formData);
       setIsEditing(false);
@@ -214,19 +221,6 @@ function OrganisationProfile() {
     } catch (error) {
       console.error("Error updating profile:", error);
       toast.error("Error updating profile");
-    }
-  };
-
-  const handleFileChange = async (e, type) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const url = await handleImageUpload(file, type);
-      if (url) {
-        setFormData(prev => ({
-          ...prev,
-          [type === 'profile' ? 'profileImage' : 'bannerImage']: url
-        }));
-      }
     }
   };
 
@@ -302,30 +296,6 @@ function OrganisationProfile() {
             </div>
 
             <div className="input-group">
-              <label>Phone Number:</label>
-              <input
-                type="tel"
-                value={formData.phoneNumber}
-                onChange={handlePhoneChange}
-                className="profile-input"
-                placeholder="Enter phone number"
-                maxLength="10"
-              />
-              {phoneError && <span className="error">{phoneError}</span>}
-            </div>
-
-            <div className="input-group">
-              <label>Category :</label>
-              <input
-                type="text"
-                value={formData.category}
-                onChange={(e) => setFormData({...formData, category: e.target.value})}
-                className="profile-input"
-                placeholder="Enter organization category"
-              />
-            </div>
-
-            <div className="input-group">
               <label>Bio :</label>
               <textarea
                 value={formData.bio}
@@ -336,11 +306,25 @@ function OrganisationProfile() {
               />
             </div>
 
+            <div className="input-group">
+              <label>Phone Number:</label>
+              <input
+                type="tel"
+                value={formData.phoneNumber || ''}
+                className="profile-input disabled-input"
+                placeholder="Phone number"
+                disabled
+              />
+              <span className="helper-text">Phone number cannot be changed</span>
+            </div>
+
+            
+
             <div className="button-group">
               <button 
                 className="save-cancel-button"
                 onClick={handleUpdateProfile}
-                disabled={isCheckingUsername || !!usernameError || !!phoneError}
+                disabled={isCheckingUsername || !!usernameError}
               >
                 Save
               </button>
