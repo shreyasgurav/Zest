@@ -10,16 +10,16 @@ const Header = ({ onEventSubmit }) => {
     const [isSearchVisible, setSearchVisible] = useState(false);
     const [isNavActive, setNavActive] = useState(false);
     const [isEventFormVisible, setEventFormVisible] = useState(false);
-    const [userEmail, setUserEmail] = useState(null);
+    const [userPhoneNumber, setUserPhoneNumber] = useState(null);
     const navigate = useNavigate();
     
     useEffect(() => {
         const auth = getAuth();
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
-                setUserEmail(user.email);
+                setUserPhoneNumber(user.phoneNumber);
             } else {
-                setUserEmail(null);
+                setUserPhoneNumber(null);
             }
         });
 
@@ -49,9 +49,9 @@ const Header = ({ onEventSubmit }) => {
         navigate('/user-profile');
     };
 
-    // Function to check if user has admin privileges
-    const isAdmin = () => {
-        return userEmail === "shrreyasgurav@gmail.com";
+    // Function to check if user is an organizer (has phone number)
+    const isOrganizer = () => {
+        return userPhoneNumber !== null && userPhoneNumber !== "";
     };
 
     return (
@@ -86,7 +86,7 @@ const Header = ({ onEventSubmit }) => {
                     <li><a href="#">Workshops</a></li>
                     <li><a href="#">Experiences</a></li>
                     <li><a href="#">Leisures</a></li>
-                    {isAdmin() && (
+                    {isOrganizer() && (
                         <li>
                             <a className="link-add-event" onClick={toggleEventForm}>List Events</a>
                         </li>

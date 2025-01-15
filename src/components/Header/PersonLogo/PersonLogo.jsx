@@ -51,7 +51,7 @@ function PersonLogo() {
         
         // Navigate based on auth method
         if (isPhoneAuth) {
-            navigate('/org-profile');
+            navigate('/organisation');
         } else {
             navigate('/profile');
         }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 import { auth, db } from "./firebase";
 import { toast } from "react-toastify";
 import "./login.css";
@@ -16,19 +16,16 @@ function Login() {
   const [recaptchaReady, setRecaptchaReady] = useState(false);
   const recaptchaContainerRef = useRef(null);
 
-  // Initialize reCAPTCHA when component mounts
   useEffect(() => {
     let mounted = true;
 
     const initRecaptcha = async () => {
       try {
-        // Clean up any existing instances
         if (window.recaptchaVerifier) {
           window.recaptchaVerifier.clear();
           window.recaptchaVerifier = null;
         }
 
-        // Create new instance
         window.recaptchaVerifier = new RecaptchaVerifier(
           auth,
           'recaptcha-container',
@@ -49,7 +46,6 @@ function Login() {
           }
         );
 
-        // Render the reCAPTCHA
         await window.recaptchaVerifier.render();
       } catch (error) {
         console.error("reCAPTCHA initialization error:", error);
@@ -59,7 +55,6 @@ function Login() {
       }
     };
 
-    // Wait for DOM to be ready
     const timer = setTimeout(() => {
       if (document.getElementById('recaptcha-container')) {
         initRecaptcha();
@@ -105,7 +100,6 @@ function Login() {
     try {
       const formattedPhone = phoneNumber.startsWith('+') ? phoneNumber : `+91${phoneNumber}`;
       
-      // Get a new reCAPTCHA verifier instance if needed
       if (!window.recaptchaVerifier) {
         throw new Error("Verification not initialized");
       }
@@ -130,7 +124,6 @@ function Login() {
         toast.error("Error sending OTP. Please refresh and try again.");
       }
 
-      // Reset reCAPTCHA
       if (window.recaptchaVerifier) {
         window.recaptchaVerifier.clear();
         window.recaptchaVerifier = null;
@@ -160,31 +153,33 @@ function Login() {
       const result = await window.confirmationResult.confirm(otp);
       
       if (result.user) {
-        const orgData = {
-          uid: result.user.uid,
-          phoneNumber: phoneNumber,
-          name: "",
-          username: "",
-          bio: "",
-          profileImage: "",
-          bannerImage: "",
-          isActive: true,
-          role: 'Organisation',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-          settings: {
-            notifications: true,
-            emailUpdates: false,
-            privacy: {
-              profileVisibility: 'public',
-              contactVisibility: 'followers'
+        // Check if organization document already exists
+        const orgDoc = await getDoc(doc(db, "Organisations", result.user.uid));
+        
+        if (!orgDoc.exists()) {
+          // Only create new document if it doesn't exist
+          const orgData = {
+            uid: result.user.uid,
+            phoneNumber: phoneNumber,
+            isActive: true,
+            role: 'Organisation',
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            settings: {
+              notifications: true,
+              emailUpdates: false,
+              privacy: {
+                profileVisibility: 'public',
+                contactVisibility: 'followers'
+              }
             }
-          }
-        };
+          };
 
-        await setDoc(doc(db, "Organisations", result.user.uid), orgData, { merge: true });
+          await setDoc(doc(db, "Organisations", result.user.uid), orgData);
+        }
+        
         toast.success("Login successful!");
-        window.location.href = "/#/fetch";
+        window.location.href = "/#/organisation";
       }
     } catch (error) {
       console.error("Error verifying OTP:", error);
