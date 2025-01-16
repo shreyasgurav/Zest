@@ -141,7 +141,7 @@
         width: 90%;
     }
 
-    .event-image {
+    .event-profile-image {
         margin-right: 0;
         max-width: 90%;
         width: 90%;
@@ -151,7 +151,7 @@
         font-size: 0;
     }
 
-    .event-image img {
+    .event-profile-image img {
         border-radius: 12px;
         vertical-align: top;
     }

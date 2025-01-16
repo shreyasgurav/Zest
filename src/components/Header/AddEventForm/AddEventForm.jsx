@@ -1,5 +1,8 @@
+// AddEventForm.jsx
 import React, { useState } from "react";
-import "./AddEventForm.css";
+import { collection, addDoc } from 'firebase/firestore';
+import { db } from '../../../firebase';
+import './AddEventForm.css';
 
 const AddEventForm = ({ onClose, onSubmit }) => {
   const [eventData, setEventData] = useState({
@@ -25,52 +28,92 @@ const AddEventForm = ({ onClose, onSubmit }) => {
     });
   };
 
-  const handleEventSubmit = async (e) => {
+
+
+
+
+
+
+
+const handleEventSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
     setSuccessMessage("");
 
     try {
-      const response = await fetch("http://localhost:5000/api/add-event", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(eventData),
+      const eventDataWithTimestamp = {
+        ...eventData,
+        created_at: new Date().toISOString(),
+        event_date_time: new Date(eventData.event_date_time).toISOString(),
+        updated_at: new Date().toISOString(),
+      };
+
+      // Changed "Events" to "events" to match your collection name
+      const eventsCollectionRef = collection(db, "events");
+      const docRef = await addDoc(eventsCollectionRef, eventDataWithTimestamp);
+
+      const typeText = 
+        eventData.event_type === 'workshop' ? 'Workshop' : 
+        eventData.event_type === 'experiences' ? 'Experiences' : 'Event';
+      
+      setSuccessMessage(`${typeText} added successfully!`);
+
+      // Reset form
+      setEventData({
+        event_type: "",
+        event_image: "",
+        event_title: "",
+        event_date_time: "",
+        event_venue: "",
+        event_registration_link: "",
+        hosting_club: "",
+        about_event: "",
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        const typeText = 
-          eventData.event_type === 'workshop' ? 'Workshop' : 
-          eventData.event_type === 'experiences' ? 'Experiences' : 'Event';
-        setSuccessMessage(`${typeText} added successfully!`);
-        if (onSubmit) onSubmit();
-        onClose();
-      } else {
-        setError(data.message || "Failed to add event");
+      if (onSubmit) {
+        onSubmit({ id: docRef.id, ...eventDataWithTimestamp });
       }
+      
+      onClose();
     } catch (error) {
-      console.error("Error:", error);
-      setError("Connection error. Please try again.");
+      console.error("Error adding document: ", error);
+      setError(error.message || "Failed to add event. Please try again.");
     } finally {
       setLoading(false);
     }
-  };
+};
+
+
+
+
+
+
+
+
 
   return (
     <div className="event-modal-overlay">
       <div className="event-form-popup">
-        <form onSubmit={handleEventSubmit}>
+        <form onSubmit={handleEventSubmit} className="event-form">
           <h2 className="event-form-title">Add Event</h2>
 
-          {successMessage && <p className="event-form-success-message">{successMessage}</p>}
-          {error && <p className="event-form-error-message">{error}</p>}
+          {successMessage && (
+            <div className="event-form-success-message">
+              <span>✓</span> {successMessage}
+            </div>
+          )}
+          
+          {error && (
+            <div className="event-form-error-message">
+              <span>⚠</span> {error}
+            </div>
+          )}
 
           <div className="event-form-group">
-            <label className="event-form-label" htmlFor="event_type">Event Type</label>
+            <label className="event-form-label" htmlFor="event_type">
+              Event Type <span className="required">*</span>
+            </label>
             <select
               id="event_type"
               name="event_type"
@@ -87,7 +130,9 @@ const AddEventForm = ({ onClose, onSubmit }) => {
           </div>
 
           <div className="event-form-group">
-            <label className="event-form-label" htmlFor="event_image">Event Profile Image Link</label>
+            <label className="event-form-label" htmlFor="event_image">
+              Event Profile Image Link
+            </label>
             <input
               type="url"
               id="event_image"
@@ -95,13 +140,14 @@ const AddEventForm = ({ onClose, onSubmit }) => {
               value={eventData.event_image}
               onChange={handleEventChange}
               placeholder="Enter image link (e.g., https://example.com/image.jpg)"
-              required
               className="event-form-input"
             />
           </div>
 
           <div className="event-form-group">
-            <label className="event-form-label" htmlFor="event_title">Event Title</label>
+            <label className="event-form-label" htmlFor="event_title">
+              Event Title <span className="required">*</span>
+            </label>
             <input
               type="text"
               id="event_title"
@@ -115,7 +161,9 @@ const AddEventForm = ({ onClose, onSubmit }) => {
           </div>
 
           <div className="event-form-group">
-            <label className="event-form-label" htmlFor="event_date_time">Event Date and Time</label>
+            <label className="event-form-label" htmlFor="event_date_time">
+              Event Date and Time <span className="required">*</span>
+            </label>
             <input
               type="datetime-local"
               id="event_date_time"
@@ -128,7 +176,9 @@ const AddEventForm = ({ onClose, onSubmit }) => {
           </div>
 
           <div className="event-form-group">
-            <label className="event-form-label" htmlFor="event_venue">Event Venue</label>
+            <label className="event-form-label" htmlFor="event_venue">
+              Event Venue <span className="required">*</span>
+            </label>
             <input
               type="text"
               id="event_venue"
@@ -142,7 +192,9 @@ const AddEventForm = ({ onClose, onSubmit }) => {
           </div>
 
           <div className="event-form-group">
-            <label className="event-form-label" htmlFor="event_registration_link">Event Registration Link</label>
+            <label className="event-form-label" htmlFor="event_registration_link">
+              Event Registration Link
+            </label>
             <input
               type="url"
               id="event_registration_link"
@@ -150,13 +202,14 @@ const AddEventForm = ({ onClose, onSubmit }) => {
               value={eventData.event_registration_link}
               onChange={handleEventChange}
               placeholder="https://example.com/register"
-              required
               className="event-form-input"
             />
           </div>
 
           <div className="event-form-group">
-            <label className="event-form-label" htmlFor="hosting_club">Hosting Club</label>
+            <label className="event-form-label" htmlFor="hosting_club">
+              Hosting Club <span className="required">*</span>
+            </label>
             <input
               type="text"
               id="hosting_club"
@@ -170,7 +223,9 @@ const AddEventForm = ({ onClose, onSubmit }) => {
           </div>
 
           <div className="event-form-group">
-            <label className="event-form-label" htmlFor="about_event">About Event</label>
+            <label className="event-form-label" htmlFor="about_event">
+              About Event <span className="required">*</span>
+            </label>
             <textarea
               id="about_event"
               name="about_event"
@@ -184,10 +239,25 @@ const AddEventForm = ({ onClose, onSubmit }) => {
           </div>
 
           <div className="event-form-actions">
-            <button type="submit" className="event-form-submit-btn" disabled={loading}>
-              {loading ? "Submitting..." : "Submit"}
+            <button 
+              type="submit" 
+              className="event-form-submit-btn" 
+              disabled={loading}
+            >
+              {loading ? (
+                <span className="loading-spinner">
+                  <span className="spinner"></span> Submitting...
+                </span>
+              ) : (
+                "Submit"
+              )}
             </button>
-            <button type="button" className="event-form-cancel-btn" onClick={onClose}>
+            <button 
+              type="button" 
+              className="event-form-cancel-btn" 
+              onClick={onClose}
+              disabled={loading}
+            >
               Cancel
             </button>
           </div>

@@ -29,7 +29,7 @@ function WorkshopProfile({ workshops }) {
     return (
         <div className="event-profile-container">
             <div className="event-content">
-            <div className="event-image">
+            <div className="event-profileimage">
                     {eventImage ? (
                         <img src={eventImage} alt={eventTitle} />
                     ) : (
