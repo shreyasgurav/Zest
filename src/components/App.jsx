@@ -13,6 +13,7 @@ import AboutUs from "./Footer/AboutUs/AboutUs";
 import OurServices from "./Footer/OurServices/OurServices";
 import ContactUs from "./Footer/ContactUs/ContactUs";
 import Profile from "./Header/PersonLogo/components/profile";
+import CreateEvent from "./Header/CreateEvent/CreateEvent";
 import "./App.css"
 import OrganisationProfile from "./Profiles/OrganizationProfile/OrganisationProfile";
 
@@ -96,7 +97,7 @@ function App() {
                             <Route path="/experiences-profile/:id" element={<ExperiencesProfile experiences={experiences} />} />
                             <Route path="/profile" element={<Profile />} />
                             <Route path="/organisation" element={<OrganisationProfile />} />
-
+                            <Route path="/create" element={<CreateEvent />} />
                         </Routes>
                     </main>
                     <Footer />

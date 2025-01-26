@@ -1,12 +1,44 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./eventbox.css";
 import { useNavigate } from "react-router-dom";
+import { db } from "../../../Header/PersonLogo/components/firebase";
+import { deleteDoc, doc, getDoc } from "firebase/firestore";
+import { FaTrash } from 'react-icons/fa';
+import { getAuth } from 'firebase/auth';
 
-function Eventbox({ event }) {
+function Eventbox({ event, onDelete }) {
     const navigate = useNavigate();
+    const auth = getAuth();
+    const currentUser = auth.currentUser;
+
+    // Simple check: is the current user the creator of this event?
+    const isEventCreator = currentUser && currentUser.uid === event.organizationId;
+    
+    console.log({
+        currentUserId: currentUser?.uid,
+        eventCreatorId: event.organizationId,
+        isMatch: isEventCreator
+    });
 
     const handleSelect = () => {
         navigate(`/event-profile/${event.id}`);
+    };
+
+    const handleDelete = async (e) => {
+        e.stopPropagation();
+        if (!isEventCreator) return; // Only allow if it's their event
+
+        try {
+            if (window.confirm("Are you sure you want to delete this event?")) {
+                await deleteDoc(doc(db, "events", event.id));
+                if (onDelete) {
+                    onDelete(event.id);
+                }
+            }
+        } catch (error) {
+            console.error("Error deleting event:", error);
+            alert("Failed to delete event. Please try again.");
+        }
     };
 
     const LocationIcon = () => (
@@ -27,10 +59,22 @@ function Eventbox({ event }) {
     return (
         <div className="event-box-container" onClick={handleSelect}>
             <div className="event-box">
-                {event.eventImage ? (
-                    <img src={event.eventImage} alt="Event" />
+                {/* Only show delete button if current user created this event */}
+                {isEventCreator && (
+                    <div className="delete-button" onClick={handleDelete}>
+                        <FaTrash />
+                    </div>
+                )}
+                {event.event_image ? (
+                    <img 
+                        src={event.event_image} 
+                        alt={event.eventTitle}
+                        className="event-image"
+                    />
                 ) : (
-                    <img src="/path/to/placeholder.jpg" alt="Placeholder" />
+                    <div className="event-image-placeholder">
+                        No Image Available
+                    </div>
                 )}
 
                 <div className="event-info">
@@ -39,7 +83,7 @@ function Eventbox({ event }) {
                     <div className="datetime-container">
                         <p>{new Date(event.eventDateTime).toLocaleDateString()}</p>
                         <div className="datetime-divider"></div>
-                        <p>{formatTime(event.eventDateTime)}</p>
+                        <p>{new Date(event.eventDateTime).toLocaleTimeString()}</p>
                     </div>
                     <div className="venue-container">
                         <LocationIcon />

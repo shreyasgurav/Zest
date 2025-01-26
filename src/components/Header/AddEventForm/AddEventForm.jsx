@@ -1,266 +1,314 @@
-// AddEventForm.jsx
-import React, { useState } from "react";
-import { collection, addDoc } from 'firebase/firestore';
-import { db } from '../../../firebase';
-import './AddEventForm.css';
+import React, { useState, useEffect } from "react";
+import { db, storage } from "../PersonLogo/components/firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getAuth } from "firebase/auth";
+import "./AddEventForm.css"; // Make sure to import the CSS
 
-const AddEventForm = ({ onClose, onSubmit }) => {
-  const [eventData, setEventData] = useState({
-    event_type: "",
-    event_image: "",
-    event_title: "",
-    event_date_time: "",
-    event_venue: "",
-    event_registration_link: "",
-    hosting_club: "",
-    about_event: "",
-  });
-
+const AddEventForm = ({ onClose }) => {
+  const [eventTitle, setEventTitle] = useState("");
+  const [eventType, setEventType] = useState("event"); // Default to "event"
+  const [eventDateTime, setEventDateTime] = useState("");
+  const [eventVenue, setEventVenue] = useState("");
+  const [registrationLink, setRegistrationLink] = useState("");
+  const [aboutEvent, setAboutEvent] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
+  const [message, setMessage] = useState("");
+  const [orgName, setOrgName] = useState("");
+  const [eventImage, setEventImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [eventCategory, setEventCategory] = useState("");
+  const [eventLanguages, setEventLanguages] = useState("");
+  const [eventDuration, setEventDuration] = useState("");
+  const [eventAgeLimit, setEventAgeLimit] = useState("");
 
-  const handleEventChange = (e) => {
-    const { name, value } = e.target;
-    setEventData({
-      ...eventData,
-      [name]: value,
-    });
+  // Fetch organization name from localStorage on component mount
+  useEffect(() => {
+    const storedOrgName = localStorage.getItem('orgName');
+    if (storedOrgName) {
+      setOrgName(storedOrgName);
+    }
+  }, []);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 5242880) { // 5MB limit
+        setMessage("Image size should be less than 5MB");
+        return;
+      }
+      setEventImage(file);
+      // Create preview URL
+      const previewUrl = URL.createObjectURL(file);
+      setImagePreview(previewUrl);
+    }
   };
 
+  const uploadImage = async (file) => {
+    if (!file) return null;
+    
+    const fileExtension = file.name.split('.').pop();
+    const fileName = `events/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExtension}`;
+    const storageRef = ref(storage, fileName);
+    
+    await uploadBytes(storageRef, file);
+    const downloadURL = await getDownloadURL(storageRef);
+    return downloadURL;
+  };
 
-
-
-
-
-
-
-const handleEventSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!eventTitle.trim() || !eventType || !eventDateTime || !eventVenue) {
+      setMessage("Please fill in all required fields");
+      return;
+    }
+
     setLoading(true);
-    setError("");
-    setSuccessMessage("");
+    setMessage("");
 
     try {
-      const eventDataWithTimestamp = {
-        ...eventData,
-        created_at: new Date().toISOString(),
-        event_date_time: new Date(eventData.event_date_time).toISOString(),
-        updated_at: new Date().toISOString(),
+      const auth = getAuth();
+      const user = auth.currentUser;
+      
+      console.log("Current user:", user); // Debug log
+      
+      if (!user) {
+        throw new Error("User not authenticated");
+      }
+
+      let imageUrl = null;
+      if (eventImage) {
+        imageUrl = await uploadImage(eventImage);
+      }
+
+      const eventData = {
+        title: eventTitle.trim(),
+        event_type: eventType,
+        event_category: eventCategory,
+        hosting_club: orgName,
+        event_date_time: eventDateTime,
+        event_venue: eventVenue,
+        event_registration_link: registrationLink,
+        about_event: aboutEvent,
+        event_image: imageUrl,
+        event_languages: eventLanguages,
+        event_duration: eventDuration,
+        event_age_limit: eventAgeLimit,
+        createdAt: serverTimestamp(),
+        organizationId: user.uid,  // Make sure this matches what we check in EventBox
       };
 
-      // Changed "Events" to "events" to match your collection name
+      console.log("Saving event data:", eventData); // Debug log
+
       const eventsCollectionRef = collection(db, "events");
-      const docRef = await addDoc(eventsCollectionRef, eventDataWithTimestamp);
-
-      const typeText = 
-        eventData.event_type === 'workshop' ? 'Workshop' : 
-        eventData.event_type === 'experiences' ? 'Experiences' : 'Event';
+      await addDoc(eventsCollectionRef, eventData);
       
-      setSuccessMessage(`${typeText} added successfully!`);
-
-      // Reset form
-      setEventData({
-        event_type: "",
-        event_image: "",
-        event_title: "",
-        event_date_time: "",
-        event_venue: "",
-        event_registration_link: "",
-        hosting_club: "",
-        about_event: "",
-      });
-
-      if (onSubmit) {
-        onSubmit({ id: docRef.id, ...eventDataWithTimestamp });
-      }
-      
-      onClose();
+      setMessage("Event added successfully!");
+      setTimeout(() => onClose(), 2000);
     } catch (error) {
-      console.error("Error adding document: ", error);
-      setError(error.message || "Failed to add event. Please try again.");
+      console.error("Error adding event:", error);
+      setMessage(`Failed to add event: ${error.message}`);
     } finally {
       setLoading(false);
     }
-};
-
-
-
-
-
-
-
-
+  };
 
   return (
     <div className="event-modal-overlay">
       <div className="event-form-popup">
-        <form onSubmit={handleEventSubmit} className="event-form">
-          <h2 className="event-form-title">Add Event</h2>
+        <h2 className="event-form-title">Add Event</h2>
 
-          {successMessage && (
-            <div className="event-form-success-message">
-              <span>✓</span> {successMessage}
-            </div>
-          )}
-          
-          {error && (
-            <div className="event-form-error-message">
-              <span>⚠</span> {error}
-            </div>
-          )}
+        <div className="event-form-group">
+            <label className="event-form-label">Event Image:</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="event-form-input"
+              disabled={loading}
+            />
+            {imagePreview && (
+              <div className="image-preview">
+                <img 
+                  src={imagePreview} 
+                  alt="Preview" 
+                  style={{ 
+                    maxWidth: '200px', 
+                    maxHeight: '200px', 
+                    objectFit: 'cover',
+                    marginTop: '10px',
+                    borderRadius: '8px'
+                  }} 
+                />
+              </div>
+            )}
+          </div>
+
+        <form onSubmit={handleSubmit}>
+          <div className="event-form-group">
+            <label className="event-form-label">Event Title:</label>
+            <input
+              type="text"
+              value={eventTitle}
+              onChange={(e) => setEventTitle(e.target.value)}
+              className="event-form-input"
+              placeholder="Enter event title"
+              disabled={loading}
+            />
+          </div>
 
           <div className="event-form-group">
-            <label className="event-form-label" htmlFor="event_type">
-              Event Type <span className="required">*</span>
-            </label>
+            <label className="event-form-label">Event Type:</label>
             <select
-              id="event_type"
-              name="event_type"
-              value={eventData.event_type}
-              onChange={handleEventChange}
-              required
+              value={eventType}
+              onChange={(e) => setEventType(e.target.value)}
               className="event-form-select"
+              disabled={loading}
             >
-              <option value="">Select Event Type</option>
               <option value="event">Event</option>
               <option value="workshop">Workshop</option>
-              <option value="experiences">Experiences</option>
+              <option value="experiences">Experience</option>
             </select>
           </div>
 
           <div className="event-form-group">
-            <label className="event-form-label" htmlFor="event_image">
-              Event Profile Image Link
-            </label>
-            <input
-              type="url"
-              id="event_image"
-              name="event_image"
-              value={eventData.event_image}
-              onChange={handleEventChange}
-              placeholder="Enter image link (e.g., https://example.com/image.jpg)"
-              className="event-form-input"
-            />
-          </div>
-
-          <div className="event-form-group">
-            <label className="event-form-label" htmlFor="event_title">
-              Event Title <span className="required">*</span>
-            </label>
+            <label className="event-form-label">Hosting Organization:</label>
             <input
               type="text"
-              id="event_title"
-              name="event_title"
-              value={eventData.event_title}
-              onChange={handleEventChange}
-              placeholder="Enter event title"
-              required
+              value={orgName}
               className="event-form-input"
+              disabled={true}
+              placeholder="Complete your organization profile first"
             />
           </div>
 
           <div className="event-form-group">
-            <label className="event-form-label" htmlFor="event_date_time">
-              Event Date and Time <span className="required">*</span>
-            </label>
+            <label className="event-form-label">Date and Time:</label>
             <input
               type="datetime-local"
-              id="event_date_time"
-              name="event_date_time"
-              value={eventData.event_date_time}
-              onChange={handleEventChange}
-              required
+              value={eventDateTime}
+              onChange={(e) => setEventDateTime(e.target.value)}
               className="event-form-input"
+              disabled={loading}
             />
           </div>
 
           <div className="event-form-group">
-            <label className="event-form-label" htmlFor="event_venue">
-              Event Venue <span className="required">*</span>
-            </label>
+            <label className="event-form-label">Venue:</label>
             <input
               type="text"
-              id="event_venue"
-              name="event_venue"
-              value={eventData.event_venue}
-              onChange={handleEventChange}
-              placeholder="Enter event venue"
-              required
+              value={eventVenue}
+              onChange={(e) => setEventVenue(e.target.value)}
               className="event-form-input"
+              placeholder="Enter event venue"
+              disabled={loading}
             />
           </div>
 
           <div className="event-form-group">
-            <label className="event-form-label" htmlFor="event_registration_link">
-              Event Registration Link
-            </label>
+            <label className="event-form-label">Registration Link:</label>
             <input
               type="url"
-              id="event_registration_link"
-              name="event_registration_link"
-              value={eventData.event_registration_link}
-              onChange={handleEventChange}
-              placeholder="https://example.com/register"
+              value={registrationLink}
+              onChange={(e) => setRegistrationLink(e.target.value)}
               className="event-form-input"
+              placeholder="Enter registration link"
+              disabled={loading}
             />
           </div>
 
           <div className="event-form-group">
-            <label className="event-form-label" htmlFor="hosting_club">
-              Hosting Club <span className="required">*</span>
-            </label>
+            <label className="event-form-label">About Event:</label>
+            <textarea
+              value={aboutEvent}
+              onChange={(e) => setAboutEvent(e.target.value)}
+              className="event-form-textarea"
+              placeholder="Enter event description"
+              rows="4"
+              disabled={loading}
+            />
+          </div>
+
+          <div className="event-form-group">
+            <label className="event-form-label">Event Category:</label>
             <input
               type="text"
-              id="hosting_club"
-              name="hosting_club"
-              value={eventData.hosting_club}
-              onChange={handleEventChange}
-              placeholder="Enter hosting club"
-              required
+              value={eventCategory}
+              onChange={(e) => setEventCategory(e.target.value)}
               className="event-form-input"
+              placeholder="e.g., Music Show, Speaker Session, Comedy Show"
+              required
             />
           </div>
 
           <div className="event-form-group">
-            <label className="event-form-label" htmlFor="about_event">
-              About Event <span className="required">*</span>
-            </label>
-            <textarea
-              id="about_event"
-              name="about_event"
-              value={eventData.about_event}
-              onChange={handleEventChange}
-              placeholder="Write a brief description of the event..."
-              rows="4"
+            <label className="event-form-label">Event Languages:</label>
+            <input
+              type="text"
+              value={eventLanguages}
+              onChange={(e) => setEventLanguages(e.target.value)}
+              className="event-form-input"
+              placeholder="e.g., Hindi, Punjabi"
               required
-              className="event-form-textarea"
-            ></textarea>
+            />
           </div>
 
+          <div className="event-form-group">
+            <label className="event-form-label">Event Duration:</label>
+            <input
+              type="text"
+              value={eventDuration}
+              onChange={(e) => setEventDuration(e.target.value)}
+              className="event-form-input"
+              placeholder="e.g., 4 Hours"
+              required
+            />
+          </div>
+
+          <div className="event-form-group">
+            <label className="event-form-label">Age Requirement:</label>
+            <input
+              type="text"
+              value={eventAgeLimit}
+              onChange={(e) => setEventAgeLimit(e.target.value)}
+              className="event-form-input"
+              placeholder="e.g., 16 yrs & above"
+              required
+            />
+          </div>
+
+          
+
           <div className="event-form-actions">
-            <button 
-              type="submit" 
-              className="event-form-submit-btn" 
-              disabled={loading}
+            <button
+              type="submit"
+              className="event-form-submit-btn"
+              disabled={loading || !orgName}
             >
-              {loading ? (
-                <span className="loading-spinner">
-                  <span className="spinner"></span> Submitting...
-                </span>
-              ) : (
-                "Submit"
-              )}
+              {loading ? "Adding..." : "Add Event"}
             </button>
-            <button 
-              type="button" 
-              className="event-form-cancel-btn" 
+            <button
+              type="button"
+              className="event-form-cancel-btn"
               onClick={onClose}
               disabled={loading}
             >
               Cancel
             </button>
           </div>
+
+          {message && (
+            <div 
+              className={
+                message.includes("success") 
+                  ? "event-form-success-message" 
+                  : "event-form-error-message"
+              }
+            >
+              {message}
+            </div>
+          )}
         </form>
       </div>
     </div>

@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { db } from "../../Header/PersonLogo/components/firebase";
+import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import useEmblaCarousel from "embla-carousel-react";
 import { DotButton, useDotButton } from "./EmblaCarouselDotButton";
 import {
@@ -9,7 +11,42 @@ import {
 import Eventbox from "./EventBox/eventbox";
 import "./EventSection.css";
 
-const EventSection = ({ events = [] }) => {
+const EventSection = () => {
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const eventsCollectionRef = collection(db, "events");
+        const q = query(eventsCollectionRef, orderBy("createdAt", "desc"));
+        const querySnapshot = await getDocs(q);
+        
+        const eventsData = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          eventTitle: doc.data().title,
+          eventType: doc.data().event_type,
+          hostingClub: doc.data().hosting_club,
+          eventDateTime: doc.data().event_date_time,
+          eventVenue: doc.data().event_venue,
+          eventRegistrationLink: doc.data().event_registration_link,
+          aboutEvent: doc.data().about_event,
+          event_image: doc.data().event_image,
+          organizationId: doc.data().organizationId,
+        }));
+
+        console.log("Fetched events with org IDs:", eventsData);
+        setEvents(eventsData);
+      } catch (error) {
+        console.error("Error fetching events:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: "start",
     containScroll: "trimSnaps",
@@ -19,13 +56,16 @@ const EventSection = ({ events = [] }) => {
   });
 
   const { selectedIndex, scrollSnaps, onDotButtonClick } = useDotButton(emblaApi);
-
   const {
     prevBtnDisabled,
     nextBtnDisabled,
     onPrevButtonClick,
     onNextButtonClick,
   } = usePrevNextButtons(emblaApi);
+
+  if (loading) {
+    return <div className="loading-message">Loading events...</div>;
+  }
 
   return (
     <div className="event-section">
@@ -41,11 +81,11 @@ const EventSection = ({ events = [] }) => {
         <section className="embla">
           <div className="embla__viewport" ref={emblaRef}>
             <div className="embla__container">
-             {events.map((event) => (
+              {events.map((event) => (
                 <div className="embla__slide" key={event.id}>
-                 <Eventbox event={event} />
+                  <Eventbox event={event} />
                 </div>
-))}
+              ))}
             </div>
           </div>
 

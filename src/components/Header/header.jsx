@@ -88,7 +88,7 @@ const Header = ({ onEventSubmit }) => {
                     <li><a href="#">Leisures</a></li>
                     {isOrganizer() && (
                         <li>
-                            <a className="link-add-event" onClick={toggleEventForm}>List Events</a>
+                            <a className="link-add-event" href='./#/create'>List Events</a>
                         </li>
                     )}
                     <li>
