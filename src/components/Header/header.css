@@ -59,6 +59,8 @@ nav .desktop-nav li .link-Profile-logo {
 }
 
 .link-add-event {
+    font-weight: 1000;
+    font-size: large;
     cursor: pointer;
 }
 

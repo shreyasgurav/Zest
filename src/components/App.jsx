@@ -13,9 +13,12 @@ import AboutUs from "./Footer/AboutUs/AboutUs";
 import OurServices from "./Footer/OurServices/OurServices";
 import ContactUs from "./Footer/ContactUs/ContactUs";
 import Profile from "./Header/PersonLogo/components/profile";
-import CreateEvent from "./Header/CreateEvent/CreateEvent";
+import CreateEvent from "./Create/CreateEvents/CreateEvent";
+import BookingFlow from "./Booking/BookingFlow";
+import EventTypeSelection from "./Create/CreateType/CreateType";
 import "./App.css"
 import OrganisationProfile from "./Profiles/OrganizationProfile/OrganisationProfile";
+import CreateType from './Create/CreateType/CreateType';
 
 function App() {
     const [events, setEvents] = useState([]);
@@ -97,7 +100,11 @@ function App() {
                             <Route path="/experiences-profile/:id" element={<ExperiencesProfile experiences={experiences} />} />
                             <Route path="/profile" element={<Profile />} />
                             <Route path="/organisation" element={<OrganisationProfile />} />
-                            <Route path="/create" element={<CreateEvent />} />
+                            <Route path="/create-event" element={<CreateEvent />} />
+                            <Route path="/create" element={<EventTypeSelection />} />
+                            <Route path="/create-type" element={<CreateType />} />
+
+                            <Route path="/book-event/:eventId" element={<BookingFlow />} />
                         </Routes>
                     </main>
                     <Footer />

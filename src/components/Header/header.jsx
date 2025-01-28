@@ -1,7 +1,6 @@
 import logo from './header-images/zest-logo.png';
 import React, { useState, useEffect } from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import AddEventForm from './AddEventForm/AddEventForm';
 import PersonLogo from "./PersonLogo/PersonLogo";
 import "./header.css";
 import { useNavigate, Link } from 'react-router-dom';
@@ -88,7 +87,7 @@ const Header = ({ onEventSubmit }) => {
                     <li><a href="#">Leisures</a></li>
                     {isOrganizer() && (
                         <li>
-                            <a className="link-add-event" href='./#/create'>List Events</a>
+                            <a className="link-add-event" href='./#/create'>Create</a>
                         </li>
                     )}
                     <li>
@@ -100,9 +99,7 @@ const Header = ({ onEventSubmit }) => {
                 </ul>
             </nav>
 
-            {isEventFormVisible && (
-                <AddEventForm onClose={toggleEventForm} onSubmit={onEventSubmit} />
-            )}
+            
         </div>
     );
 };

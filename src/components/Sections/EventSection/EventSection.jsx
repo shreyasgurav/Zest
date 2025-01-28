@@ -8,8 +8,9 @@ import {
   NextButton,
   usePrevNextButtons,
 } from "./EmblaCarouselArrowButtons";
-import Eventbox from "./EventBox/eventbox";
+import Eventbox from "./EventBox/EventBox";
 import "./EventSection.css";
+import EventSectionSkeleton from './EventSectionSkeleton';
 
 const EventSection = () => {
   const [events, setEvents] = useState([]);
@@ -64,7 +65,7 @@ const EventSection = () => {
   } = usePrevNextButtons(emblaApi);
 
   if (loading) {
-    return <div className="loading-message">Loading events...</div>;
+    return <EventSectionSkeleton />;
   }
 
   return (

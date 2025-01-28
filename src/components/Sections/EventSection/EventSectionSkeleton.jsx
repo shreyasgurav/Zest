@@ -1,6 +1,6 @@
 import React from 'react';
 import './EventSection.css';
-import './eventbox.css';
+import '/Users/shreyasgurav/Documents/Zest/Zest/zest-frontend/src/components/Sections/EventSection/EventBox/EventBox.css';
 
 const EventBoxSkeleton = () => {
   return (
@@ -26,24 +26,21 @@ const EventBoxSkeleton = () => {
 
 const EventSectionSkeleton = () => {
   return (
-    <div className="event-section">
-      <div className="event-section-heading">
-        <h1 className="upcoming-events-heading">Upcoming Events</h1>
-        <a href="/all-events" className="see-all-link">
-          See All
-        </a>
+    <div className="event-section skeleton-section">
+      <div className="upcoming-events-heading">
+        <div className="skeleton-line skeleton-heading"></div>
       </div>
-      <section className="embla">
+      <div className="embla">
         <div className="embla__viewport">
           <div className="embla__container">
-            {[...Array(3)].map((_, index) => (
-              <div className="embla__slide" key={index}>
+            {[1, 2, 3, 4].map((index) => (
+              <div key={index} className="embla__slide" style={{ opacity: 1 - (index * 0.2) }}>
                 <EventBoxSkeleton />
               </div>
             ))}
           </div>
         </div>
-      </section>
+      </div>
     </div>
   );
 };

@@ -1,24 +1,31 @@
 import React, { useState, useEffect } from "react";
-import "./eventbox.css";
+import "./EventBox.css";
 import { useNavigate } from "react-router-dom";
 import { db } from "../../../Header/PersonLogo/components/firebase";
 import { deleteDoc, doc, getDoc } from "firebase/firestore";
 import { FaTrash } from 'react-icons/fa';
 import { getAuth } from 'firebase/auth';
 
-function Eventbox({ event, onDelete }) {
+function EventBox({ event, onDelete }) {
     const navigate = useNavigate();
     const auth = getAuth();
     const currentUser = auth.currentUser;
 
     // Simple check: is the current user the creator of this event?
-    const isEventCreator = currentUser && currentUser.uid === event.organizationId;
+    const isEventCreator = currentUser && currentUser.uid === event?.organizationId;
     
     console.log({
         currentUserId: currentUser?.uid,
-        eventCreatorId: event.organizationId,
+        eventCreatorId: event?.organizationId,
         isMatch: isEventCreator
     });
+
+    // Check if time_slots is defined and is an array
+    const timeSlots = Array.isArray(event?.time_slots) ? event.time_slots : [];
+    
+    // Get the first date and determine if there are multiple dates
+    const firstDate = timeSlots.length > 0 ? timeSlots[0].date : "No Date Available";
+    const dateText = timeSlots.length > 1 ? `${firstDate} onwards` : firstDate;
 
     const handleSelect = () => {
         navigate(`/event-profile/${event.id}`);
@@ -81,9 +88,7 @@ function Eventbox({ event, onDelete }) {
                     <p className="hosting-club">By {event.hostingClub}</p>
                     <h3>{event.eventTitle}</h3>
                     <div className="datetime-container">
-                        <p>{new Date(event.eventDateTime).toLocaleDateString()}</p>
-                        <div className="datetime-divider"></div>
-                        <p>{new Date(event.eventDateTime).toLocaleTimeString()}</p>
+                        <p>{dateText}</p>
                     </div>
                     <div className="venue-container">
                         <LocationIcon />
@@ -95,4 +100,4 @@ function Eventbox({ event, onDelete }) {
     );
 }
 
-export default Eventbox;
+export default EventBox;

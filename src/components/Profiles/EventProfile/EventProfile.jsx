@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '../../Header/PersonLogo/components/firebase'; // Adjust path as needed
 import { doc, getDoc } from 'firebase/firestore';
 import './EventProfile.css';
@@ -7,6 +7,7 @@ import { FaBookmark, FaCalendarAlt, FaMapMarkerAlt, FaLanguage, FaClock, FaUsers
 
 function EventProfile() {
     const { id } = useParams();
+    const navigate = useNavigate();
     const [event, setEvent] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -34,7 +35,8 @@ function EventProfile() {
                         event_category: data.event_category,
                         event_languages: data.event_languages,
                         event_duration: data.event_duration,
-                        event_age_limit: data.event_age_limit
+                        event_age_limit: data.event_age_limit,
+                        time_slots: data.time_slots
                     });
                 } else {
                     setError("Event not found");
@@ -58,7 +60,21 @@ function EventProfile() {
         return <div className="error-message">{error || "Event not found"}</div>;
     }
 
-    const { eventImage, eventTitle, type, eventDateTime, eventVenue, eventRegistrationLink, hostingClub, aboutEvent } = event;
+    const { eventImage, eventTitle, type, eventDateTime, eventVenue, eventRegistrationLink, hostingClub, aboutEvent, time_slots } = event;
+
+    const handleBookNow = () => {
+        navigate(`/book-event/${id}`);
+    };
+
+    // Format all dates for display
+    const formattedDates = Array.isArray(time_slots) ? time_slots.map(slot => (
+        <div key={slot.date}>
+            <p>{slot.date}</p> {/* Show only the date */}
+        </div>
+    )) : null;
+
+    // Determine the date text for the profile
+    const dateText = time_slots.length > 1 ? `${time_slots[0].date} onwards` : time_slots[0]?.date;
 
     return (
         <div className="event-profile-container">
@@ -78,7 +94,7 @@ function EventProfile() {
                             <FaBookmark /> {event.event_category}
                         </div>
                         <div className="event-detail">
-                            <FaCalendarAlt /> {new Date(eventDateTime).toLocaleString()}
+                            <FaCalendarAlt /> {dateText}
                         </div>
                         <div className="event-detail">
                             <FaMapMarkerAlt /> {eventVenue}
@@ -86,7 +102,7 @@ function EventProfile() {
                         <div className="event-price">
                             <button 
                                 className="book-now-button" 
-                                onClick={() => window.open(eventRegistrationLink, "_blank")}
+                                onClick={handleBookNow}
                                 disabled={!eventRegistrationLink}
                             >
                                 Book Now
@@ -135,6 +151,11 @@ function EventProfile() {
                         </div>
                     </div>
                 </div>
+            </div>
+            <div className="event-dates">
+                <h3>Event Dates</h3>
+                <p>{dateText}</p> {/* Show date with "onwards" if multiple dates */}
+                {formattedDates}
             </div>
         </div>
     );
