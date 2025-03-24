@@ -1,12 +1,74 @@
-import React from "react";
-import "./eventbox.css";
+// EventBox.jsx
+import React, { useEffect } from "react";
+import "./EventBox.css";
 import { useNavigate } from "react-router-dom";
+import { db } from "../../../firebase";
+import { deleteDoc, doc } from "firebase/firestore";
+import { FaTrash } from 'react-icons/fa';
+import { getAuth } from 'firebase/auth';
 
-function Eventbox({ event }) {
+function EventBox({ event, onDelete }) {
     const navigate = useNavigate();
+    const auth = getAuth();
+    const currentUser = auth.currentUser;
+    const isEventCreator = currentUser && currentUser.uid === event?.organizationId;
+
+    useEffect(() => {
+        // Check if event has passed
+        const checkEventTime = () => {
+            if (!event?.event_date || !event?.event_time) return;
+
+            const eventDateTime = new Date(`${event.event_date}T${event.event_time}`);
+            const now = new Date();
+
+            if (eventDateTime < now) {
+                handleEventDeletion();
+            }
+        };
+
+        checkEventTime();
+        // Check every minute
+        const interval = setInterval(checkEventTime, 60000);
+
+        return () => clearInterval(interval);
+    }, [event]);
+
+    const handleEventDeletion = async () => {
+        try {
+            await deleteDoc(doc(db, "events", event.id));
+            if (onDelete) {
+                onDelete(event.id);
+            }
+        } catch (error) {
+            console.error("Error deleting expired event:", error);
+        }
+    };
+
+    const truncateText = (text, wordLimit) => {
+        if (!text) return "";
+        const words = text.trim().split(/\s+/);
+        if (words.length > wordLimit) {
+            return words.slice(0, wordLimit).join(' ') + '...';
+        }
+        return text;
+    };
 
     const handleSelect = () => {
         navigate(`/event-profile/${event.id}`);
+    };
+
+    const handleManualDelete = async (e) => {
+        e.stopPropagation();
+        if (!isEventCreator) return;
+
+        try {
+            if (window.confirm("Are you sure you want to delete this event?")) {
+                await handleEventDeletion();
+            }
+        } catch (error) {
+            console.error("Error deleting event:", error);
+            alert("Failed to delete event. Please try again.");
+        }
     };
 
     const LocationIcon = () => (
@@ -15,35 +77,72 @@ function Eventbox({ event }) {
         </svg>
     );
 
-    const formatTime = (dateTime) => {
-        const date = new Date(dateTime);
-        return date.toLocaleTimeString('en-US', {
-            hour: 'numeric',
-            minute: '2-digit',
-            hour12: true
-        }).toUpperCase(); // Makes AM/PM uppercase
+    const formatDate = (dateString) => {
+        if (!dateString) return "No Date Available";
+        
+        try {
+            const [year, month, day] = dateString.split('-');
+            const date = new Date(year, month - 1, day);
+            
+            if (isNaN(date.getTime())) {
+                return "Invalid Date";
+            }
+            
+            return date.toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        } catch (error) {
+            console.error("Error formatting date:", error);
+            return "Date Format Error";
+        }
     };
+
+    const formatTime = (timeString) => {
+        if (!timeString) return "";
+        return new Date(`2000/01/01 ${timeString}`).toLocaleTimeString('en-US', {
+            hour: 'numeric',
+            minute: 'numeric',
+            hour12: true
+        });
+    };
+
+    const formattedDate = formatDate(event?.event_date);
+    const formattedTime = formatTime(event?.event_time);
+    const dateTimeDisplay = formattedTime ? `${formattedDate}` : formattedDate;
 
     return (
         <div className="event-box-container" onClick={handleSelect}>
             <div className="event-box">
-                {event.eventImage ? (
-                    <img src={event.eventImage} alt="Event" />
+                {isEventCreator && (
+                    <div className="delete-button" onClick={handleManualDelete}>
+                        <FaTrash />
+                    </div>
+                )}
+                {event.event_image ? (
+                    <img 
+                        src={event.event_image} 
+                        alt={event.eventTitle}
+                        className="event-image"
+                    />
                 ) : (
-                    <img src="/path/to/placeholder.jpg" alt="Placeholder" />
+                    <div className="event-image-placeholder">
+                        No Image Available
+                    </div>
                 )}
 
                 <div className="event-info">
-                    <p className="hosting-club">By {event.hostingClub}</p>
-                    <h3>{event.eventTitle}</h3>
+                    <h3>{truncateText(event.title || event.eventTitle, 20)}</h3>
+                    
                     <div className="datetime-container">
-                        <p>{new Date(event.eventDateTime).toLocaleDateString()}</p>
-                        <div className="datetime-divider"></div>
-                        <p>{formatTime(event.eventDateTime)}</p>
+                        <p>{dateTimeDisplay}</p>
                     </div>
+
                     <div className="venue-container">
                         <LocationIcon />
-                        <p>{event.eventVenue}</p>
+                        <p>{truncateText(event.event_venue || event.eventVenue, 14)}</p>
                     </div>
                 </div>
             </div>
@@ -51,4 +150,4 @@ function Eventbox({ event }) {
     );
 }
 
-export default Eventbox;
+export default EventBox;

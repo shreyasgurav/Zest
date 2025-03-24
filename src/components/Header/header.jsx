@@ -1,7 +1,6 @@
 import logo from './header-images/zest-logo.png';
 import React, { useState, useEffect } from 'react';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import AddEventForm from './AddEventForm/AddEventForm';
+import { getAuth, onAuthStateChanged, GoogleAuthProvider } from 'firebase/auth';
 import PersonLogo from "./PersonLogo/PersonLogo";
 import "./header.css";
 import { useNavigate, Link } from 'react-router-dom';
@@ -16,14 +15,13 @@ const Header = ({ onEventSubmit }) => {
     useEffect(() => {
         const auth = getAuth();
         const unsubscribe = onAuthStateChanged(auth, (user) => {
-            if (user) {
+            if (user && user.providerData[0].providerId === 'google.com') {
                 setUserEmail(user.email);
             } else {
                 setUserEmail(null);
             }
         });
 
-        // Cleanup subscription on unmount
         return () => unsubscribe();
     }, []);
 
@@ -49,9 +47,12 @@ const Header = ({ onEventSubmit }) => {
         navigate('/user-profile');
     };
 
-    // Function to check if user has admin privileges
-    const isAdmin = () => {
+    const isAuthorizedUser = () => {
         return userEmail === "shrreyasgurav@gmail.com";
+    };
+
+    const handleNavItemClick = () => {
+        setNavActive(false);
     };
 
     return (
@@ -78,31 +79,25 @@ const Header = ({ onEventSubmit }) => {
 
                 <ul className={`desktop-nav ${isNavActive ? 'show' : ''}`}>
                     <li>
-                        <Link to="/" className="link-logo">
+                        <Link to="/" className="link-logo" onClick={handleNavItemClick}>
                             <img className='link-logo' src={logo} alt="Zest Logo" />
                         </Link>
                     </li>
-                    <li><a href="#">Events</a></li>
-                    <li><a href="#">Workshops</a></li>
-                    <li><a href="#">Experiences</a></li>
-                    <li><a href="#">Leisures</a></li>
-                    {isAdmin() && (
+                    <li><Link to="/about" onClick={handleNavItemClick}>About</Link></li>
+                    <li><Link to="/guides" onClick={handleNavItemClick}>Guides</Link></li>
+                    {isAuthorizedUser() && (
                         <li>
-                            <a className="link-add-event" onClick={toggleEventForm}>List Events</a>
+                            <Link to="/create" onClick={handleNavItemClick}>Create</Link>
                         </li>
                     )}
                     <li>
-                        <a href="#" className="link-search" onClick={toggleSearch}></a>
+                       {/* <a href="#" className="link-search" onClick={toggleSearch}></a> */}
                     </li>
                     <li>
-                        <a className="link-Profile-logo"><PersonLogo /></a>
+                        <a className="link-Profile-logo" onClick={handleNavItemClick}><PersonLogo /></a>
                     </li>
                 </ul>
             </nav>
-
-            {isEventFormVisible && (
-                <AddEventForm onClose={toggleEventForm} onSubmit={onEventSubmit} />
-            )}
         </div>
     );
 };

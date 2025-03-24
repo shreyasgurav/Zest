@@ -1,0 +1,291 @@
+/* General Event Section Styling */
+.experiences-section {
+    flex: 1;
+    margin-top: 50px;
+}
+
+.upcoming-experiences-heading {
+    flex: 1;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 50px;
+    margin-bottom: 17px;
+    color: white;
+    opacity: 0.7;
+    margin-left: 50px;
+    font-family: "Architects Daughter", cursive;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.experiences-section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.see-all-link {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    margin-left: 10px;
+    transition: color 0.3s;
+}
+
+.see-all-link:hover {
+    opacity: 0.6;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .see-all-link {
+        font-size: 14px;
+    }
+    
+    .embla__container {
+        grid-column-gap: 20px;
+    }
+
+    /* Add these new styles for mobile */
+    .upcoming-experiences-heading {
+        font-size: 20px; /* Smaller font size for mobile */
+        margin-left: 20px; /* Reduced margin */
+        margin-top: 30px; /* Reduced top margin */
+        margin-bottom: 12px; /* Reduced bottom margin */
+    }
+
+    .experiences-section-heading {
+        padding: 0 15px; /* Reduced padding */
+    }
+}
+
+/* Add an even smaller breakpoint for very small devices */
+@media (max-width: 480px) {
+    .upcoming-experiences-heading {
+        font-size: 18px; /* Even smaller font size */
+        margin-left: 10px;
+    }
+}
+
+.no-experiences-message {
+    text-align: center;
+    font-size: 18px;
+    color: #666;
+    margin-top: 17px;
+    font-family: 'Arial', sans-serif;
+    padding: 165px;
+    background: none;
+}
+
+
+/* Embla Carousel Styling */
+.embla {
+    position: relative;
+    overflow: visible;
+    width: 100%;
+}
+
+.embla__viewport {
+    overflow: hidden;
+    width: 100%;
+}
+
+.embla__container {
+    display: flex; /* Ensures horizontal layout */
+    align-items: center; /* Vertically aligns items */
+    gap: 10px; /* Space between slides */
+}
+
+.embla__slide {
+    flex: 0 0 auto; /* Prevent shrinking or growing */
+    width: 250px; /* Fixed width for event boxes */
+    box-sizing: border-box; /* Ensures padding is included in the width */
+}
+
+
+/* Removed Arrows and Dots */
+.embla__controls,
+.embla__buttons,
+.embla__dots {
+    display: none;
+}
+
+/* Skeleton Loading Animation */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.skeleton-loading .guides-box-card {
+  background: rgb(44, 44, 44, 0.3);
+  border: none;
+  pointer-events: none;
+}
+
+.skeleton-background {
+  background: linear-gradient(
+    90deg,
+    rgba(44, 44, 44, 0.3) 25%,
+    rgba(60, 60, 60, 0.5) 37%,
+    rgba(44, 44, 44, 0.3) 63%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+.skeleton-line {
+  height: 12px;
+  border-radius: 4px;
+  margin: 8px 0;
+  background: linear-gradient(
+    90deg,
+    rgba(44, 44, 44, 0.3) 25%,
+    rgba(60, 60, 60, 0.5) 37%,
+    rgba(44, 44, 44, 0.3) 63%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+.skeleton-title {
+  width: 80%;
+  height: 16px;
+  margin: 12px auto;
+}
+
+.skeleton-loading .guides-box-image-placeholder {
+  width: 230px;
+  height: 230px;
+  background: linear-gradient(
+    90deg,
+    rgba(44, 44, 44, 0.3) 25%,
+    rgba(60, 60, 60, 0.5) 37%,
+    rgba(44, 44, 44, 0.3) 63%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+/* Skeleton Section Styles */
+.skeleton-section {
+  opacity: 0;
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.skeleton-heading {
+  width: 200px;
+  height: 32px;
+  margin-bottom: 8px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .skeleton-loading .guides-box-image-placeholder {
+    width: 170px;
+    height: 170px;
+  }
+  
+  .skeleton-heading {
+    width: 160px;
+    height: 28px;
+  }
+  
+  .skeleton-title {
+    width: 70%;
+    height: 14px;
+  }
+}
+
+.embla-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0 60px;
+}
+
+.embla-button {
+  position: absolute;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.embla-button svg {
+  width: 24px;
+  height: 24px;
+  color: white;
+}
+
+.embla-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+.embla-button-prev {
+  left: 20px;
+}
+
+.embla-button-next {
+  right: 20px;
+}
+
+.embla-button-disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.embla-button-disabled:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .embla-container {
+    padding: 0 40px;
+  }
+
+  .embla-button {
+    width: 32px;
+    height: 32px;
+  }
+
+  .embla-button svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .embla-button-prev {
+    left: 10px;
+  }
+
+  .embla-button-next {
+    right: 10px;
+  }
+}
+

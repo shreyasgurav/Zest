@@ -41,7 +41,7 @@ function ExperiencesProfile({ experiences }) {
     return (
         <div className="event-profile-container">
             <div className="event-content">
-                <div className="event-image">
+                <div className="event-profile-image">
                     {eventImage ? (
                         <img src={eventImage} alt={eventTitle} />
                     ) : (

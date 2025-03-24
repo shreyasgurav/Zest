@@ -4,22 +4,19 @@ import "./footer.css";
 
 function Footer() {
     return (
-        <footer>
-            <div className="footer">
-                <div className="row">
-                    <a href="https://www.instagram.com/tryzest/"><i className="fa fa-instagram"></i></a>
-                    <a href="https://www.linkedin.com/company/zestlive/about/?viewAsMember=true"><i className="fa fa-linkedin"></i></a>
-                </div>
-                <div className="row">
-                    <ul>
-                        <li><Link to="/contact-us">Contact us</Link></li>
-                        <li><Link to="/our-services">Our Services</Link></li>
-                        <li><Link to="/about-us">About Us</Link></li>
-                    </ul>
-                </div>
-                <div className="row">
-                    Zest Copyright © 2024 Zest - All rights reserved
-                </div>
+        <footer className="footer">
+            <div className="row">
+                <a href="https://www.instagram.com/tryzest/"><i className="fa fa-instagram"></i></a>
+                <a href="https://www.linkedin.com/company/zestlive/about/?viewAsMember=true"><i className="fa fa-linkedin"></i></a>
+            </div>
+            <div className="row">
+                <ul>
+                    <li><Link to="/about">About</Link></li>
+                    <li><Link to="/contact">Contact</Link></li>
+                </ul>
+            </div>
+            <div className="row">
+                Zest Copyright © 2025 Zest - All rights reserved
             </div>
         </footer>
     );

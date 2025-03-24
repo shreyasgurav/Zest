@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { auth } from './components/firebase';
+import { auth } from '../../firebase';
 import { signOut } from "firebase/auth";
-import LoginPopup from './LoginPopup';
+import LoginPopup from './../../Authentication/LoginPopup/LoginPopup';
 import { useNavigate } from 'react-router-dom';
 import "./PersonLogo.css";
 
@@ -37,9 +37,24 @@ function PersonLogo() {
             await auth.signOut();
             window.location.href = "/";
             console.log("User logged out successfully!");
-          } catch (error) {
+        } catch (error) {
             console.error("Error logging out:", error.message);
-          }
+        }
+    };
+
+    const handleProfileClick = () => {
+        // Check if user exists
+        if (!user) return;
+
+        // Check the authentication provider
+        const isPhoneAuth = user.providerData[0]?.providerId === 'phone';
+        
+        // Navigate based on auth method
+        if (isPhoneAuth) {
+            navigate('/organisation');
+        } else {
+            navigate('/profile');
+        }
     };
 
     return (
@@ -69,7 +84,7 @@ function PersonLogo() {
                         </div>
                     ) : (
                         <>
-                            <div className="dropdown-item" onClick={() => navigate('/profile')}>
+                            <div className="dropdown-item" onClick={handleProfileClick}>
                                 Profile
                             </div>
                             <div className="dropdown-item" onClick={handleLogout}>
@@ -83,7 +98,6 @@ function PersonLogo() {
             {isPopupOpen && !user && (
                 <div className="login-popup-overlay">
                     <div className="login-popup-content">
-                       
                         <LoginPopup onClose={() => setPopupOpen(false)} />
                     </div>
                 </div>

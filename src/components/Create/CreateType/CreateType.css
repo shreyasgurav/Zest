@@ -1,0 +1,119 @@
+.type-selection-page {
+  min-height: 100vh;
+  padding: 80px 20px 40px;
+  background: var(--background-color);
+}
+
+.type-selection-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: rgba(40, 40, 40, 0.5);
+  border-radius: 15px;
+  padding: 40px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.page-title {
+  color: #aeadad;
+  text-align: center;
+  margin-bottom: 50px;
+  font-size: 2em;
+}
+
+.type-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+  padding: 20px;
+}
+
+.type-card {
+  background: rgba(30, 30, 30, 0.5);
+  border-radius: 12px;
+  padding: 30px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+}
+
+.type-card:hover {
+  transform: translateY(-5px);
+  background: rgba(40, 40, 40, 0.8);
+  border-color: #4CAF50;
+}
+
+.type-icon {
+  font-size: 3em;
+  margin-bottom: 20px;
+}
+
+.type-card h2 {
+  color: #fff;
+  margin-bottom: 15px;
+  font-size: 1.5em;
+}
+
+.type-card p {
+  color: #888;
+  font-size: 0.9em;
+  line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+  .type-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .type-selection-container {
+    padding: 20px;
+  }
+}
+
+.unauthorized-message-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.unauthorized-message {
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  padding: 40px;
+  border-radius: 16px;
+  text-align: center;
+  color: white;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.unauthorized-message h1 {
+  font-size: 24px;
+  margin-bottom: 16px;
+  color: #ff4444;
+}
+
+.unauthorized-message p {
+  margin-bottom: 24px;
+  opacity: 0.8;
+  line-height: 1.5;
+}
+
+.back-button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.back-button:hover {
+  background: #0056b3;
+}

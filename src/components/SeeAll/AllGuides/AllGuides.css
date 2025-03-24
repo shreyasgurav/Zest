@@ -1,0 +1,145 @@
+.all-guides-container {
+  padding: 2rem;
+  margin-top: 40px;
+  background: none !important;
+}
+
+.all-guides-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.all-guides-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+  opacity: 0.8;
+  margin-bottom: 2rem;
+  text-align: center;
+  font-family: "Architects Daughter", cursive;
+}
+
+.guides-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 2rem;
+  padding: 1rem 0;
+  background: none !important;
+}
+
+.guide-item {
+  display: flex;
+  justify-content: center;
+  background: none !important;
+}
+
+.no-guides {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #666;
+  margin-top: 7rem;
+}
+
+/* Skeleton Loading Styles */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.skeleton-loading {
+  pointer-events: none;
+}
+
+.skeleton-background {
+  width: 230px;
+  height: 230px;
+  border-radius: 8px 8px 0 0;
+  background: linear-gradient(
+    90deg,
+    rgba(44, 44, 44, 0.3) 25%,
+    rgba(60, 60, 60, 0.5) 37%,
+    rgba(44, 44, 44, 0.3) 63%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+.skeleton-line {
+  width: 80%;
+  height: 16px;
+  margin: 12px auto;
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    rgba(44, 44, 44, 0.3) 25%,
+    rgba(60, 60, 60, 0.5) 37%,
+    rgba(44, 44, 44, 0.3) 63%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+.skeleton-title-loading {
+  width: 300px;
+  height: 32px;
+  margin: 0 auto 2rem;
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    rgba(44, 44, 44, 0.3) 25%,
+    rgba(60, 60, 60, 0.5) 37%,
+    rgba(44, 44, 44, 0.3) 63%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .guides-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .skeleton-background {
+    width: 200px;
+    height: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .all-guides-container {
+    padding: 1rem;
+  }
+
+  .all-guides-title {
+    font-size: 20px;
+    margin-bottom: 1.5rem;
+  }
+
+  .guides-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .skeleton-background {
+    width: 170px;
+    height: 170px;
+  }
+}
+
+@media (max-width: 480px) {
+  .all-guides-title {
+    font-size: 18px;
+    margin-bottom: 1rem;
+  }
+
+  .guides-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}

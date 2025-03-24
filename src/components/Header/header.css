@@ -35,20 +35,19 @@ nav .desktop-nav {
     padding: 0;
     margin: 0;
     width: 100%;
-    gap: 20px; /* Add consistent gap between items */
+    gap: 20px;
 }
 
 nav .desktop-nav li {
     display: flex;
     align-items: center;
-    /* Remove the padding that was causing shrinking */
     padding: 0;
 }
 
 nav .desktop-nav li a {
     color: #fff;
     text-decoration: none;
-    font-size: 14px; /* Keep fixed font size */
+    font-size: 14px;
     opacity: 0.6;
     transition: opacity 400ms;
     white-space: nowrap;
@@ -59,8 +58,26 @@ nav .desktop-nav li .link-Profile-logo {
 }
 
 .link-add-event {
+    font-weight: 1000;
+    font-size: large;
     cursor: pointer;
 }
+
+/* Mobile Add Button */
+/* .mobile-add-button {
+    display: none;
+    color: #fff;
+    font-size: 24px;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 0 10px;
+    opacity: 0.8;
+    transition: opacity 400ms;
+}
+
+.mobile-add-button:hover {
+    opacity: 1;
+} */
 
 nav .desktop-nav li a:hover {
     opacity: 1;
@@ -389,6 +406,21 @@ nav .desktop-nav li a:hover {
         transition: all 1000ms ease;
     }
 
+    /* .mobile-add-button {
+        display: block;
+    } */
+    
+    .desktop-nav .link-add-event {
+        display: none;
+    }
+
+    nav .mobile-nav li:last-child {
+        display: flex;
+        align-items: center;
+        /* Remove the gap since we don't have the plus button anymore */
+        /* gap: 15px; */
+    }
+
     .link-logo,
     .link-Profile-logo,
     .menu-icon {
@@ -444,8 +476,9 @@ nav .desktop-nav li a:hover {
         z-index: 1000;
         padding: 0;
         margin: 0;
-        width: 100%;
     }
+
+    
 
     nav .mobile-nav li {
         margin-left: 20px;
@@ -454,54 +487,60 @@ nav .desktop-nav li a:hover {
 
 
     nav .menu-icon-container {
-        width: 20px;
+        width: 44px;
         height: 44px;
         display: flex;
         align-items: center;
+        justify-content: center;
         cursor: pointer;
-        padding: 10px;  /* Creates a larger clickable area */
-        margin: -10px;  /* Offsets the padding to maintain visual positioning */
-        box-sizing: content-box;
+        position: relative;
+        margin-left: -12px;
     }
 
     nav .menu-icon {
         position: relative;
-        width: 100%;
+        width: 20px;
+        padding: 10px;
+        margin: -10px;
+        height: 20px; /* Add fixed height */
+        display: flex;
+        flex-direction: column;
+        justify-content: center; /* Center the lines vertically */
     }
 
     nav .menu-icon .line-1,
     nav .menu-icon .line-2 {
         position: absolute;
-        height: 1px;
+        height: 1.5px;
         width: 100%;
         background: #fff;
         transition-property: transform, top;
         transition-delay: 0ms, 160ms;
         transition-duration: 200ms;
+        left: 0;
     }
 
     nav .menu-icon .line-1 {
-        top: -4px;
+        top: 6px; /* Adjust this value */
     }
 
     nav .menu-icon .line-2 {
-        top: 4px;
+        top: 14px; /* Adjust this value */
+    }
+
+    /* Active state (cross) styles */
+    .nav-container.active nav .menu-icon-container .menu-icon .line-1,
+    .nav-container.active nav .menu-icon-container .menu-icon .line-2 {
+        top: 50%; /* Center both lines */
+        margin-top: -1px; /* Offset by half the line height */
     }
 
     .nav-container.active nav .menu-icon-container .menu-icon .line-1 {
-        top: 0;
         transform: rotateZ(45deg);
-        transition-property: top, transform;
-        transition-delay: 0ms, 160ms;
-        transition-duration: 200ms;
     }
 
     .nav-container.active nav .menu-icon-container .menu-icon .line-2 {
-        top: 0;
         transform: rotateZ(-45deg);
-        transition-property: top, transform;
-        transition-delay: 0ms, 160ms;
-        transition-duration: 200ms;
     }
 
 

@@ -1,0 +1,401 @@
+.guide-page {
+    min-height: 100vh;
+    padding: 80px 20px 40px;
+    background: var(--background-color);
+  }
+  
+  .guide-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: rgba(40, 40, 40, 0.5);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Guide Header */
+  .guide-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+  
+  .guide-cover {
+    width: 100%;
+    max-width: 800px;
+    height: 300px;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  
+  .guide-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .cover-placeholder {
+    width: 100%;
+    height: 100%;
+    background-color: #2d2d2d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    font-size: 20px;
+  }
+  
+  .guide-title {
+    color: #fff;
+    font-size: 36px;
+    text-align: center;
+    font-family: "Architects Daughter", cursive;
+    font-weight: 400;
+  }
+  
+  /* Items Section */
+  .guide-items-container {
+    margin-bottom: 40px;
+  }
+  
+  .items-heading {
+    color: #fff;
+    font-size: 24px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 10px;
+  }
+  
+  .guide-items-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  
+  .guide-item-card {
+    position: relative;
+    background: rgba(30, 30, 30, 0.7);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .guide-item-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+  
+  .item-image {
+    width: 100%;
+    height: 200px;
+  }
+  
+  .item-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .item-image-placeholder {
+    width: 100%;
+    height: 100%;
+    background-color: #2d2d2d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+  }
+  
+  .item-details {
+    padding: 15px;
+  }
+  
+  .item-name {
+    color: #fff;
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  
+  .item-price {
+    color: #4CAF50;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .item-address {
+    color: #2196F3;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    display: block;
+    margin-bottom: 10px;
+    font-size: 14px;
+  }
+  
+  .item-address:hover {
+    color: #64B5F6;
+    text-decoration: underline;
+  }
+  
+  .item-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    color: #ddd;
+    font-size: 14px;
+  }
+  
+  .website-link {
+    display: inline-block;
+    color: #2196F3;
+    text-decoration: none;
+    transition: opacity 0.3s;
+  }
+  
+  .website-link:hover {
+    opacity: 0.8;
+  }
+  
+  /* Back Button */
+  .back-button {
+    display: block;
+    margin: 0 auto;
+    padding: 10px 25px;
+    background: #333;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+    font-size: 16px;
+  }
+  
+  .back-button:hover {
+    background: #444;
+  }
+  
+  /* Loading and Error States */
+  .loading-indicator,
+  .error-message {
+    text-align: center;
+    padding: 40px;
+    color: #ddd;
+    font-size: 18px;
+  }
+  
+  .error-message {
+    color: #f44336;
+  }
+  
+  .no-items-message {
+    text-align: center;
+    color: #888;
+    font-size: 18px;
+    padding: 40px;
+  }
+  
+  /* Responsive Adjustments */
+  @media (max-width: 768px) {
+    .guide-container {
+      padding: 20px;
+    }
+    
+    .guide-cover {
+      height: 200px;
+    }
+    
+    .guide-title {
+      font-size: 28px;
+    }
+    
+    .guide-items-grid {
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+    
+    .item-image {
+      height: 150px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .guide-header {
+      margin-bottom: 20px;
+    }
+    
+    .guide-cover {
+      height: 150px;
+    }
+    
+    .guide-title {
+      font-size: 22px;
+    }
+    
+    .guide-items-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .items-heading {
+      font-size: 20px;
+    }
+  }
+
+  .delete-item-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(244, 67, 54, 0.9); /* Red with some transparency */
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    opacity: 0; /* Hidden by default */
+    transform: translateY(-5px);
+    backdrop-filter: blur(4px);
+    z-index: 2;
+  }
+
+  .guide-item-card:hover .delete-item-button {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .delete-item-button:hover {
+    background-color: rgb(244, 67, 54); /* Solid red on hover */
+    box-shadow: 0 2px 8px rgba(244, 67, 54, 0.4);
+  }
+
+  .delete-item-button:active {
+    transform: scale(0.95);
+  }
+
+  /* Ensure the item content doesn't interfere with the delete button */
+  .item-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Add a subtle overlay effect when hovering */
+  .guide-item-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .guide-item-card:hover::before {
+    opacity: 1;
+  }
+
+  /* Skeleton Loading Styles */
+  @keyframes shimmer {
+    0% {
+      background-position: -1000px 0;
+    }
+    100% {
+      background-position: 1000px 0;
+    }
+  }
+
+  .skeleton-loading {
+    pointer-events: none;
+  }
+
+  .skeleton-background {
+    background: linear-gradient(
+      90deg,
+      rgba(44, 44, 44, 0.3) 25%,
+      rgba(60, 60, 60, 0.5) 37%,
+      rgba(44, 44, 44, 0.3) 63%
+    );
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite linear;
+  }
+
+  .skeleton-line {
+    height: 12px;
+    border-radius: 4px;
+    margin: 8px 0;
+    background: linear-gradient(
+      90deg,
+      rgba(44, 44, 44, 0.3) 25%,
+      rgba(60, 60, 60, 0.5) 37%,
+      rgba(44, 44, 44, 0.3) 63%
+    );
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite linear;
+  }
+
+  .skeleton-guide-title {
+    width: 300px;
+    height: 36px;
+    margin: 20px auto;
+  }
+
+  .skeleton-loading .item-image {
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(
+      90deg,
+      rgba(44, 44, 44, 0.3) 25%,
+      rgba(60, 60, 60, 0.5) 37%,
+      rgba(44, 44, 44, 0.3) 63%
+    );
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite linear;
+  }
+
+  .skeleton-name {
+    width: 80%;
+    height: 18px;
+    margin: 10px auto;
+  }
+
+  .skeleton-price {
+    width: 40%;
+    height: 14px;
+    margin: 10px auto;
+  }
+
+  /* Responsive Adjustments */
+  @media (max-width: 768px) {
+    .skeleton-guide-title {
+      width: 200px;
+      height: 28px;
+    }
+
+    .skeleton-loading .item-image {
+      height: 150px;
+    }
+
+    .skeleton-name {
+      width: 70%;
+      height: 16px;
+    }
+
+    .skeleton-price {
+      width: 35%;
+      height: 12px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .skeleton-guide-title {
+      width: 150px;
+      height: 22px;
+    }
+
+    .skeleton-loading .item-image {
+      height: 120px;
+    }
+  }

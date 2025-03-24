@@ -1,6 +1,19 @@
+/* Footer CSS */
+/* First, ensure the root element and body take full height */
+#root {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Main content wrapper - add this class to your main content wrapper */
+.content-wrapper {
+    flex: 1 0 auto;
+}
+
 /* Footer */
 .footer {
-    margin-top: auto;
+    flex-shrink: 0; /* Prevent footer from shrinking */
     width: 100%;
     background: linear-gradient(
         to top,
@@ -14,7 +27,7 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    position: relative; /* Added for line positioning */
+    position: relative;
 }
 
 /* Top line style */
@@ -71,8 +84,8 @@
     }
 
     .footer::before {
-        left: 20px; /* Adjusted for mobile */
-        right: 20px; /* Adjusted for mobile */
+        left: 20px;
+        right: 20px;
     }
 
     .footer .row ul li {
@@ -83,10 +96,4 @@
     .footer .row a i {
         margin: 0% 3%;
     }
-
-    .footer::before {
-        left: 100px;
-        right: 100px;
-    }
-
 }
