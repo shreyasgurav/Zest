@@ -76,24 +76,22 @@ function PersonLogo() {
                 />
             </svg>
 
-            {showDropdown && (
-                <div className="person-dropdown">
-                    {!user ? (
-                        <div className="dropdown-item" onClick={() => setPopupOpen(true)}>
-                            Login
+            <div className={`person-dropdown ${showDropdown ? 'active' : ''}`}>
+                {!user ? (
+                    <div className="dropdown-item" onClick={() => setPopupOpen(true)}>
+                        Login
+                    </div>
+                ) : (
+                    <>
+                        <div className="dropdown-item" onClick={handleProfileClick}>
+                            Profile
                         </div>
-                    ) : (
-                        <>
-                            <div className="dropdown-item" onClick={handleProfileClick}>
-                                Profile
-                            </div>
-                            <div className="dropdown-item" onClick={handleLogout}>
-                                Logout
-                            </div>
-                        </>
-                    )}
-                </div>
-            )}
+                        <div className="dropdown-item" onClick={handleLogout}>
+                            Logout
+                        </div>
+                    </>
+                )}
+            </div>
 
             {isPopupOpen && !user && (
                 <div className="login-popup-overlay">

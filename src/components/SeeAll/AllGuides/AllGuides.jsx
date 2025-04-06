@@ -42,7 +42,7 @@ const AllGuides = () => {
     const fetchGuides = async () => {
       try {
         const guidesCollectionRef = collection(db, 'guides');
-        const q = query(guidesCollectionRef, orderBy('createdAt', 'desc'));
+        const q = query(guidesCollectionRef, orderBy('createdAt', 'asc'));
         const guideSnapshot = await getDocs(q);
         const guidesList = guideSnapshot.docs.map(doc => ({
           id: doc.id,

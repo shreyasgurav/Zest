@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import "./App.css";
 import { auth, db } from "./firebase";
@@ -30,6 +30,54 @@ import AboutUs from "./Footer/AboutUs/AboutUs";
 import OurServices from "./Footer/OurServices/OurServices";
 import ContactUs from "./Footer/ContactUs/ContactUs";
 
+// Create a simple error boundary component
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error("Error caught by boundary:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ padding: '20px', textAlign: 'center', color: 'white' }}>
+          <h2>Something went wrong</h2>
+          <p>We're working on fixing this issue. Please try again later.</p>
+          <button onClick={() => window.location.href = '/'} 
+                  style={{ padding: '10px 20px', marginTop: '15px', cursor: 'pointer' }}>
+            Return to Home
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+// Create a loading component
+const LoadingFallback = () => (
+  <div style={{ 
+    display: 'flex', 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    height: '100vh',
+    color: 'white' 
+  }}>
+    <div>
+      <h3>Loading...</h3>
+      <p>Please wait while we prepare your content</p>
+    </div>
+  </div>
+);
+
 function App() {
     const [events, setEvents] = useState([]);
     const [workshops, setWorkshops] = useState([]);
@@ -50,7 +98,11 @@ function App() {
 
     const fetchEvents = async () => {
         try {
-            const response = await fetch("http://localhost:5000/api/events");
+            const apiUrl = window.location.hostname === 'localhost' 
+                ? "http://localhost:5000/api/events" 
+                : "https://zestlive.in";
+            
+            const response = await fetch(apiUrl);
             if (!response.ok) throw new Error('Failed to fetch events');
             const data = await response.json();
             
@@ -76,7 +128,11 @@ function App() {
 
     const handleEventSubmit = async (eventData) => {
         try {
-            const response = await fetch("http://localhost:5000/api/add-event", {
+            const apiUrl = window.location.hostname === 'localhost' 
+                ? "http://localhost:5000/api/add-event" 
+                : "https://zestlive.in";
+            
+            const response = await fetch(apiUrl, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -108,11 +164,7 @@ function App() {
                     const userSnap = await getDoc(userRef);
                     
                     if (userSnap.exists()) {
-                        const data = userSnap.data();
-                        setUserData(data);
-                        if (data.username && data.phone) {
-                            window.location.href = "/profile";
-                        }
+                        setUserData(userSnap.data());
                     }
                     setIsLoading(false);
                 } catch (error) {
@@ -132,48 +184,21 @@ function App() {
             return <Navigate to="/" />;
         }
         
-        return <PostLoginModal user={currentUser} />;
+        if (userData && userData.username && userData.phone) {
+            return <Navigate to="/profile" />;
+        }
+        
+        const handleComplete = () => {
+            window.location.href = "/profile";
+        };
+        
+        return <PostLoginModal user={currentUser} onComplete={handleComplete} />;
     };
 
     const ProtectedProfile = () => {
-        const [userData, setUserData] = useState(null);
-        const [isLoading, setIsLoading] = useState(true);
-
-        useEffect(() => {
-            async function fetchUserData() {
-                if (!currentUser) {
-                    setIsLoading(false);
-                    return;
-                }
-
-                try {
-                    const userRef = doc(db, "Users", currentUser.uid);
-                    const userSnap = await getDoc(userRef);
-                    if (userSnap.exists()) {
-                        setUserData(userSnap.data());
-                    }
-                    setIsLoading(false);
-                } catch (error) {
-                    console.error("Error fetching user data:", error);
-                    setIsLoading(false);
-                }
-            }
-
-            fetchUserData();
-        }, [currentUser]);
-
-        if (isLoading) {
-            return <div>Loading...</div>;
-        }
-
         if (!currentUser) {
             return <Navigate to="/" />;
         }
-
-        if (!userData?.username || !userData?.phone) {
-            return <Navigate to="/postlogin" />;
-        }
-
         return <UserProfile />;
     };
 
@@ -183,40 +208,62 @@ function App() {
                 <div className="app-container">
                     <Header onEventSubmit={fetchEvents} />
                     <main className="main-content">
-                        <Routes>
-                            <Route
-                                path="/"
-                                element={
-                                    <>
-
-                                        <GuidesSection experiences={experiences} />
-                                       {/* <EventSection events={events} /> */}
-                                    </>
-                                }
-                            />
-                            <Route path="/blogs" element={<BlogsPage />} />
-                            <Route path="/about" element={<AboutUs />} />
-                            <Route path="/our-services" element={<OurServices />} />
-                            <Route path="/contact" element={<ContactUs />} />
-                            <Route path="/event-profile/:id" element={<EventProfile events={events} />} />
-                            <Route path="/workshop-profile/:id" element={<WorkshopProfile workshops={workshops} />} />
-                            <Route path="/experiences-profile/:id" element={<ExperiencesProfile experiences={experiences} />} />
-                            <Route path="/profile" element={<ProtectedProfile />} />
-
-                            <Route path="/create-event" element={<CreateEvent />} />
-                            <Route path="/create-guide" element={<CreateGuide />} />
-                            <Route path="/guidepage/:guideId" element={<GuidePage />} />
-                            <Route path="/guide-profile/:guideId/:itemIndex" element={<GuideProfile />} />
-                            <Route path="/edit-guide/:id" element={<EditGuide />} />
-
-
-
-                            <Route path="/create" element={<EventTypeSelection />} />
-                            <Route path="/create-type" element={<CreateType />} />
-                            <Route path="/postlogin" element={<PostLoginWithAuth />} />
-                            <Route path="/events" element={<AllEvents />} />
-                            <Route path="/guides" element={<AllGuides />} />
-                        </Routes>
+                        <ErrorBoundary>
+                            <Suspense fallback={<LoadingFallback />}>
+                                <Routes>
+                                    <Route
+                                        path="/"
+                                        element={
+                                            <>
+                                                <GuidesSection experiences={experiences} />
+                                            </>
+                                        }
+                                    />
+                                    <Route path="/blogs" element={<BlogsPage />} />
+                                    <Route path="/about" element={<AboutUs />} />
+                                    <Route path="/our-services" element={<OurServices />} />
+                                    <Route path="/contact" element={<ContactUs />} />
+                                    <Route path="/event-profile/:id" element={
+                                        <ErrorBoundary>
+                                            <EventProfile events={events} />
+                                        </ErrorBoundary>
+                                    } />
+                                    <Route path="/workshop-profile/:id" element={
+                                        <ErrorBoundary>
+                                            <WorkshopProfile workshops={workshops} />
+                                        </ErrorBoundary>
+                                    } />
+                                    <Route path="/experiences-profile/:id" element={
+                                        <ErrorBoundary>
+                                            <ExperiencesProfile experiences={experiences} />
+                                        </ErrorBoundary>
+                                    } />
+                                    <Route path="/profile" element={<ProtectedProfile />} />
+                                    <Route path="/create-event" element={<CreateEvent />} />
+                                    <Route path="/create-guide" element={<CreateGuide />} />
+                                    <Route path="/guides/:slug" element={<GuidePage />} />
+                                    <Route path="/guidepage/:guideId" element={<GuidePage />} />
+                                    <Route path="/guide-item/:slug/:itemIndex" element={<GuideProfile />} />
+                                    <Route path="/guide-profile/:guideId/:itemIndex" element={<GuideProfile />} />
+                                    <Route path="/edit-guide/:id" element={<EditGuide />} />
+                                    <Route path="/create" element={<EventTypeSelection />} />
+                                    <Route path="/create-type" element={<CreateType />} />
+                                    <Route path="/postlogin" element={<PostLoginWithAuth />} />
+                                    <Route path="/events" element={<AllEvents />} />
+                                    <Route path="/guides" element={<AllGuides />} />
+                                    <Route path="*" element={
+                                        <div style={{ padding: '40px', textAlign: 'center', color: 'white' }}>
+                                            <h2>Page Not Found</h2>
+                                            <p>The page you're looking for doesn't exist.</p>
+                                            <button onClick={() => window.location.href = '/'} 
+                                                    style={{ padding: '10px 20px', marginTop: '15px', cursor: 'pointer' }}>
+                                                Return to Home
+                                            </button>
+                                        </div>
+                                    } />
+                                </Routes>
+                            </Suspense>
+                        </ErrorBoundary>
                     </main>
                 </div>
             </div>

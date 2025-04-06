@@ -7,19 +7,7 @@ import GuideBox from "./GuideBox/GuidesBox";
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi'; // Import icons
 import "./GuidesSection.css";
 import { Link } from 'react-router-dom';
-
-const GuideBoxSkeleton = () => {
-  return (
-    <div className="guides-box-wrapper skeleton-loading">
-      <div className="guides-box-card">
-        <div className="guides-box-image-placeholder skeleton-background"></div>
-        <div className="guides-box-info">
-          <div className="skeleton-line skeleton-title"></div>
-        </div>
-      </div>
-    </div>
-  );
-};
+import GuidesSectionSkeleton from './GuidesSectionSkeleton';
 
 const GuidesSection = () => {
   const [guides, setGuides] = useState([]);
@@ -28,12 +16,11 @@ const GuidesSection = () => {
   const [nextBtnEnabled, setNextBtnEnabled] = useState(false);
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
-    align: "start",
+    align: "center",
     containScroll: "trimSnaps",
     draggable: true,
     slidesToScroll: 1,
-    loop: false,
-    spacing: 5,
+    loop: false
   });
 
   const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
@@ -54,7 +41,9 @@ const GuidesSection = () => {
 
   useEffect(() => {
     const fetchGuides = async () => {
+      setLoading(true);
       try {
+        console.log("Fetching guides...");
         const guidesCollectionRef = collection(db, "guides");
         const q = query(guidesCollectionRef, orderBy("createdAt", "asc"));
         const querySnapshot = await getDocs(q);
@@ -64,37 +53,28 @@ const GuidesSection = () => {
           ...doc.data()
         }));
 
+        console.log("Guides fetched:", guidesData.length);
         setGuides(guidesData);
       } catch (error) {
         console.error("Error fetching guides:", error);
       } finally {
-        setLoading(false);
+        // Set a slight delay so the skeleton is visible momentarily
+        setTimeout(() => {
+          setLoading(false);
+        }, 500);
       }
     };
 
     fetchGuides();
   }, []);
 
+  // Show skeleton while loading
   if (loading) {
-    return (
-      <div className="experiences-section skeleton-section">
-        <div className="experiences-section-heading">
-          <div className="skeleton-line skeleton-heading"></div>
-        </div>
-        <section className="embla">
-          <div className="embla__viewport">
-            <div className="embla__container">
-              {[1, 2, 3, 4].map((index) => (
-                <div key={index} className="embla__slide" style={{ opacity: 1 - (index * 0.2) }}>
-                  <GuideBoxSkeleton />
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      </div>
-    );
+    console.log("Rendering skeleton");
+    return <GuidesSectionSkeleton />;
   }
+
+  console.log("Rendering guides:", guides.length);
 
   return (
     <div className="experiences-section">

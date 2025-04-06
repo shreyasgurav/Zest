@@ -1,20 +1,21 @@
 import React, { useState } from 'react';
 import { db, storage } from "../../firebase";
-import { doc, updateDoc, arrayUnion } from "firebase/firestore";
+import { doc, updateDoc, getDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import "./AddGuideItems.css";
+import "./EditGuideItem.css";
 
-const AddGuideItem = ({ guideId, onClose, onItemAdded }) => {
+const EditGuideItem = ({ guideId, itemIndex, item, onClose, onItemUpdated }) => {
   const [itemData, setItemData] = useState({
-    name: '',
-    price: '',
-    contactInfo: '',
-    website: '',
-    address: '',
-    addressLink: '',
-    pricingUrl: ''
+    name: item.name || '',
+    price: item.price || '',
+    contactInfo: item.contactInfo || '',
+    website: item.website || '',
+    address: item.address || '',
+    addressLink: item.addressLink || '',
+    pricingUrl: item.pricingUrl || '',
+    photos: item.photos || []
   });
-  const [itemImages, setItemImages] = useState([]);
+  const [newImages, setNewImages] = useState([]);
   const [imagePreviews, setImagePreviews] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -22,8 +23,8 @@ const AddGuideItem = ({ guideId, onClose, onItemAdded }) => {
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
     
-    if (files.length > 10) {
-      setError("Maximum 10 images allowed");
+    if (files.length + itemData.photos.length > 10) {
+      setError("Maximum 10 images allowed in total");
       return;
     }
 
@@ -35,22 +36,29 @@ const AddGuideItem = ({ guideId, onClose, onItemAdded }) => {
       return true;
     });
 
-    setItemImages(validFiles);
+    setNewImages(validFiles);
     setImagePreviews(validFiles.map(file => URL.createObjectURL(file)));
+  };
+
+  const removeExistingImage = (index) => {
+    setItemData(prev => ({
+      ...prev,
+      photos: prev.photos.filter((_, i) => i !== index)
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (itemImages.length === 0 || !itemData.name || !itemData.price || !itemData.contactInfo || !itemData.address || !itemData.addressLink) {
-      setError('Please fill in all required fields and upload at least one image');
+    if (!itemData.name || !itemData.price || !itemData.contactInfo || !itemData.address || !itemData.addressLink) {
+      setError('Please fill in all required fields');
       return;
     }
 
     setLoading(true);
     try {
-      // Upload all images
-      const imageUrls = await Promise.all(
-        itemImages.map(async (image) => {
+      // Upload new images if any
+      const newImageUrls = await Promise.all(
+        newImages.map(async (image) => {
           const fileName = `guides/items/${Date.now()}-${Math.random().toString(36).substring(7)}.${image.name.split('.').pop()}`;
           const storageRef = ref(storage, fileName);
           await uploadBytes(storageRef, image);
@@ -58,38 +66,61 @@ const AddGuideItem = ({ guideId, onClose, onItemAdded }) => {
         })
       );
 
-      // Add item to guide with multiple images
+      // Get current guide data
       const guideRef = doc(db, "guides", guideId);
-      await updateDoc(guideRef, {
-        items: arrayUnion({
-          ...itemData,
-          photos: imageUrls
-        })
-      });
+      const guideSnap = await getDoc(guideRef);
+      const guideData = guideSnap.data();
+      const items = [...guideData.items];
 
-      onItemAdded();
+      // Update the specific item
+      items[itemIndex] = {
+        ...itemData,
+        photos: [...itemData.photos, ...newImageUrls]
+      };
+
+      // Update the guide document
+      await updateDoc(guideRef, { items });
+
+      onItemUpdated();
       onClose();
     } catch (error) {
-      console.error("Error adding guide item:", error);
-      setError("Failed to add item. Please try again.");
+      console.error("Error updating guide item:", error);
+      setError("Failed to update item. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="add-item-modal">
+    <div className="edit-item-modal">
       <div className="modal-content">
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label>Images (Max 10)</label>
+            <label>Current Images</label>
+            <div className="current-images">
+              {itemData.photos.map((photo, index) => (
+                <div key={index} className="preview-item">
+                  <img src={photo} alt={`Current ${index + 1}`} />
+                  <button
+                    type="button"
+                    className="remove-image"
+                    onClick={() => removeExistingImage(index)}
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label>Add New Images (Max 10 total)</label>
             <input
               type="file"
               accept="image/*"
               onChange={handleImageChange}
               className="file-input"
               multiple
-              required
             />
             {imagePreviews.length > 0 && (
               <div className="image-previews">
@@ -181,7 +212,7 @@ const AddGuideItem = ({ guideId, onClose, onItemAdded }) => {
 
           <div className="modal-actions">
             <button type="submit" className="submit-button" disabled={loading}>
-              {loading ? "Adding Item..." : "Add Item"}
+              {loading ? "Updating..." : "Update Item"}
             </button>
             <button type="button" className="cancel-button" onClick={onClose}>
               Cancel
@@ -193,4 +224,4 @@ const AddGuideItem = ({ guideId, onClose, onItemAdded }) => {
   );
 };
 
-export default AddGuideItem;
+export default EditGuideItem; 

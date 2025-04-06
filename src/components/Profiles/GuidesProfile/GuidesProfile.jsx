@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { db } from "../../firebase";
-import { doc, getDoc } from "firebase/firestore";
-import { FaMapMarkerAlt, FaPhone, FaGlobe, FaDollarSign } from 'react-icons/fa';
+import { doc, getDoc, collection, query, where, getDocs, updateDoc } from "firebase/firestore";
+import { FaMapMarkerAlt, FaPhone, FaGlobe, FaDollarSign, FaExternalLinkAlt, FaCopy, FaCheck } from 'react-icons/fa';
+import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import "./GuidesProfile.css";
 
 const GuideProfileSkeleton = () => {
@@ -44,54 +45,146 @@ const GuideProfileSkeleton = () => {
 };
 
 const GuideProfile = () => {
-  const { guideId, itemIndex } = useParams();
+  const { guideId, itemIndex, slug } = useParams();
+  const navigate = useNavigate();
   const [guideItem, setGuideItem] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     const fetchGuideItem = async () => {
       try {
-        const guideDocRef = doc(db, "guides", guideId);
-        const guideSnapshot = await getDoc(guideDocRef);
+        let guideData;
+        let actualGuideId = guideId;
         
-        if (guideSnapshot.exists()) {
-          const guideData = guideSnapshot.data();
-          if (guideData.items && guideData.items[itemIndex]) {
-            setGuideItem(guideData.items[itemIndex]);
-          } else {
-            setError("Guide item not found");
+        if (slug) {
+          // If accessed via slug URL, first get the guide by slug
+          const guidesRef = collection(db, "guides");
+          const q = query(guidesRef, where("slug", "==", slug));
+          const querySnapshot = await getDocs(q);
+          
+          if (!querySnapshot.empty) {
+            const doc = querySnapshot.docs[0];
+            guideData = doc.data();
+            actualGuideId = doc.id; // Store the actual guide ID
+          }
+        } else if (guideId) {
+          // Direct access via guide ID
+          const guideDocRef = doc(db, "guides", guideId);
+          const guideSnapshot = await getDoc(guideDocRef);
+          
+          if (guideSnapshot.exists()) {
+            guideData = guideSnapshot.data();
+          }
+        }
+        
+        if (guideData && guideData.items && guideData.items[itemIndex]) {
+          setGuideItem(guideData.items[itemIndex]);
+          
+          // Redirect to slug URL if we accessed via ID and a slug exists
+          if (guideId && !slug && guideData.slug) {
+            navigate(`/guide-item/${guideData.slug}/${itemIndex}`, { replace: true });
+            return;
           }
         } else {
-          setError("Guide not found");
+          setError("Guide item not found");
         }
       } catch (err) {
         console.error("Error fetching guide item:", err);
-        setError("Failed to load guide item");
+        setError(err.message);
       } finally {
         setLoading(false);
       }
     };
 
-    if (guideId && itemIndex !== undefined) {
-      fetchGuideItem();
+    fetchGuideItem();
+  }, [guideId, slug, itemIndex, navigate]);
+
+  const nextImage = () => {
+    if (guideItem && guideItem.photos) {
+      setCurrentImageIndex((prev) => (prev + 1) % guideItem.photos.length);
     }
-  }, [guideId, itemIndex]);
+  };
+
+  const prevImage = () => {
+    if (guideItem && guideItem.photos) {
+      setCurrentImageIndex((prev) => 
+        prev === 0 ? guideItem.photos.length - 1 : prev - 1
+      );
+    }
+  };
+
+  const handleCopyPhone = async (e) => {
+    e.stopPropagation();
+    try {
+      await navigator.clipboard.writeText(guideItem.contactInfo);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000); // Reset after 2 seconds
+    } catch (err) {
+      console.error('Failed to copy:', err);
+    }
+  };
 
   if (loading) {
     return <GuideProfileSkeleton />;
   }
 
   if (error || !guideItem) {
-    return <div className="error-state">{error}</div>;
+    return (
+      <div className="guide-profile-container" style={{ textAlign: 'center', color: 'white', padding: '30px' }}>
+        <h2>Error</h2>
+        <p>{error || "Guide item not found"}</p>
+      </div>
+    );
   }
 
   return (
     <div className="guide-profile-container">
       <div className="guide-content">
         <div className="guide-profile-image">
-          {guideItem.photo ? (
-            <img src={guideItem.photo} alt={guideItem.name} />
+          {guideItem.photos && guideItem.photos.length > 0 ? (
+            <div className="image-carousel">
+              <div className="carousel-track" style={{ transform: `translateX(-${currentImageIndex * 100}%)` }}>
+                {guideItem.photos.map((photo, index) => (
+                  <div key={index} className="carousel-slide">
+                    <img src={photo} alt={`${guideItem.name} - ${index + 1}`} />
+                  </div>
+                ))}
+              </div>
+              
+              {guideItem.photos.length > 1 && (
+                <>
+                  <button 
+                    className="carousel-btn prev" 
+                    onClick={prevImage}
+                    style={{ opacity: currentImageIndex > 0 ? 1 : 0.5 }}
+                  >
+                    <FiChevronLeft />
+                  </button>
+                  <button 
+                    className="carousel-btn next" 
+                    onClick={nextImage}
+                    style={{ opacity: currentImageIndex < guideItem.photos.length - 1 ? 1 : 0.5 }}
+                  >
+                    <FiChevronRight />
+                  </button>
+                  
+                  <div className="carousel-dots">
+                    {guideItem.photos.map((_, index) => (
+                      <span
+                        key={index}
+                        className={`dot ${index === currentImageIndex ? 'active' : ''}`}
+                        onClick={() => setCurrentImageIndex(index)}
+                      >
+                        {index + 1}
+                      </span>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
           ) : (
             <div className="no-image">No Image Available</div>
           )}
@@ -99,15 +192,25 @@ const GuideProfile = () => {
         
         <div className="guide-info-box">
           <div className="guide-info">
-            <h2>{guideItem.name}</h2>
+            <h2 className="guide-item-title">{guideItem.name}</h2>
             
-            <div className="guide-detail">
-              <FaDollarSign />
-              {guideItem.price}
+            <div className="guide-detail price-detail">
+              <span className="price-amount">₹{guideItem.price}</span>
+              {guideItem.pricingUrl && (
+                <a
+                  href={guideItem.pricingUrl.startsWith('http') ? guideItem.pricingUrl : `https://${guideItem.pricingUrl}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="pricing-link"
+                >
+                  <FaExternalLinkAlt />
+                  Check Pricing
+                </a>
+              )}
             </div>
             
-            <div className="guide-detail">
-              <FaMapMarkerAlt />
+            <div className="guide-detail location-detail">
+              <FaMapMarkerAlt className="icon" />
               <a 
                 href={guideItem.addressLink}
                 target="_blank"
@@ -118,14 +221,17 @@ const GuideProfile = () => {
               </a>
             </div>
 
-            <div className="guide-detail">
+            <div className="guide-detail contact-detail">
               <FaPhone />
-              {guideItem.contactInfo}
+              <span>{guideItem.contactInfo}</span>
+              <button className="copy-button" onClick={handleCopyPhone}>
+                {copied ? <FaCheck className="icon" /> : <FaCopy className="icon" />}
+              </button>
             </div>
 
             {guideItem.website && (
-              <div className="guide-detail">
-                <FaGlobe />
+              <div className="guide-detail website-detail">
+                <FaGlobe className="icon" />
                 <a 
                   href={guideItem.website.startsWith('http') ? guideItem.website : `https://${guideItem.website}`}
                   target="_blank"
@@ -141,6 +247,30 @@ const GuideProfile = () => {
             )}
           </div>
         </div>
+      </div>
+      <div style={{ marginTop: '30px', textAlign: 'center' }}>
+        <button 
+          className="back-button"
+          onClick={() => {
+            if (slug) {
+              navigate(`/guides/${slug}`);
+            } else if (guideId) {
+              navigate(`/guidepage/${guideId}`);
+            } else {
+              navigate('/guides');
+            }
+          }}
+          style={{
+            padding: '10px 20px',
+            background: '#333',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer'
+          }}
+        >
+          Back to Guide
+        </button>
       </div>
     </div>
   );

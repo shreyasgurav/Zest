@@ -54,6 +54,15 @@ const CreateGuide = () => {
     }
   };
 
+  const generateSlug = (title) => {
+    return title
+      .toLowerCase()
+      .replace(/[^\w\s-]/g, '') // Remove special characters
+      .replace(/\s+/g, '-')     // Replace spaces with hyphens
+      .replace(/-+/g, '-')      // Remove consecutive hyphens
+      .trim();                   // Trim whitespace
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -78,8 +87,13 @@ const CreateGuide = () => {
       await uploadBytes(storageRef, guideImage);
       const coverImageUrl = await getDownloadURL(storageRef);
   
+      // Generate the slug from the guide name
+      const slug = generateSlug(guideName);
+      console.log("Generated slug:", slug); // e.g., "best-go-karting-in-bombay"
+  
       const guideData = {
         name: guideName.trim(),
+        slug: slug, // Store the slug in Firestore
         cover_image: coverImageUrl,
         items: [], // Initialize with empty items array
         createdBy: auth.currentUser.uid,
@@ -90,7 +104,7 @@ const CreateGuide = () => {
       const docRef = await addDoc(guidesCollectionRef, guideData);
       
       setMessage("Guide created successfully!");
-      setTimeout(() => navigate(`/guidepage/${docRef.id}`), 2000);
+      setTimeout(() => navigate(`/guides/${slug}`), 2000);
     } catch (error) {
       console.error("Error creating guide:", error);
       setMessage(`Failed to create guide: ${error.message}`);

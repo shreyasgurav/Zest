@@ -13,7 +13,11 @@ function GuidesBox({ guide, onDelete }) {
   const isGuideCreator = currentUser && currentUser.uid === guide?.createdBy;
 
   const handleClick = () => {
-    navigate(`/guidepage/${guide.id}`);
+    if (guide.slug) {
+      navigate(`/guides/${guide.slug}`);
+    } else {
+      navigate(`/guidepage/${guide.id}`);
+    }
   };
 
   const handleDelete = async (e) => {

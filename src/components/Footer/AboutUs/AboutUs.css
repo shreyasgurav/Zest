@@ -16,9 +16,13 @@
 
 .about-us-content h2 {
     margin-bottom: 20px;
-    font-size: 2em;
-    color: #848383;
-    margin-bottom: 20px;
+    font-size: 24px;
+    color: white;
+    opacity: 0.7;
+    font-family: "Architects Daughter", cursive;
+    font-weight: 400;
+    font-style: normal;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
 .about-us-content p {
@@ -26,7 +30,7 @@
     line-height: 1.6;
     font-size: 1.1em;
     margin: 25px;
-    color: #555;
+    color: rgba(255, 255, 255, 0.7);
 }
 
 

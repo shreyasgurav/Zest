@@ -3,8 +3,11 @@ import { useParams, useNavigate } from "react-router-dom";
 import { db } from "../firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import AddGuideItem from "./AddGuideItems/AddGuideItems";
+import EditGuideItem from "./EditGuideItem/EditGuideItem";
 import "./GuidesPage.css";
 import { getAuth } from 'firebase/auth';
+import { FaEdit } from 'react-icons/fa';
+import { collection, getDocs, query, where } from "firebase/firestore";
 
 const GuideItemSkeleton = () => {
   return (
@@ -19,57 +22,76 @@ const GuideItemSkeleton = () => {
 };
 
 const GuidePage = () => {
-  const { guideId } = useParams();
+  const { guideId, slug } = useParams();
   const navigate = useNavigate();
   const [guide, setGuide] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showAddItem, setShowAddItem] = useState(false);
+  const [showEditItem, setShowEditItem] = useState(false);
+  const [editingItemIndex, setEditingItemIndex] = useState(null);
   const auth = getAuth();
   const currentUser = auth.currentUser;
   const isAuthorized = currentUser?.email === 'shrreyasgurav@gmail.com';
 
-  const fetchGuide = async () => {
-    try {
-      const guideDocRef = doc(db, "guides", guideId);
-      const guideSnapshot = await getDoc(guideDocRef);
-      
-      if (guideSnapshot.exists()) {
-        setGuide({
-          id: guideSnapshot.id,
-          ...guideSnapshot.data()
-        });
-      } else {
-        setError("Guide not found");
-      }
-    } catch (err) {
-      console.error("Error fetching guide:", err);
-      setError("Failed to load guide");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    if (guideId) {
-      fetchGuide();
-    }
-  }, [guideId]);
+    const fetchGuide = async () => {
+      try {
+        let guideData = null;
+        
+        if (slug) {
+          console.log("Fetching guide by slug:", slug);
+          const guidesRef = collection(db, "guides");
+          const q = query(guidesRef, where("slug", "==", slug));
+          const querySnapshot = await getDocs(q);
+          
+          if (!querySnapshot.empty) {
+            const doc = querySnapshot.docs[0];
+            guideData = {
+              id: doc.id,
+              ...doc.data()
+            };
+          }
+        } else if (guideId) {
+          console.log("Fetching guide by ID:", guideId);
+          const guideDocRef = doc(db, "guides", guideId);
+          const guideSnapshot = await getDoc(guideDocRef);
+          
+          if (guideSnapshot.exists()) {
+            guideData = {
+              id: guideSnapshot.id,
+              ...guideSnapshot.data()
+            };
+            
+            if (guideData.slug) {
+              navigate(`/guides/${guideData.slug}`, { replace: true });
+              return;
+            }
+          }
+        }
+        
+        if (guideData) {
+          setGuide(guideData);
+        } else {
+          setError("Guide not found");
+        }
+      } catch (error) {
+        console.error("Error fetching guide:", error);
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchGuide();
+  }, [guideId, slug, navigate]);
 
   const handleItemClick = (index) => {
-    navigate(`/guide-profile/${guideId}/${index}`);
-  };
-
-  const handleAddItemClick = () => {
-    setShowAddItem(true);
-  };
-
-  const handleCloseAddItem = () => {
-    setShowAddItem(false);
-  };
-
-  const handleItemAdded = () => {
-    fetchGuide(); // Refresh the guide data after adding a new item
+    if (guide.slug) {
+      navigate(`/guide-item/${guide.slug}/${index}`);
+    } else {
+      navigate(`/guide-profile/${guide.id}/${index}`);
+    }
   };
 
   const handleDeleteItem = async (index) => {
@@ -86,6 +108,16 @@ const GuidePage = () => {
         });
         
         // Refresh the guide data after deletion
+        const fetchGuide = async () => {
+          const updatedSnapshot = await getDoc(guideDocRef);
+          if (updatedSnapshot.exists()) {
+            setGuide({
+              id: updatedSnapshot.id,
+              ...updatedSnapshot.data()
+            });
+          }
+        };
+        
         fetchGuide();
       }
     } catch (err) {
@@ -119,9 +151,6 @@ const GuidePage = () => {
       <div className="guide-page">
         <div className="guide-container">
           <div className="error-message">{error || "Guide not found"}</div>
-          <button className="back-button" onClick={() => navigate("/guides")}>
-            Back to Guides
-          </button>
         </div>
       </div>
     );
@@ -132,17 +161,16 @@ const GuidePage = () => {
       <div className="guide-container">
         <div className="guide-header">
           <h1 className="guide-title">{guide.name}</h1>
-        </div>
-
-        <div className="guide-items-container">
           {isAuthorized && (
-            <div className="items-header">
+            <div className="header-actions">
               <button className="add-item-button" onClick={() => setShowAddItem(true)}>
                 Add New
               </button>
             </div>
           )}
-          
+        </div>
+
+        <div className="guide-items-container">
           {guide.items && guide.items.length > 0 ? (
             <div className="guide-items-grid">
               {guide.items.map((item, index) => (
@@ -152,28 +180,40 @@ const GuidePage = () => {
                   onClick={() => handleItemClick(index)}
                 >
                   {isAuthorized && (
-                    <button 
-                      className="delete-item-button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (window.confirm('Are you sure you want to delete this item?')) {
-                          handleDeleteItem(index);
-                        }
-                      }}
-                    >
-                      Delete
-                    </button>
+                    <div className="item-actions">
+                      <button 
+                        className="edit-item-button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setEditingItemIndex(index);
+                          setShowEditItem(true);
+                        }}
+                      >
+                        <FaEdit />
+                      </button>
+                      <button 
+                        className="delete-item-button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (window.confirm('Are you sure you want to delete this item?')) {
+                            handleDeleteItem(index);
+                          }
+                        }}
+                      >
+                        ×
+                      </button>
+                    </div>
                   )}
                   <div className="item-image">
-                    {item.photo ? (
-                      <img src={item.photo} alt={item.name} />
+                    {item.photos && item.photos.length > 0 ? (
+                      <img src={item.photos[0]} alt={item.name} />
                     ) : (
                       <div className="item-image-placeholder">No Image</div>
                     )}
                   </div>
                   <div className="item-details">
                     <h3 className="item-name">{item.name}</h3>
-                    <p className="item-price">Starts from: {item.price}</p>
+                    <p className="item-price">₹{item.price}</p>
                   </div>
                 </div>
               ))}
@@ -183,16 +223,48 @@ const GuidePage = () => {
           )}
         </div>
 
-        <button className="back-button" onClick={() => navigate("/guides")}>
-          Back to Guides
-        </button>
-        
-
         {showAddItem && (
           <AddGuideItem
             guideId={guideId}
             onClose={() => setShowAddItem(false)}
-            onItemAdded={fetchGuide}
+            onItemAdded={() => {
+              const fetchGuide = async () => {
+                const guideDocRef = doc(db, "guides", guideId);
+                const guideSnapshot = await getDoc(guideDocRef);
+                if (guideSnapshot.exists()) {
+                  setGuide({
+                    id: guideSnapshot.id,
+                    ...guideSnapshot.data()
+                  });
+                }
+              };
+              fetchGuide();
+            }}
+          />
+        )}
+
+        {showEditItem && (
+          <EditGuideItem
+            guideId={guideId}
+            itemIndex={editingItemIndex}
+            item={guide.items[editingItemIndex]}
+            onClose={() => {
+              setShowEditItem(false);
+              setEditingItemIndex(null);
+            }}
+            onItemUpdated={() => {
+              const fetchGuide = async () => {
+                const guideDocRef = doc(db, "guides", guideId);
+                const guideSnapshot = await getDoc(guideDocRef);
+                if (guideSnapshot.exists()) {
+                  setGuide({
+                    id: guideSnapshot.id,
+                    ...guideSnapshot.data()
+                  });
+                }
+              };
+              fetchGuide();
+            }}
           />
         )}
       </div>

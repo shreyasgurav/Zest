@@ -7,18 +7,16 @@
   .guide-container {
     max-width: 1200px;
     margin: 0 auto;
-    background: rgba(40, 40, 40, 0.5);
-    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
     padding: 30px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
   
   /* Guide Header */
   .guide-header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
+    text-align: center;
     margin-bottom: 40px;
   }
   
@@ -50,9 +48,9 @@
   .guide-title {
     color: #fff;
     font-size: 36px;
-    text-align: center;
     font-family: "Architects Daughter", cursive;
     font-weight: 400;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
   }
   
   /* Items Section */
@@ -70,58 +68,78 @@
   
   .guide-items-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 20px;
+    padding: 10px;
   }
   
   .guide-item-card {
     position: relative;
-    background: rgba(30, 30, 30, 0.7);
-    border-radius: 8px;
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 20px;
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    cursor: pointer;
   }
   
   .guide-item-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
   }
   
   .item-image {
     width: 100%;
-    height: 200px;
+    height: 100%;
+    position: relative;
   }
   
   .item-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
   }
   
-  .item-image-placeholder {
-    width: 100%;
-    height: 100%;
-    background-color: #2d2d2d;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #666;
+  .guide-item-card:hover .item-image img {
+    opacity: 1;
   }
   
   .item-details {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
     padding: 15px;
+    background: linear-gradient(to top, 
+        rgba(0, 0, 0, 0.8), 
+        rgba(0, 0, 0, 0.4), 
+        transparent
+    );
+    z-index: 1;
   }
   
   .item-name {
     color: #fff;
-    font-size: 18px;
-    margin-bottom: 10px;
+    font-size: 15px;
+    font-weight: 400;
+    margin: 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    font-family: "Architects Daughter", cursive;
+    opacity: 0.9;
   }
   
   .item-price {
-    color: #4CAF50;
-    font-weight: bold;
-    margin-bottom: 5px;
+    color: #fff;
+    font-size: 13px;
+    margin-top: 4px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    opacity: 0.7;
   }
   
   .item-address {
@@ -210,72 +228,58 @@
     }
     
     .guide-items-grid {
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 15px;
     }
     
-    .item-image {
-      height: 150px;
+    .item-details {
+      padding: 12px;
+    }
+    
+    .item-name {
+      font-size: 14px;
+    }
+    
+    .item-price {
+      font-size: 12px;
     }
   }
   
   @media (max-width: 480px) {
-    .guide-header {
-      margin-bottom: 20px;
-    }
-    
-    .guide-cover {
-      height: 150px;
+    .guide-container {
+      padding: 15px;
     }
     
     .guide-title {
-      font-size: 22px;
+      font-size: 24px;
     }
     
     .guide-items-grid {
-      grid-template-columns: 1fr;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 10px;
     }
     
-    .items-heading {
-      font-size: 20px;
+    .item-details {
+      padding: 10px;
+    }
+    
+    .item-name {
+      font-size: 13px;
+    }
+    
+    .item-price {
+      font-size: 11px;
     }
   }
 
   .delete-item-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: rgba(244, 67, 54, 0.9); /* Red with some transparency */
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: all 0.3s ease;
-    opacity: 0; /* Hidden by default */
-    transform: translateY(-5px);
-    backdrop-filter: blur(4px);
-    z-index: 2;
+    position: static;
+    padding: 0;
+    transform: none;
   }
 
   .guide-item-card:hover .delete-item-button {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  .delete-item-button:hover {
-    background-color: rgb(244, 67, 54); /* Solid red on hover */
-    box-shadow: 0 2px 8px rgba(244, 67, 54, 0.4);
-  }
-
-  .delete-item-button:active {
-    transform: scale(0.95);
-  }
-
-  /* Ensure the item content doesn't interfere with the delete button */
-  .item-content {
-    position: relative;
-    z-index: 1;
+    transform: none;
   }
 
   /* Add a subtle overlay effect when hovering */
@@ -300,10 +304,10 @@
   /* Skeleton Loading Styles */
   @keyframes shimmer {
     0% {
-      background-position: -1000px 0;
+      background-position: 100% 0;
     }
     100% {
-      background-position: 1000px 0;
+      background-position: -100% 0;
     }
   }
 
@@ -398,4 +402,97 @@
     .skeleton-loading .item-image {
       height: 120px;
     }
+  }
+
+  /* Update the item actions and buttons */
+  .item-actions {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    gap: 8px;
+    z-index: 2;
+    opacity: 0;
+    transform: translateY(-5px);
+    transition: all 0.3s ease;
+  }
+
+  .guide-item-card:hover .item-actions {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .edit-item-button,
+  .delete-item-button {
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+  }
+
+  .edit-item-button svg {
+    color: #fff;
+    font-size: 14px;
+    opacity: 0.8;
+  }
+
+  .delete-item-button {
+    font-size: 12px;
+    color: #fff;
+    opacity: 0.8;
+  }
+
+  .edit-item-button:hover,
+  .delete-item-button:hover {
+    transform: scale(1.1);
+    background: rgba(0, 0, 0, 0.8);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .edit-item-button:hover svg,
+  .delete-item-button:hover {
+    opacity: 1;
+  }
+
+  .current-images {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+
+  .preview-item {
+    position: relative;
+    aspect-ratio: 1;
+  }
+
+  .remove-image {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: rgba(244, 67, 54, 0.9);
+    color: white;
+    border: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: all 0.3s ease;
+  }
+
+  .remove-image:hover {
+    background: rgb(244, 67, 54);
+    transform: scale(1.1);
   }
