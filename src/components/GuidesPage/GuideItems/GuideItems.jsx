@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { db } from "../../firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, collection, getDocs, query, where } from "firebase/firestore";
 import "./GuideItems.css";
 
 const GuideItems = () => {
-  const { guideId, itemIndex } = useParams();
+  const { guideId, slug, itemIndex } = useParams();
   const navigate = useNavigate();
   const [guideItem, setGuideItem] = useState(null);
   const [guideName, setGuideName] = useState("");
@@ -15,17 +15,38 @@ const GuideItems = () => {
   useEffect(() => {
     const fetchGuideItem = async () => {
       try {
-        const guideDocRef = doc(db, "guides", guideId);
-        const guideSnapshot = await getDoc(guideDocRef);
+        let guideDocRef;
         
-        if (guideSnapshot.exists()) {
-          const guideData = guideSnapshot.data();
-          setGuideName(guideData.name);
+        if (slug) {
+          // First try to fetch by slug
+          const q = query(collection(db, "guides"), where("slug", "==", slug));
+          const querySnapshot = await getDocs(q);
           
-          if (guideData.items && guideData.items[itemIndex]) {
-            setGuideItem(guideData.items[itemIndex]);
-          } else {
-            setError("Guide item not found");
+          if (!querySnapshot.empty) {
+            guideDocRef = querySnapshot.docs[0].ref;
+          }
+        } else if (guideId) {
+          // Fallback to ID
+          guideDocRef = doc(db, "guides", guideId);
+        }
+
+        if (guideDocRef) {
+          const guideSnapshot = await getDoc(guideDocRef);
+          if (guideSnapshot.exists()) {
+            const guideData = guideSnapshot.data();
+            setGuideName(guideData.name);
+            
+            if (guideData.items && guideData.items[itemIndex]) {
+              setGuideItem(guideData.items[itemIndex]);
+              
+              // Redirect to slug URL if accessed via ID
+              if (guideId && !slug && guideData.slug) {
+                navigate(`/guide-item/${guideData.slug}/${itemIndex}`, { replace: true });
+                return;
+              }
+            } else {
+              setError("Guide item not found");
+            }
           }
         } else {
           setError("Guide not found");
@@ -38,10 +59,8 @@ const GuideItems = () => {
       }
     };
 
-    if (guideId && itemIndex !== undefined) {
-      fetchGuideItem();
-    }
-  }, [guideId, itemIndex]);
+    fetchGuideItem();
+  }, [guideId, slug, itemIndex, navigate]);
 
   if (loading) return <div className="loading-state">Loading...</div>;
   if (error || !guideItem) return <div className="error-state">{error}</div>;

@@ -3,8 +3,9 @@ import { db, storage } from "../../firebase";
 import { doc, updateDoc, arrayUnion } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import "./AddGuideItems.css";
+import { generateSlug } from '../../utils/generateSlug';
 
-const AddGuideItem = ({ guideId, onClose, onItemAdded }) => {
+const AddGuideItem = ({ guideId, slug, onClose, onItemAdded }) => {
   const [itemData, setItemData] = useState({
     name: '',
     price: '',
@@ -63,7 +64,8 @@ const AddGuideItem = ({ guideId, onClose, onItemAdded }) => {
       await updateDoc(guideRef, {
         items: arrayUnion({
           ...itemData,
-          photos: imageUrls
+          photos: imageUrls,
+          itemSlug: generateSlug(itemData.name)
         })
       });
 

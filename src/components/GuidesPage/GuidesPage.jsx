@@ -8,6 +8,7 @@ import "./GuidesPage.css";
 import { getAuth } from 'firebase/auth';
 import { FaEdit } from 'react-icons/fa';
 import { collection, getDocs, query, where } from "firebase/firestore";
+import { generateSlug } from "../utils/generateSlug";
 
 const GuideItemSkeleton = () => {
   return (
@@ -40,7 +41,7 @@ const GuidePage = () => {
         let guideData = null;
         
         if (slug) {
-          console.log("Fetching guide by slug:", slug);
+          // First try to fetch by slug
           const guidesRef = collection(db, "guides");
           const q = query(guidesRef, where("slug", "==", slug));
           const querySnapshot = await getDocs(q);
@@ -53,7 +54,7 @@ const GuidePage = () => {
             };
           }
         } else if (guideId) {
-          console.log("Fetching guide by ID:", guideId);
+          // Fetch by ID if no slug
           const guideDocRef = doc(db, "guides", guideId);
           const guideSnapshot = await getDoc(guideDocRef);
           
@@ -63,7 +64,18 @@ const GuidePage = () => {
               ...guideSnapshot.data()
             };
             
-            if (guideData.slug) {
+            // If guide doesn't have a slug, generate and add one
+            if (!guideData.slug && guideData.name) {
+              const newSlug = generateSlug(guideData.name);
+              await updateDoc(guideDocRef, {
+                slug: newSlug
+              });
+              guideData.slug = newSlug;
+              // Redirect to the new slug URL
+              navigate(`/guides/${newSlug}`, { replace: true });
+              return;
+            } else if (guideData.slug) {
+              // If guide has a slug but we're on the ID URL, redirect to slug URL
               navigate(`/guides/${guideData.slug}`, { replace: true });
               return;
             }

@@ -34,7 +34,7 @@ import ContactUs from "./Footer/ContactUs/ContactUs";
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { hasError: false, error: null };
+    this.state = { hasError: false, error: null, errorInfo: null };
   }
 
   static getDerivedStateFromError(error) {
@@ -43,6 +43,9 @@ class ErrorBoundary extends React.Component {
 
   componentDidCatch(error, errorInfo) {
     console.error("Error caught by boundary:", error, errorInfo);
+    this.setState({
+      errorInfo: errorInfo
+    });
   }
 
   render() {
@@ -50,9 +53,22 @@ class ErrorBoundary extends React.Component {
       return (
         <div style={{ padding: '20px', textAlign: 'center', color: 'white' }}>
           <h2>Something went wrong</h2>
-          <p>We're working on fixing this issue. Please try again later.</p>
-          <button onClick={() => window.location.href = '/'} 
-                  style={{ padding: '10px 20px', marginTop: '15px', cursor: 'pointer' }}>
+          <p>{this.state.error?.message}</p>
+          <pre style={{ whiteSpace: 'pre-wrap', color: '#ff6b6b' }}>
+            {this.state.errorInfo?.componentStack}
+          </pre>
+          <button 
+            onClick={() => window.location.href = '/'} 
+            style={{ 
+              padding: '10px 20px', 
+              marginTop: '15px', 
+              cursor: 'pointer',
+              background: '#333',
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px'
+            }}
+          >
             Return to Home
           </button>
         </div>
@@ -241,9 +257,36 @@ function App() {
                                     <Route path="/profile" element={<ProtectedProfile />} />
                                     <Route path="/create-event" element={<CreateEvent />} />
                                     <Route path="/create-guide" element={<CreateGuide />} />
-                                    <Route path="/guides/:slug" element={<GuidePage />} />
-                                    <Route path="/guidepage/:guideId" element={<GuidePage />} />
-                                    <Route path="/guide-item/:slug/:itemIndex" element={<GuideProfile />} />
+                                    <Route 
+                                        path="/guides/:slug" 
+                                        element={
+                                            <ErrorBoundary>
+                                                <Suspense fallback={<LoadingFallback />}>
+                                                    <GuidePage />
+                                                </Suspense>
+                                            </ErrorBoundary>
+                                        } 
+                                    />
+                                    <Route 
+                                        path="/guidepage/:guideId" 
+                                        element={
+                                            <ErrorBoundary>
+                                                <Suspense fallback={<LoadingFallback />}>
+                                                    <GuidePage />
+                                                </Suspense>
+                                            </ErrorBoundary>
+                                        } 
+                                    />
+                                    <Route 
+                                        path="/guide-item/:slug/:itemIndex" 
+                                        element={
+                                            <ErrorBoundary>
+                                                <Suspense fallback={<LoadingFallback />}>
+                                                    <GuideProfile />
+                                                </Suspense>
+                                            </ErrorBoundary>
+                                        } 
+                                    />
                                     <Route path="/guide-profile/:guideId/:itemIndex" element={<GuideProfile />} />
                                     <Route path="/edit-guide/:id" element={<EditGuide />} />
                                     <Route path="/create" element={<EventTypeSelection />} />

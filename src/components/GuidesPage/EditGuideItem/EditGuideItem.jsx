@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { db, storage } from "../../firebase";
 import { doc, updateDoc, getDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { generateSlug } from '../../utils/generateSlug';
 import "./EditGuideItem.css";
 
 const EditGuideItem = ({ guideId, itemIndex, item, onClose, onItemUpdated }) => {
   const [itemData, setItemData] = useState({
     name: item.name || '',
+    slug: item.slug || generateSlug(item.name) || '',
     price: item.price || '',
     contactInfo: item.contactInfo || '',
     website: item.website || '',
@@ -72,9 +74,10 @@ const EditGuideItem = ({ guideId, itemIndex, item, onClose, onItemUpdated }) => 
       const guideData = guideSnap.data();
       const items = [...guideData.items];
 
-      // Update the specific item
+      // Update the specific item with new slug
       items[itemIndex] = {
         ...itemData,
+        slug: generateSlug(itemData.name),
         photos: [...itemData.photos, ...newImageUrls]
       };
 

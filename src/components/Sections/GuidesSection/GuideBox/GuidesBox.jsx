@@ -3,8 +3,9 @@ import "./GuidesBox.css";
 import { useNavigate } from "react-router-dom";
 import { getAuth } from 'firebase/auth';
 import { db } from "../../../firebase";
-import { deleteDoc, doc } from "firebase/firestore";
+import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { FaTrash, FaEdit } from 'react-icons/fa';
+import { generateSlug } from "../../../utils/generateSlug";
 
 function GuidesBox({ guide, onDelete }) {
   const navigate = useNavigate();
@@ -12,10 +13,24 @@ function GuidesBox({ guide, onDelete }) {
   const currentUser = auth.currentUser;
   const isGuideCreator = currentUser && currentUser.uid === guide?.createdBy;
 
-  const handleClick = () => {
-    if (guide.slug) {
-      navigate(`/guides/${guide.slug}`);
-    } else {
+  const handleClick = async () => {
+    try {
+      if (!guide.slug && guide.name) {
+        // If guide doesn't have a slug, generate and add one
+        const newSlug = generateSlug(guide.name);
+        const guideRef = doc(db, "guides", guide.id);
+        await updateDoc(guideRef, {
+          slug: newSlug
+        });
+        navigate(`/guides/${newSlug}`);
+      } else if (guide.slug) {
+        navigate(`/guides/${guide.slug}`);
+      } else {
+        navigate(`/guides/${generateSlug(guide.name)}`);
+      }
+    } catch (error) {
+      console.error("Error handling guide click:", error);
+      // Fallback to ID-based navigation if something goes wrong
       navigate(`/guidepage/${guide.id}`);
     }
   };

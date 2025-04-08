@@ -93,6 +93,15 @@ const EditGuide = () => {
     }
   };
 
+  const generateSlug = (title) => {
+    return title
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '') // Remove special characters
+      .replace(/\s+/g, '-')         // Replace spaces with hyphens
+      .replace(/-+/g, '-')          // Remove consecutive hyphens
+      .trim();                      // Remove leading/trailing spaces
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -116,8 +125,12 @@ const EditGuide = () => {
         coverImageUrl = await getDownloadURL(storageRef);
       }
   
+      // Generate new slug from updated name
+      const newSlug = generateSlug(guideName.trim());
+  
       const guideData = {
         name: guideName.trim(),
+        slug: newSlug,
         cover_image: coverImageUrl,
         updatedAt: new Date()
       };
@@ -126,7 +139,7 @@ const EditGuide = () => {
       await updateDoc(guideRef, guideData);
       
       setMessage("Guide updated successfully!");
-      setTimeout(() => navigate(`/guidepage/${id}`), 2000);
+      setTimeout(() => navigate(`/guides/${newSlug}`), 2000);
     } catch (error) {
       console.error("Error updating guide:", error);
       setMessage(`Failed to update guide: ${error.message}`);

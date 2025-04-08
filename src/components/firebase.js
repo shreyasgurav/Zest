@@ -14,24 +14,29 @@ const firebaseConfig = {
   measurementId: "G-XSS8QEY3PX", // Replace with your actual Measurement ID
 };
 
-// Initialize Firebase App **before** accessing other services
-const app = initializeApp(firebaseConfig);
-
-// Initialize Firebase Services **only after** Firebase is initialized
-const auth = getAuth(app);
-const db = getFirestore(app);
-const storage = getStorage(app);
-
-// Initialize Analytics (Only if supported)
+let app;
+let auth;
+let db;
+let storage;
 let analytics = null;
-isSupported().then((supported) => {
-  if (supported) {
-    analytics = getAnalytics(app);
-    console.log("Analytics initialized:", analytics);
-  } else {
-    console.warn("Analytics is not supported in this environment.");
-  }
-});
+
+try {
+  app = initializeApp(firebaseConfig);
+  auth = getAuth(app);
+  db = getFirestore(app);
+  storage = getStorage(app);
+  
+  isSupported().then((supported) => {
+    if (supported) {
+      analytics = getAnalytics(app);
+      console.log("Analytics initialized:", analytics);
+    } else {
+      console.warn("Analytics is not supported in this environment.");
+    }
+  }).catch(console.error);
+} catch (error) {
+  console.error("Firebase initialization error:", error);
+}
 
 // Debug Logs
 console.log("Firebase initialized:", app);
