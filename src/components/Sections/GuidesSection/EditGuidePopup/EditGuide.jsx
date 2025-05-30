@@ -4,7 +4,7 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 import { useNavigate, useParams } from "react-router-dom";
-import "/Users/shreyasgurav/Documents/zest-v1/zest-frontend/src/components/Create/CreateGuide/CreateGuide.css"; // Reusing same CSS
+import "./EditGuide.css"; // We'll create this file next
 
 const EditGuide = () => {
   const { id } = useParams();
