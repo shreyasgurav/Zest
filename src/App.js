@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
 
@@ -40,6 +41,17 @@ function App() {
 
   return (
     <div>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       {/* Desktop Navigation */}
       <nav className="desktop-nav">
         <button className="link-search" onClick={handleSearchClick}>Search</button>
