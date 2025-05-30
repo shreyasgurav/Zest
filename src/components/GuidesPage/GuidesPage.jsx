@@ -100,7 +100,7 @@ const GuidePage = () => {
 
   const handleItemClick = (index) => {
     if (guide.slug) {
-      navigate(`/guide-item/${guide.slug}/${index}`);
+      navigate(`/guide-profile/${guide.slug}/${index}`);
     } else {
       navigate(`/guide-profile/${guide.id}/${index}`);
     }

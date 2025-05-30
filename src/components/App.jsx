@@ -19,7 +19,6 @@ import AllEvents from "./SeeAll/AllEvents/AllEvents";
 import CreateEvent from "./Create/CreateEvents/CreateEvent";
 import CreateGuide from "./Create/CreateGuide/CreateGuide";
 import GuidePage from "./GuidesPage/GuidesPage";
-import GuideItems from "./GuidesPage/GuideItems/GuideItems";
 import EditGuide from "./Sections/GuidesSection/EditGuidePopup/EditGuide";
 import GuideProfile from "./Profiles/GuidesProfile/GuidesProfile";
 import AllGuides from "./SeeAll/AllGuides/AllGuides";
@@ -278,7 +277,7 @@ function App() {
                                         } 
                                     />
                                     <Route 
-                                        path="/guide-item/:slug/:itemIndex" 
+                                        path="/guide-profile/:slug/:itemIndex" 
                                         element={
                                             <ErrorBoundary>
                                                 <Suspense fallback={<LoadingFallback />}>
@@ -287,7 +286,16 @@ function App() {
                                             </ErrorBoundary>
                                         } 
                                     />
-                                    <Route path="/guide-profile/:guideId/:itemIndex" element={<GuideProfile />} />
+                                    <Route 
+                                        path="/guide-profile/:guideId/:itemIndex" 
+                                        element={
+                                            <ErrorBoundary>
+                                                <Suspense fallback={<LoadingFallback />}>
+                                                    <GuideProfile />
+                                                </Suspense>
+                                            </ErrorBoundary>
+                                        } 
+                                    />
                                     <Route path="/edit-guide/:id" element={<EditGuide />} />
                                     <Route path="/create" element={<EventTypeSelection />} />
                                     <Route path="/create-type" element={<CreateType />} />
