@@ -1,0 +1,444 @@
+/* General Event Section Styling */
+.experiences-section {
+    flex: 1;
+    margin-top: 50px;
+}
+
+.upcoming-experiences-heading {
+    grid-column: 2; /* Place in middle column */
+    text-align: center;
+    font-size: 24px;
+    color: white;
+    opacity: 0.7;
+    font-family: "Architects Daughter", cursive;
+    font-weight: 400;
+    font-style: normal;
+    margin: 0;
+}
+
+.experiences-section-heading {
+    display: grid;
+    grid-template-columns: 100px 1fr 100px; /* Fixed width for sides, flexible middle */
+    align-items: center;
+    padding: 0 20px;
+    margin-bottom: 20px;
+}
+
+.see-all-link {
+    grid-column: 3; /* Place in last column */
+    justify-self: end;
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    opacity: 0.7;
+    white-space: nowrap;
+}
+
+.see-all-link:hover {
+    opacity: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .experiences-section-heading {
+        grid-template-columns: 80px 1fr 80px; /* Slightly smaller side columns */
+        padding: 0 15px;
+    }
+
+    .upcoming-experiences-heading {
+        font-size: 20px;
+    }
+
+    .see-all-link {
+        font-size: 14px;
+    }
+
+    .embla__container {
+        grid-column-gap: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .experiences-section-heading {
+        grid-template-columns: 60px 1fr 60px; /* Even smaller side columns */
+        padding: 0 10px;
+    }
+
+    .upcoming-experiences-heading {
+        font-size: 18px;
+    }
+
+    .see-all-link {
+        font-size: 12px;
+    }
+}
+
+.no-experiences-message {
+    text-align: center;
+    font-size: 18px;
+    color: #666;
+    margin-top: 17px;
+    font-family: 'Arial', sans-serif;
+    padding: 165px;
+    background: none;
+}
+
+
+/* Embla Carousel Styling */
+.embla {
+    position: relative;
+    overflow: visible;
+    width: 100%;
+}
+
+.embla__viewport {
+    overflow: hidden;
+    width: 100%;
+    padding: 0 20px;
+}
+
+.embla__container {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-left: 0;
+}
+
+.embla__slide {
+    flex: 0 0 auto;
+    min-width: 250px;
+    padding: 0;
+    display: flex;
+    justify-content: flex-start;
+}
+
+
+/* Removed Arrows and Dots */
+.embla__controls,
+.embla__buttons,
+.embla__dots {
+    display: none;
+}
+
+/* Skeleton Loading Animation */
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.skeleton-loading {
+  background: rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  width: 100%;
+  max-width: 230px;
+  aspect-ratio: 1;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.guides-box-image-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.03) 25%,
+    rgba(255, 255, 255, 0.08) 37%,
+    rgba(255, 255, 255, 0.03) 63%
+  );
+  background-size: 400% 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+.skeleton-loading .guides-box-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.8),
+    rgba(0, 0, 0, 0.4),
+    transparent
+  );
+}
+
+.skeleton-loading .skeleton-title {
+  height: 18px;
+  width: 80%;
+  margin: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 25%,
+    rgba(255, 255, 255, 0.1) 37%,
+    rgba(255, 255, 255, 0.05) 63%
+  );
+  background-size: 400% 100%;
+  animation: shimmer 2s infinite linear;
+  border-radius: 4px;
+}
+
+.skeleton-text {
+  color: transparent !important;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 25%,
+    rgba(255, 255, 255, 0.1) 37%,
+    rgba(255, 255, 255, 0.05) 63%
+  );
+  background-size: 400% 100%;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 4px;
+}
+
+/* Skeleton Section Styles */
+.skeleton-section {
+  opacity: 0;
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.skeleton-heading {
+  width: 200px;
+  height: 32px;
+  margin-bottom: 8px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .skeleton-loading {
+    max-width: 180px;
+  }
+}
+
+@media (max-width: 480px) {
+  .skeleton-loading {
+    max-width: 170px;
+  }
+}
+
+.embla-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 0;
+    overflow: visible;
+}
+
+.embla-button {
+    position: absolute;
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.embla-button svg {
+    width: 24px;
+    height: 24px;
+    color: white;
+}
+
+.embla-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.embla-button-prev {
+    left: 0;
+}
+
+.embla-button-next {
+    right: 0;
+}
+
+.embla-button-disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.embla-button-disabled:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .embla__container {
+        margin-left: 20px;
+    }
+    
+    .embla__viewport {
+        padding: 0 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .embla__slide {
+        min-width: 180px;
+    }
+
+    .embla__viewport {
+        mask-image: linear-gradient(
+            to right,
+            transparent,
+            black 10%,
+            black 90%,
+            transparent
+        );
+        -webkit-mask-image: linear-gradient(
+            to right,
+            transparent,
+            black 10%,
+            black 90%,
+            transparent
+        );
+    }
+}
+
+/* Update the responsive styles */
+@media (max-width: 480px) {
+  .embla__slide {
+    min-width: 250px; /* Keep the same width as larger screens */
+    width: auto;
+    padding: 0;
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  .guides-box-wrapper {
+    max-width: 230px; /* Match larger screens */
+    padding: 10px;
+  }
+
+  .guides-box-card {
+    max-width: 230px; /* Match larger screens */
+  }
+
+  /* Remove any styles that force single slide view */
+  .embla__container {
+    gap: 0;
+  }
+
+  .embla__viewport {
+    overflow-x: auto; /* Ensure horizontal scrolling works */
+    padding: 0 20px;
+  }
+}
+
+/* Update skeleton styles to match GuideBox exactly */
+.guides-box-card {
+  position: relative;
+  width: 100%;
+  max-width: 230px;
+  aspect-ratio: 1;
+  border-radius: 20px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.guides-box-image-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.03) 25%,
+    rgba(255, 255, 255, 0.08) 37%,
+    rgba(255, 255, 255, 0.03) 63%
+  );
+  background-size: 400% 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+.skeleton-text {
+  color: transparent !important;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 25%,
+    rgba(255, 255, 255, 0.1) 37%,
+    rgba(255, 255, 255, 0.05) 63%
+  );
+  background-size: 400% 100%;
+  animation: shimmer 2s infinite linear;
+  border-radius: 4px;
+  opacity: 0.7;
+}
+
+.skeleton-loading .guides-box-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.8),
+    rgba(0, 0, 0, 0.4),
+    transparent
+  );
+}
+
+.skeleton-loading .skeleton-title {
+  height: 18px;
+  width: 80%;
+  margin: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 25%,
+    rgba(255, 255, 255, 0.1) 37%,
+    rgba(255, 255, 255, 0.05) 63%
+  );
+  background-size: 400% 100%;
+  animation: shimmer 2s infinite linear;
+  border-radius: 4px;
+}
+
+/* Update the shimmer animation */
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Maintain responsive styles */
+@media (max-width: 768px) {
+  .guides-box-card {
+    max-width: 180px;
+  }
+}
+
+@media (max-width: 480px) {
+  .guides-box-card {
+    max-width: 170px;
+  }
+}
+

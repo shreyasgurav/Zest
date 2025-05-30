@@ -1,0 +1,294 @@
+.create-event-page {
+    min-height: 100vh;
+    padding: 80px 20px 40px;
+    background: var(--background-color);
+}
+
+.create-event-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: rgba(40, 40, 40, 0.5);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.page-title {
+    color: #aeadad;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2em;
+}
+
+.create-event-form {
+    width: 100%;
+}
+
+.form-section {
+    background: rgba(30, 30, 30, 0.5);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.form-section h2 {
+    color: #aeadad;
+    font-size: 1.2em;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #444;
+    padding-bottom: 10px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    color: #888;
+    margin-bottom: 8px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #444;
+    border-radius: 5px;
+    background: rgba(20, 20, 20, 0.5);
+    color: #fff;
+}
+
+.image-tip {
+    color: #888;
+    margin-bottom: 15px;
+    font-size: 0.9em;
+}
+
+.file-input {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+    padding: 10px;
+    background: rgba(20, 20, 20, 0.5);
+    border-radius: 5px;
+    border: 1px solid #444;
+    color: #fff;
+}
+
+.image-preview {
+    margin: 20px auto;
+    width: 300px;
+    height: 200px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 2px dashed #444;
+}
+
+.image-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.submit-button,
+.cancel-button {
+    padding: 10px 25px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1em;
+    cursor: pointer;
+    transition: 0.25s ease-in-out;
+}
+
+.submit-button {
+    background: #4CAF50;
+    color: white;
+}
+
+.submit-button:hover {
+    background: #39883d;
+}
+
+.cancel-button {
+    background: #666;
+    color: white;
+}
+
+.cancel-button:hover {
+    background: #555;
+}
+
+.message {
+    text-align: center;
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+.message.success {
+    background: rgba(76, 175, 80, 0.2);
+    color: #4CAF50;
+}
+
+.message.error {
+    background: rgba(244, 67, 54, 0.2);
+    color: #f44336;
+}
+
+@media (max-width: 768px) {
+    .create-event-container {
+        padding: 20px;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .submit-button,
+    .cancel-button {
+        width: 100%;
+    }
+}
+
+/* Add these styles to your CreateGuide.css file */
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .add-item-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .add-item-button:hover {
+    background: #39883d;
+  }
+  
+  .guide-item {
+    background: rgba(25, 25, 25, 0.5);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .guide-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .guide-item-header h3 {
+    color: #aeadad;
+    margin: 0;
+  }
+  
+  .remove-item-button {
+    background: none;
+    border: none;
+    color: #ff4444;
+    cursor: pointer;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+  }
+  
+  .remove-item-button:hover {
+    transform: scale(1.1);
+  }
+  
+  .guide-item .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .guide-item .form-group:last-child {
+    margin-bottom: 0;
+  }
+  
+  .guide-item .image-preview {
+    margin: 10px 0;
+    width: 200px;
+    height: 200px;
+  }
+  
+  @media (max-width: 768px) {
+    .guide-item {
+      padding: 15px;
+    }
+    
+    .guide-item .image-preview {
+      width: 150px;
+      height: 150px;
+    }
+  }
+
+.unauthorized-message-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.unauthorized-message {
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  padding: 40px;
+  border-radius: 16px;
+  text-align: center;
+  color: white;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.unauthorized-message h1 {
+  font-size: 24px;
+  margin-bottom: 16px;
+  color: #ff4444;
+}
+
+.unauthorized-message p {
+  margin-bottom: 24px;
+  opacity: 0.8;
+  line-height: 1.5;
+}
+
+.back-button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.back-button:hover {
+  background: #0056b3;
+}
+
+  

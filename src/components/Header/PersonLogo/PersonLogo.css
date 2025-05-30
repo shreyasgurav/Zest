@@ -1,0 +1,134 @@
+.person-logo-container {
+    position: relative;
+    display: inline-block;
+}
+
+.person-dropdown {
+    position: absolute;
+    top: calc(100% + 15px);
+    right: -10px;
+    background: rgba(18, 18, 18, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 12px;
+    min-width: 160px;
+    z-index: 1000;
+    
+    /* Initial state */
+    opacity: 0;
+    transform: scale(0.95) translateY(-20px);
+    transition: all 0.1s cubic-bezier(0.16, 1, 0.3, 1);
+    visibility: hidden;
+    pointer-events: none;
+    
+    /* Add a subtle shadow */
+    box-shadow: 
+        0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+/* Add a subtle arrow/triangle */
+.person-dropdown::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    right: 15px;
+    width: 10px;
+    height: 10px;
+    background: rgba(18, 18, 18, 0.95);
+    transform: rotate(45deg);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Active state */
+.person-dropdown.active {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    visibility: visible;
+    pointer-events: all;
+}
+
+.dropdown-item {
+    padding: 12px 16px;
+    margin: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    transform: translateX(2px);
+}
+
+/* Remove the border between items and use spacing instead */
+.dropdown-item:not(:last-child) {
+    margin-bottom: 2px;
+}
+
+/* Add a subtle hover glow effect */
+.person-dropdown:hover {
+    box-shadow: 
+        0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06),
+        0 0 0 1px rgba(255, 255, 255, 0.1),
+        0 0 15px rgba(255, 255, 255, 0.05);
+}
+
+/* Fallback for browsers that don't support backdrop-filter */
+@supports not (backdrop-filter: blur(12px)) {
+    .person-dropdown {
+        background: rgba(18, 18, 18, 0.98);
+    }
+}
+
+/* Animation for items */
+.dropdown-item {
+    opacity: 0;
+    transform: translateY(-5px);
+    transition: all 0.3s ease;
+}
+
+.person-dropdown.active .dropdown-item {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Stagger the animation for each item */
+.person-dropdown.active .dropdown-item:nth-child(1) {
+    transition-delay: 0.1s;
+}
+
+.person-dropdown.active .dropdown-item:nth-child(2) {
+    transition-delay: 0.15s;
+}
+
+/* Add these styles for the login popup if needed */
+.login-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.login-popup-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    position: relative;
+}

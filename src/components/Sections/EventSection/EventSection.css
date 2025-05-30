@@ -1,0 +1,225 @@
+/* General Event Section Styling */
+.event-section {
+    flex: 1;
+    margin-top: 50px;
+}
+
+.upcoming-events-heading {
+    flex: 1;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 17px;
+    margin-bottom: 17px;
+    color: white;
+    opacity: 0.7;
+    margin-left: 50px;
+    font-family: "Architects Daughter", cursive;
+    font-weight: 400;
+    font-style: normal;
+    padding: 20px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.event-section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.see-all-link {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    margin-left: 10px;
+    transition: color 0.3s;
+}
+
+.see-all-link:hover {
+    opacity: 0.6;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .see-all-link {
+        font-size: 14px;
+    }
+    
+    .embla__container {
+        grid-column-gap: 20px;
+    }
+
+    .upcoming-events-heading {
+        padding: 16px 20px;
+    }
+    
+    .skeleton-heading {
+        width: 160px;
+        height: 28px;
+    }
+    
+    .skeleton-subheading {
+        width: 100px;
+        height: 14px;
+    }
+}
+
+.no-event-message {
+    text-align: center;
+    font-size: 18px;
+    color: #666;
+    margin-top: 17px;
+    font-family: 'Arial', sans-serif;
+    padding: 165px;
+    background: none;
+}
+
+/* Embla Carousel Styling */
+.embla {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+}
+
+.embla__viewport {
+    overflow: hidden;
+    width: 100%;
+}
+
+.embla__container {
+    display: flex;
+    align-items: center;
+}
+
+.embla__slide {
+    flex: 0 0 50% auto;
+    width: 250px;
+}
+
+.embla__slide:nth-child(1) {
+    margin-left: 5%;
+  }
+
+
+  .embla__slide:last-child {
+    margin-right: 5%;
+  }
+
+
+/* Removed Arrows and Dots */
+.embla__controls,
+.embla__buttons,
+.embla__dots {
+    display: none;
+}
+
+
+/* Existing styles... */
+
+/* Skeleton Loading Animation */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.skeleton-loading .event-box {
+  background: rgb(44, 44, 44, 0.3);
+  border: none;
+  pointer-events: none;
+}
+
+.skeleton-background {
+  background: linear-gradient(
+    90deg,
+    rgba(44, 44, 44, 0.3) 25%,
+    rgba(60, 60, 60, 0.5) 37%,
+    rgba(44, 44, 44, 0.3) 63%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+.skeleton-line {
+  height: 12px;
+  border-radius: 4px;
+  margin: 8px 0;
+  background: linear-gradient(
+    90deg,
+    rgba(44, 44, 44, 0.3) 25%,
+    rgba(60, 60, 60, 0.5) 37%,
+    rgba(44, 44, 44, 0.3) 63%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+.skeleton-hosting-club {
+  width: 60%;
+  margin: 8px auto;
+}
+
+.skeleton-title {
+  width: 80%;
+  height: 16px;
+  margin: 12px auto;
+}
+
+.skeleton-date, .skeleton-time {
+  width: 40%;
+  height: 10px;
+  margin: 0;
+}
+
+.skeleton-venue {
+  width: 70%;
+  height: 10px;
+  margin: 8px auto;
+}
+
+.skeleton-loading .event-image-placeholder {
+  height: 230px;
+  background: linear-gradient(
+    90deg,
+    rgba(44, 44, 44, 0.3) 25%,
+    rgba(60, 60, 60, 0.5) 37%,
+    rgba(44, 44, 44, 0.3) 63%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+/* Skeleton Section Styles */
+.skeleton-section {
+  opacity: 0;
+  animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Add these styles to your existing CSS */
+
+.skeleton-heading {
+  width: 200px;
+  height: 32px;
+  margin-bottom: 8px;
+}
+
+.skeleton-subheading {
+  width: 120px;
+  height: 16px;
+  margin-top: 4px;
+}

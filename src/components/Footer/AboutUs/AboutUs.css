@@ -1,0 +1,38 @@
+.about-us-container {
+    padding: 20px;
+    margin-top: 100px;
+    font-family: 'Roboto', sans-serif;
+    background: none;
+}
+
+.about-us-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: rgb(40, 40, 40, 0.3);
+}
+
+.about-us-content h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: white;
+    opacity: 0.7;
+    font-family: "Architects Daughter", cursive;
+    font-weight: 400;
+    font-style: normal;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.about-us-content p {
+    margin-bottom: 15px;
+    line-height: 1.6;
+    font-size: 1.1em;
+    margin: 25px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+
+
+

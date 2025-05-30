@@ -1,0 +1,498 @@
+.guide-page {
+    min-height: 100vh;
+    padding: 80px 20px 40px;
+    background: var(--background-color);
+  }
+  
+  .guide-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 30px;
+  }
+  
+  /* Guide Header */
+  .guide-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  
+  .guide-cover {
+    width: 100%;
+    max-width: 800px;
+    height: 300px;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  
+  .guide-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .cover-placeholder {
+    width: 100%;
+    height: 100%;
+    background-color: #2d2d2d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    font-size: 20px;
+  }
+  
+  .guide-title {
+    color: #fff;
+    font-size: 36px;
+    font-family: "Architects Daughter", cursive;
+    font-weight: 400;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  }
+  
+  /* Items Section */
+  .guide-items-container {
+    margin-bottom: 40px;
+  }
+  
+  .items-heading {
+    color: #fff;
+    font-size: 24px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 10px;
+  }
+  
+  .guide-items-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 10px;
+  }
+  
+  .guide-item-card {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 20px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+  }
+  
+  .guide-item-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .item-image {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+  
+  .item-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+  }
+  
+  .guide-item-card:hover .item-image img {
+    opacity: 1;
+  }
+  
+  .item-details {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 15px;
+    background: linear-gradient(to top, 
+        rgba(0, 0, 0, 0.8), 
+        rgba(0, 0, 0, 0.4), 
+        transparent
+    );
+    z-index: 1;
+  }
+  
+  .item-name {
+    color: #fff;
+    font-size: 15px;
+    font-weight: 400;
+    margin: 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    font-family: "Architects Daughter", cursive;
+    opacity: 0.9;
+  }
+  
+  .item-price {
+    color: #fff;
+    font-size: 13px;
+    margin-top: 4px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    opacity: 0.7;
+  }
+  
+  .item-address {
+    color: #2196F3;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    display: block;
+    margin-bottom: 10px;
+    font-size: 14px;
+  }
+  
+  .item-address:hover {
+    color: #64B5F6;
+    text-decoration: underline;
+  }
+  
+  .item-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    color: #ddd;
+    font-size: 14px;
+  }
+  
+  .website-link {
+    display: inline-block;
+    color: #2196F3;
+    text-decoration: none;
+    transition: opacity 0.3s;
+  }
+  
+  .website-link:hover {
+    opacity: 0.8;
+  }
+  
+  /* Back Button */
+  .back-button {
+    display: block;
+    margin: 0 auto;
+    padding: 10px 25px;
+    background: #333;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+    font-size: 16px;
+  }
+  
+  .back-button:hover {
+    background: #444;
+  }
+  
+  /* Loading and Error States */
+  .loading-indicator,
+  .error-message {
+    text-align: center;
+    padding: 40px;
+    color: #ddd;
+    font-size: 18px;
+  }
+  
+  .error-message {
+    color: #f44336;
+  }
+  
+  .no-items-message {
+    text-align: center;
+    color: #888;
+    font-size: 18px;
+    padding: 40px;
+  }
+  
+  /* Responsive Adjustments */
+  @media (max-width: 768px) {
+    .guide-container {
+      padding: 20px;
+    }
+    
+    .guide-cover {
+      height: 200px;
+    }
+    
+    .guide-title {
+      font-size: 28px;
+    }
+    
+    .guide-items-grid {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 15px;
+    }
+    
+    .item-details {
+      padding: 12px;
+    }
+    
+    .item-name {
+      font-size: 14px;
+    }
+    
+    .item-price {
+      font-size: 12px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .guide-container {
+      padding: 15px;
+    }
+    
+    .guide-title {
+      font-size: 24px;
+    }
+    
+    .guide-items-grid {
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 10px;
+    }
+    
+    .item-details {
+      padding: 10px;
+    }
+    
+    .item-name {
+      font-size: 13px;
+    }
+    
+    .item-price {
+      font-size: 11px;
+    }
+  }
+
+  .delete-item-button {
+    position: static;
+    padding: 0;
+    transform: none;
+  }
+
+  .guide-item-card:hover .delete-item-button {
+    transform: none;
+  }
+
+  /* Add a subtle overlay effect when hovering */
+  .guide-item-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .guide-item-card:hover::before {
+    opacity: 1;
+  }
+
+  /* Skeleton Loading Styles */
+  @keyframes shimmer {
+    0% {
+      background-position: 100% 0;
+    }
+    100% {
+      background-position: -100% 0;
+    }
+  }
+
+  .skeleton-loading {
+    pointer-events: none;
+  }
+
+  .skeleton-background {
+    background: linear-gradient(
+      90deg,
+      rgba(44, 44, 44, 0.3) 25%,
+      rgba(60, 60, 60, 0.5) 37%,
+      rgba(44, 44, 44, 0.3) 63%
+    );
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite linear;
+  }
+
+  .skeleton-line {
+    height: 12px;
+    border-radius: 4px;
+    margin: 8px 0;
+    background: linear-gradient(
+      90deg,
+      rgba(44, 44, 44, 0.3) 25%,
+      rgba(60, 60, 60, 0.5) 37%,
+      rgba(44, 44, 44, 0.3) 63%
+    );
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite linear;
+  }
+
+  .skeleton-guide-title {
+    width: 300px;
+    height: 36px;
+    margin: 20px auto;
+  }
+
+  .skeleton-loading .item-image {
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(
+      90deg,
+      rgba(44, 44, 44, 0.3) 25%,
+      rgba(60, 60, 60, 0.5) 37%,
+      rgba(44, 44, 44, 0.3) 63%
+    );
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite linear;
+  }
+
+  .skeleton-name {
+    width: 80%;
+    height: 18px;
+    margin: 10px auto;
+  }
+
+  .skeleton-price {
+    width: 40%;
+    height: 14px;
+    margin: 10px auto;
+  }
+
+  /* Responsive Adjustments */
+  @media (max-width: 768px) {
+    .skeleton-guide-title {
+      width: 200px;
+      height: 28px;
+    }
+
+    .skeleton-loading .item-image {
+      height: 150px;
+    }
+
+    .skeleton-name {
+      width: 70%;
+      height: 16px;
+    }
+
+    .skeleton-price {
+      width: 35%;
+      height: 12px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .skeleton-guide-title {
+      width: 150px;
+      height: 22px;
+    }
+
+    .skeleton-loading .item-image {
+      height: 120px;
+    }
+  }
+
+  /* Update the item actions and buttons */
+  .item-actions {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    gap: 8px;
+    z-index: 2;
+    opacity: 0;
+    transform: translateY(-5px);
+    transition: all 0.3s ease;
+  }
+
+  .guide-item-card:hover .item-actions {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .edit-item-button,
+  .delete-item-button {
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+  }
+
+  .edit-item-button svg {
+    color: #fff;
+    font-size: 14px;
+    opacity: 0.8;
+  }
+
+  .delete-item-button {
+    font-size: 12px;
+    color: #fff;
+    opacity: 0.8;
+  }
+
+  .edit-item-button:hover,
+  .delete-item-button:hover {
+    transform: scale(1.1);
+    background: rgba(0, 0, 0, 0.8);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .edit-item-button:hover svg,
+  .delete-item-button:hover {
+    opacity: 1;
+  }
+
+  .current-images {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+
+  .preview-item {
+    position: relative;
+    aspect-ratio: 1;
+  }
+
+  .remove-image {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: rgba(244, 67, 54, 0.9);
+    color: white;
+    border: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: all 0.3s ease;
+  }
+
+  .remove-image:hover {
+    background: rgb(244, 67, 54);
+    transform: scale(1.1);
+  }
