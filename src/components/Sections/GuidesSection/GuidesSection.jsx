@@ -12,6 +12,7 @@ import GuidesSectionSkeleton from './GuidesSectionSkeleton';
 const GuidesSection = () => {
   const [guides, setGuides] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
   const [prevBtnEnabled, setPrevBtnEnabled] = useState(false);
   const [nextBtnEnabled, setNextBtnEnabled] = useState(false);
 
@@ -39,9 +40,24 @@ const GuidesSection = () => {
     emblaApi.on('reInit', onSelect);
   }, [emblaApi, onSelect]);
 
+  // Preload images to prevent layout shift
+  const preloadImages = async (guidesData) => {
+    const imagePromises = guidesData
+      .filter(guide => guide.cover_image)
+      .map(guide => {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.onload = resolve;
+          img.onerror = resolve; // Resolve even on error to not block
+          img.src = guide.cover_image;
+        });
+      });
+
+    await Promise.all(imagePromises);
+  };
+
   useEffect(() => {
     const fetchGuides = async () => {
-      setLoading(true);
       try {
         console.log("Fetching guides...");
         const guidesCollectionRef = collection(db, "guides");
@@ -54,27 +70,36 @@ const GuidesSection = () => {
         }));
 
         console.log("Guides fetched:", guidesData.length);
+        
+        // Preload all images before showing guides
+        await preloadImages(guidesData);
+        
+        // Set guides data
         setGuides(guidesData);
-      } catch (error) {
-        console.error("Error fetching guides:", error);
-      } finally {
-        // Set a slight delay so the skeleton is visible momentarily
+        setImagesLoaded(true);
+        
+        // Small delay for smooth transition
         setTimeout(() => {
           setLoading(false);
-        }, 500);
+        }, 100);
+        
+      } catch (error) {
+        console.error("Error fetching guides:", error);
+        setGuides([]);
+        setImagesLoaded(true);
+        setTimeout(() => {
+          setLoading(false);
+        }, 100);
       }
     };
 
     fetchGuides();
   }, []);
 
-  // Show skeleton while loading
-  if (loading) {
-    console.log("Rendering skeleton");
+  // Show skeleton while loading or images aren't ready
+  if (loading || !imagesLoaded) {
     return <GuidesSectionSkeleton />;
   }
-
-  console.log("Rendering guides:", guides.length);
 
   return (
     <div className="experiences-section">
@@ -87,11 +112,12 @@ const GuidesSection = () => {
       {guides.length === 0 ? (
         <div className="no-experiences-message">No guides available.</div>
       ) : (
-        <div className="embla-container">
+        <div className="embla-container" style={{ minHeight: '280px' }}>
           <button 
             className={`embla-button embla-button-prev ${!prevBtnEnabled ? 'embla-button-disabled' : ''}`}
             onClick={scrollPrev}
             disabled={!prevBtnEnabled}
+            style={{ opacity: imagesLoaded ? 1 : 0 }}
           >
             <FiChevronLeft />
           </button>
@@ -112,6 +138,7 @@ const GuidesSection = () => {
             className={`embla-button embla-button-next ${!nextBtnEnabled ? 'embla-button-disabled' : ''}`}
             onClick={scrollNext}
             disabled={!nextBtnEnabled}
+            style={{ opacity: imagesLoaded ? 1 : 0 }}
           >
             <FiChevronRight />
           </button>

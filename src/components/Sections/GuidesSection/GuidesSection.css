@@ -103,6 +103,7 @@
     align-items: center;
     gap: 0;
     margin-left: 0;
+    will-change: transform;
 }
 
 .embla__slide {
@@ -111,8 +112,30 @@
     padding: 0;
     display: flex;
     justify-content: flex-start;
+    opacity: 0;
+    animation: fadeIn 0.3s ease-out forwards;
 }
 
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Stagger the animation for each slide */
+.embla__slide:nth-child(1) { animation-delay: 0ms; }
+.embla__slide:nth-child(2) { animation-delay: 50ms; }
+.embla__slide:nth-child(3) { animation-delay: 100ms; }
+.embla__slide:nth-child(4) { animation-delay: 150ms; }
+.embla__slide:nth-child(5) { animation-delay: 200ms; }
+.embla__slide:nth-child(6) { animation-delay: 250ms; }
+.embla__slide:nth-child(7) { animation-delay: 300ms; }
+.embla__slide:nth-child(8) { animation-delay: 350ms; }
 
 /* Removed Arrows and Dots */
 .embla__controls,
@@ -239,6 +262,7 @@
     width: 100%;
     padding: 0;
     overflow: visible;
+    transition: opacity 0.3s ease;
 }
 
 .embla-button {
