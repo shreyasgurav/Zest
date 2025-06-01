@@ -40,6 +40,8 @@ const AllGuides = () => {
   const [guides, setGuides] = useState([]);
   const [loading, setLoading] = useState(true);
   const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [animationReady, setAnimationReady] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -60,6 +62,8 @@ const AllGuides = () => {
         });
 
         setGuides(guidesList);
+        // Trigger animation after a short delay
+        setTimeout(() => setAnimationReady(true), 100);
       } catch (error) {
         console.error("Error fetching guides:", error);
       } finally {
@@ -73,6 +77,11 @@ const AllGuides = () => {
   const handleGuideClick = (guide) => {
     navigate(`/guides/${guide.slug}`);
   };
+
+  // Filter guides based on search term
+  const filteredGuides = guides.filter(guide =>
+    guide.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   // Generate structured data for SEO
   const structuredData = {
@@ -93,13 +102,14 @@ const AllGuides = () => {
     return (
       <>
         <Helmet>
-          <title>All Adventure Activities in Mumbai - Zest</title>
+          <title>All Guides - Zest</title>
         </Helmet>
         <div className="all-guides-page">
           <div className="all-guides-container">
             <h1 className="all-guides-title">All Guides</h1>
+            <div className="all-guides-search-skeleton"></div>
             <div className="all-guides-grid">
-              {[1, 2, 3, 4, 5, 6].map((index) => (
+              {[1, 2, 3, 4, 5, 6, 7, 8].map((index) => (
                 <div key={index} className="guide-card skeleton">
                   <div className="skeleton-image"></div>
                   <div className="skeleton-title"></div>
@@ -115,7 +125,7 @@ const AllGuides = () => {
   return (
     <>
       <Helmet>
-        <title>Adventure Activities & Entertainment in Mumbai - Zest | Book Now</title>
+        <title>All Guides - Zest | Adventure Activities in Mumbai</title>
         <meta name="description" content="Explore Mumbai's best adventure activities and entertainment venues. Find go-karting tracks, bowling alleys, paintball arenas, laser tag, trampoline parks with prices and locations." />
         <meta name="keywords" content="adventure activities mumbai, entertainment mumbai, go-karting mumbai, bowling mumbai, paintball mumbai, laser tag mumbai, trampoline parks mumbai, zest mumbai" />
         <meta name="author" content="Zest Mumbai" />
@@ -141,16 +151,54 @@ const AllGuides = () => {
       </Helmet>
       <div className="all-guides-page">
         <div className="all-guides-container">
-          <h1 className="all-guides-title">Explore Mumbai's Best Adventure Activities</h1>
-          <p className="all-guides-subtitle">
-            Discover exciting entertainment venues across Mumbai. Compare prices, locations, and book your next adventure!
-          </p>
-          <div className="all-guides-grid">
-            {guides.map(guide => (
-              <div key={guide.id} className="guide-item">
-                <GuideBox guide={guide} noBackground={true} />
+          <div className="all-guides-header">
+            <h1 className="all-guides-title">All Guides</h1>
+            <div className="guides-count">{filteredGuides.length} Activities</div>
+          </div>
+          
+          <div className="all-guides-search-container">
+            <div className="search-input-wrapper">
+              <svg className="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.35-4.35"></path>
+              </svg>
+              <input
+                type="text"
+                placeholder="Search activities..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="all-guides-search"
+              />
+              {searchTerm && (
+                <button 
+                  className="clear-search"
+                  onClick={() => setSearchTerm('')}
+                >
+                  ×
+                </button>
+              )}
+            </div>
+          </div>
+
+          <div className={`all-guides-grid guides-grid ${animationReady ? 'animate-in' : ''}`}>
+            {filteredGuides.length > 0 ? (
+              filteredGuides.map((guide, index) => (
+                <div 
+                  key={guide.id} 
+                  className="guide-item"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <GuideBox guide={guide} noBackground={true} />
+                </div>
+              ))
+            ) : (
+              <div className="no-results">
+                <p>No activities found matching "{searchTerm}"</p>
+                <button onClick={() => setSearchTerm('')} className="clear-filters-btn">
+                  Clear Search
+                </button>
               </div>
-            ))}
+            )}
           </div>
         </div>
       </div>
