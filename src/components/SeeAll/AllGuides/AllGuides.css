@@ -143,3 +143,19 @@
     gap: 1rem;
   }
 }
+
+/* Add subtitle styling */
+.all-guides-subtitle {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #999;
+  max-width: 800px;
+  margin: 0 auto 3rem;
+  line-height: 1.6;
+}
+
+/* Update the existing container styles if needed */
+.all-guides-page {
+  min-height: 100vh;
+  padding: 80px 20px 40px;
+}

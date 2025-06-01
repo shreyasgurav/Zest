@@ -205,31 +205,103 @@ const GuidePage = () => {
 
   const actualGuideId = guide.actualId || guide.id;
   
-  // Generate meta description from guide items
-  const metaDescription = guide.items && guide.items.length > 0 
-    ? `Discover the best ${guide.name.toLowerCase()} in Mumbai. ${guide.items.length} amazing places including ${guide.items.slice(0, 3).map(item => item.name).join(', ')}${guide.items.length > 3 ? ' and more' : ''}.`
-    : `Explore ${guide.name} - A comprehensive guide by Zest.`;
+  // Generate SEO-friendly title based on guide name
+  const generateSEOTitle = (guideName) => {
+    const titleMap = {
+      'Go Karting': 'Best Go-Karting Tracks in Mumbai',
+      'Bowling': 'Best Bowling Alleys in Mumbai',
+      'Paintball': 'Best Paintball Arenas in Mumbai',
+      'Laser Tag': 'Best Laser Tag Arenas in Mumbai',
+      'Trampoline Parks': 'Best Trampoline Parks in Mumbai',
+      'Escape Rooms': 'Best Escape Rooms in Mumbai'
+    };
+    
+    return titleMap[guideName] || `Best ${guideName} in Mumbai`;
+  };
+  
+  // Generate rich meta description with keywords
+  const generateMetaDescription = () => {
+    if (guide.items && guide.items.length > 0) {
+      const topItems = guide.items.slice(0, 3).map(item => item.name).join(', ');
+      const priceRange = guide.items.reduce((acc, item) => {
+        const price = parseInt(item.price);
+        return {
+          min: Math.min(acc.min, price),
+          max: Math.max(acc.max, price)
+        };
+      }, { min: Infinity, max: 0 });
+      
+      return `Find the best ${guide.name.toLowerCase()} in Mumbai with Zest. Compare ${guide.items.length} top-rated venues including ${topItems}. Prices from ₹${priceRange.min} to ₹${priceRange.max}. Book now!`;
+    }
+    return `Discover the best ${guide.name.toLowerCase()} in Mumbai with Zest. Compare prices, locations, and book your experience today!`;
+  };
+  
+  // Generate keywords based on guide type
+  const generateKeywords = () => {
+    const baseKeywords = `${guide.name.toLowerCase()} mumbai, best ${guide.name.toLowerCase()} mumbai, ${guide.name.toLowerCase()} near me, zest ${guide.name.toLowerCase()}`;
+    const locationKeywords = guide.items ? guide.items.map(item => {
+      const location = item.address?.split(',')[0] || '';
+      return `${guide.name.toLowerCase()} ${location.toLowerCase()}`;
+    }).join(', ') : '';
+    
+    return `${baseKeywords}, ${locationKeywords}`;
+  };
+  
+  const seoTitle = generateSEOTitle(guide.name);
+  const metaDescription = generateMetaDescription();
+  const keywords = generateKeywords();
 
   return (
     <>
       <Helmet>
-        <title>{guide.name} - Best in Mumbai | Zest</title>
+        <title>{seoTitle} (2025) - Zest | Book Now</title>
         <meta name="description" content={metaDescription} />
-        <meta property="og:title" content={`${guide.name} - Best in Mumbai | Zest`} />
+        <meta name="keywords" content={keywords} />
+        <meta name="author" content="Zest Mumbai" />
+        <meta name="robots" content="index, follow" />
+        
+        {/* Open Graph tags */}
+        <meta property="og:title" content={`${seoTitle} - Zest Mumbai`} />
         <meta property="og:description" content={metaDescription} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={`https://zestlive.in/guides/${guide.slug || guide.id}`} />
         {guide.cover_image && <meta property="og:image" content={guide.cover_image} />}
+        <meta property="og:site_name" content="Zest Mumbai" />
+        
+        {/* Twitter Card tags */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={`${guide.name} - Best in Mumbai | Zest`} />
+        <meta name="twitter:title" content={`${seoTitle} - Zest`} />
         <meta name="twitter:description" content={metaDescription} />
         {guide.cover_image && <meta name="twitter:image" content={guide.cover_image} />}
+        <meta name="twitter:site" content="@zestmumbai" />
+        
+        {/* Canonical URL */}
         <link rel="canonical" href={`https://zestlive.in/guides/${guide.slug || guide.id}`} />
+        
+        {/* Structured Data for Local Business */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            "name": seoTitle,
+            "description": metaDescription,
+            "numberOfItems": guide.items?.length || 0,
+            "itemListElement": guide.items?.map((item, index) => ({
+              "@type": "LocalBusiness",
+              "position": index + 1,
+              "name": item.name,
+              "address": item.address,
+              "priceRange": `₹${item.price}`,
+              "telephone": item.contactInfo,
+              "url": item.website
+            })) || []
+          })}
+        </script>
       </Helmet>
       <div className="guide-page">
         <div className="guide-container">
           <div className="guide-header">
-            <h1 className="guide-title">{guide.name}</h1>
+            <h1 className="guide-title">{seoTitle}</h1>
             {isAuthorized && (
               <div className="header-actions">
                 <button className="add-item-button" onClick={() => setShowAddItem(true)}>
