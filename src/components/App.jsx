@@ -4,6 +4,7 @@ import "./App.css";
 import { auth, db } from "./firebase";
 import { getDoc, doc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
+import { Helmet } from 'react-helmet-async';
 
 import Header from "./Header/header";
 import Footer from "./Footer/footer";
@@ -230,6 +231,18 @@ function App() {
                                         path="/"
                                         element={
                                             <>
+                                                <Helmet>
+                                                    <title>Zest - Best Go-Karting, Bowling, Paintball & More in Mumbai</title>
+                                                    <meta name="description" content="Discover the best adventure activities in Mumbai - Go-Karting, Bowling Alleys, Paintball, Trampoline Parks, and Laser Tag Arenas. Find prices, locations, and book now!" />
+                                                    <meta property="og:title" content="Zest - Best Adventure Activities in Mumbai" />
+                                                    <meta property="og:description" content="Discover the best adventure activities in Mumbai - Go-Karting, Bowling, Paintball, and more. Find prices and locations." />
+                                                    <meta property="og:url" content="https://zestlive.in" />
+                                                    <meta property="og:type" content="website" />
+                                                    <meta name="twitter:card" content="summary_large_image" />
+                                                    <meta name="twitter:title" content="Zest - Best Adventure Activities in Mumbai" />
+                                                    <meta name="twitter:description" content="Discover the best adventure activities in Mumbai. Find prices and locations." />
+                                                    <link rel="canonical" href="https://zestlive.in" />
+                                                </Helmet>
                                                 <GuidesSection experiences={experiences} />
                                             </>
                                         }
