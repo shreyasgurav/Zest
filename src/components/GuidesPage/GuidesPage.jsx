@@ -5,10 +5,19 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import AddGuideItem from "./AddGuideItems/AddGuideItems";
 import EditGuideItem from "./EditGuideItem/EditGuideItem";
 import "./GuidesPage.css";
-import { getAuth } from 'firebase/auth';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { FaEdit } from 'react-icons/fa';
 import { collection, getDocs, query, where } from "firebase/firestore";
-import { generateSlug } from "../utils/generateSlug";
+
+// Helper function to generate slug
+const generateSlug = (title) => {
+  return title
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '') // Remove special characters
+    .replace(/\s+/g, '-')     // Replace spaces with hyphens
+    .replace(/-+/g, '-')      // Remove consecutive hyphens
+    .trim();                   // Trim whitespace
+};
 
 const GuideItemSkeleton = () => {
   return (
@@ -31,14 +40,28 @@ const GuidePage = () => {
   const [showAddItem, setShowAddItem] = useState(false);
   const [showEditItem, setShowEditItem] = useState(false);
   const [editingItemIndex, setEditingItemIndex] = useState(null);
-  const auth = getAuth();
-  const currentUser = auth.currentUser;
+  const [currentUser, setCurrentUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
+  
+  // Set up auth listener
+  useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setCurrentUser(user);
+      setAuthLoading(false);
+    });
+    
+    return () => unsubscribe();
+  }, []);
+  
   const isAuthorized = currentUser?.email === 'shrreyasgurav@gmail.com';
 
   useEffect(() => {
     const fetchGuide = async () => {
       try {
+        setLoading(true);
         let guideData = null;
+        let actualGuideId = guideId;
         
         if (slug) {
           // First try to fetch by slug
@@ -48,6 +71,7 @@ const GuidePage = () => {
           
           if (!querySnapshot.empty) {
             const doc = querySnapshot.docs[0];
+            actualGuideId = doc.id;
             guideData = {
               id: doc.id,
               ...doc.data()
@@ -83,7 +107,7 @@ const GuidePage = () => {
         }
         
         if (guideData) {
-          setGuide(guideData);
+          setGuide({ ...guideData, actualId: actualGuideId });
         } else {
           setError("Guide not found");
         }
@@ -108,7 +132,8 @@ const GuidePage = () => {
 
   const handleDeleteItem = async (index) => {
     try {
-      const guideDocRef = doc(db, "guides", guideId);
+      const actualId = guide.actualId || guide.id;
+      const guideDocRef = doc(db, "guides", actualId);
       const guideSnapshot = await getDoc(guideDocRef);
       
       if (guideSnapshot.exists()) {
@@ -120,17 +145,15 @@ const GuidePage = () => {
         });
         
         // Refresh the guide data after deletion
-        const fetchGuide = async () => {
-          const updatedSnapshot = await getDoc(guideDocRef);
-          if (updatedSnapshot.exists()) {
-            setGuide({
-              id: updatedSnapshot.id,
-              ...updatedSnapshot.data()
-            });
-          }
-        };
-        
-        fetchGuide();
+        const updatedSnapshot = await getDoc(guideDocRef);
+        if (updatedSnapshot.exists()) {
+          setGuide({
+            ...guide,
+            ...updatedSnapshot.data(),
+            id: updatedSnapshot.id,
+            actualId: actualId
+          });
+        }
       }
     } catch (err) {
       console.error("Error deleting item:", err);
@@ -138,7 +161,7 @@ const GuidePage = () => {
     }
   };
 
-  if (loading) {
+  if (loading || authLoading) {
     return (
       <div className="guide-page">
         <div className="guide-container">
@@ -167,6 +190,8 @@ const GuidePage = () => {
       </div>
     );
   }
+
+  const actualGuideId = guide.actualId || guide.id;
 
   return (
     <div className="guide-page">
@@ -237,16 +262,18 @@ const GuidePage = () => {
 
         {showAddItem && (
           <AddGuideItem
-            guideId={guideId}
+            guideId={actualGuideId}
             onClose={() => setShowAddItem(false)}
             onItemAdded={() => {
               const fetchGuide = async () => {
-                const guideDocRef = doc(db, "guides", guideId);
+                const guideDocRef = doc(db, "guides", actualGuideId);
                 const guideSnapshot = await getDoc(guideDocRef);
                 if (guideSnapshot.exists()) {
                   setGuide({
+                    ...guide,
+                    ...guideSnapshot.data(),
                     id: guideSnapshot.id,
-                    ...guideSnapshot.data()
+                    actualId: actualGuideId
                   });
                 }
               };
@@ -257,7 +284,7 @@ const GuidePage = () => {
 
         {showEditItem && (
           <EditGuideItem
-            guideId={guideId}
+            guideId={actualGuideId}
             itemIndex={editingItemIndex}
             item={guide.items[editingItemIndex]}
             onClose={() => {
@@ -266,12 +293,14 @@ const GuidePage = () => {
             }}
             onItemUpdated={() => {
               const fetchGuide = async () => {
-                const guideDocRef = doc(db, "guides", guideId);
+                const guideDocRef = doc(db, "guides", actualGuideId);
                 const guideSnapshot = await getDoc(guideDocRef);
                 if (guideSnapshot.exists()) {
                   setGuide({
+                    ...guide,
+                    ...guideSnapshot.data(),
                     id: guideSnapshot.id,
-                    ...guideSnapshot.data()
+                    actualId: actualGuideId
                   });
                 }
               };
