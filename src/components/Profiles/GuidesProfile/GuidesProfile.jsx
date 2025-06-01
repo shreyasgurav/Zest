@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { db } from "../../firebase";
 import { doc, getDoc, collection, query, where, getDocs, updateDoc } from "firebase/firestore";
@@ -53,6 +53,12 @@ const GuideProfile = () => {
   const [error, setError] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [copied, setCopied] = useState(false);
+  
+  // Touch/swipe handling refs
+  const carouselRef = useRef(null);
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
+  const isDragging = useRef(false);
 
   useEffect(() => {
     const fetchGuideItem = async () => {
@@ -115,6 +121,34 @@ const GuideProfile = () => {
         prev === 0 ? guideItem.photos.length - 1 : prev - 1
       );
     }
+  };
+
+  // Touch/swipe handlers
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+    isDragging.current = true;
+  };
+
+  const handleTouchMove = (e) => {
+    if (!isDragging.current) return;
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (!isDragging.current) return;
+    
+    const swipeDistance = touchStartX.current - touchEndX.current;
+    const swipeThreshold = 50; // Minimum distance for a swipe
+
+    if (Math.abs(swipeDistance) > swipeThreshold) {
+      if (swipeDistance > 0) {
+        nextImage(); // Swipe left
+      } else {
+        prevImage(); // Swipe right
+      }
+    }
+    
+    isDragging.current = false;
   };
 
   const handleCopyPhone = async (e) => {
@@ -187,11 +221,23 @@ const GuideProfile = () => {
         <div className="guide-content">
           <div className="guide-profile-image">
             {guideItem.photos && guideItem.photos.length > 0 ? (
-              <div className="image-carousel">
-                <div className="carousel-track" style={{ transform: `translateX(-${currentImageIndex * 100}%)` }}>
+              <div 
+                className="image-carousel"
+                ref={carouselRef}
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
+              >
+                <div className="carousel-track" style={{ 
+                  transform: `translateX(-${currentImageIndex * 100}%)`
+                }}>
                   {guideItem.photos.map((photo, index) => (
                     <div key={index} className="carousel-slide">
-                      <img src={photo} alt={`${guideItem.name} - ${index + 1}`} />
+                      <img 
+                        src={photo} 
+                        alt={`${guideItem.name} - ${index + 1}`}
+                        draggable="false"
+                      />
                     </div>
                   ))}
                 </div>
