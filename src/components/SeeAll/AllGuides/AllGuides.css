@@ -63,8 +63,10 @@
   transform: translateY(-50%);
   width: 20px;
   height: 20px;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.7);
   pointer-events: none;
+  stroke: rgba(255, 255, 255, 0.7);
+  stroke-width: 2;
 }
 
 .all-guides-search {
