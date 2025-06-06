@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { FiSearch, FiX } from 'react-icons/fi'
 import GuideBox from '@/components/GuidesSection/GuideBox/GuideBox'
 import styles from './AllGuides.module.css'
+import { getAllGuides } from '@/lib/guides'
 
 interface Guide {
   id: string
@@ -13,13 +14,27 @@ interface Guide {
   createdBy?: string
 }
 
-interface AllGuidesProps {
-  initialGuides: Guide[]
-}
-
-export default function AllGuides({ initialGuides }: AllGuidesProps) {
-  const [guides, setGuides] = useState(initialGuides)
+export default function AllGuides() {
+  const [guides, setGuides] = useState<Guide[]>([])
   const [searchQuery, setSearchQuery] = useState('')
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const fetchGuides = async () => {
+      try {
+        const fetchedGuides = await getAllGuides()
+        setGuides(fetchedGuides)
+      } catch (err) {
+        setError('Failed to load guides. Please try again later.')
+        console.error('Error fetching guides:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchGuides()
+  }, [])
 
   const filteredGuides = guides.filter(guide =>
     guide.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -31,6 +46,30 @@ export default function AllGuides({ initialGuides }: AllGuidesProps) {
 
   const clearSearch = () => {
     setSearchQuery('')
+  }
+
+  if (loading) {
+    return (
+      <div className={styles.allGuidesPage}>
+        <div className={styles.allGuidesContainer}>
+          <div className={styles.allGuidesContent}>
+            <div className={styles.loading}>Loading guides...</div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className={styles.allGuidesPage}>
+        <div className={styles.allGuidesContainer}>
+          <div className={styles.allGuidesContent}>
+            <div className={styles.error}>{error}</div>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (
