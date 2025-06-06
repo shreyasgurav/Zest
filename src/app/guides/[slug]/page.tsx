@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { getFirebaseDb } from "@/lib/firebase";
 import { doc, getDoc, updateDoc, collection, getDocs, query, where, Firestore } from "firebase/firestore";
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
@@ -70,8 +70,30 @@ const GuideItemSkeleton = () => {
   );
 };
 
+// This function will be used to generate static paths at build time
+export async function generateStaticParams() {
+  try {
+    const db = getFirebaseDb();
+    const guidesSnapshot = await getDocs(collection(db, "guides"));
+    const paths: { slug: string }[] = [];
+
+    guidesSnapshot.forEach((doc) => {
+      const guideData = doc.data() as Guide;
+      if (guideData.slug) {
+        paths.push({ slug: guideData.slug });
+      }
+    });
+
+    return paths;
+  } catch (error) {
+    console.error("Error generating static params:", error);
+    return [];
+  }
+}
+
 const GuidePage = () => {
   const params = useParams();
+  const router = useRouter();
   const slug = params?.slug as string;
   const [guide, setGuide] = useState<Guide | null>(null);
   const [loading, setLoading] = useState(true);
@@ -138,9 +160,9 @@ const GuidePage = () => {
   const handleItemClick = (index: number) => {
     if (!guide) return;
     if (guide.slug) {
-      window.location.href = `/guide-profile/${guide.slug}/${index}`;
+      router.push(`/guide-profile/${guide.slug}/${index}`);
     } else {
-      window.location.href = `/guide-profile/${guide.id}/${index}`;
+      router.push(`/guide-profile/${guide.id}/${index}`);
     }
   };
 
