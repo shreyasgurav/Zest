@@ -1,4 +1,4 @@
-import type { NextConfig } from "next";
+/** @type {import('next').NextConfig} */
 
 // Load environment variables directly
 const firebaseConfig = {
@@ -10,7 +10,7 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-const nextConfig: NextConfig = {
+const nextConfig = {
   reactStrictMode: true,
   // Pass environment variables directly to the client
   publicRuntimeConfig: {
@@ -33,4 +33,4 @@ const nextConfig: NextConfig = {
   }
 };
 
-export default nextConfig;
+module.exports = nextConfig; 
