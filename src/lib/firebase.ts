@@ -1,7 +1,7 @@
-import { initializeApp, getApps, FirebaseApp } from 'firebase/app';
-import { getAuth, Auth } from 'firebase/auth';
-import { getFirestore, Firestore } from 'firebase/firestore';
-import { getStorage, FirebaseStorage } from 'firebase/storage';
+import { FirebaseApp } from 'firebase/app';
+import { Auth } from 'firebase/auth';
+import { Firestore } from 'firebase/firestore';
+import { FirebaseStorage } from 'firebase/storage';
 
 // Check if we're in the browser
 const isClient = typeof window !== 'undefined';
@@ -13,72 +13,53 @@ let db: Firestore;
 let storage: FirebaseStorage;
 
 // Function to initialize Firebase
-function initializeFirebase() {
-  const firebaseConfig = {
-    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-    appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-    measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
-  };
+async function initializeFirebase() {
+  if (!isClient) return;
 
-  // Validate required environment variables
-  const requiredEnvVars = [
-    'NEXT_PUBLIC_FIREBASE_API_KEY',
-    'NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN',
-    'NEXT_PUBLIC_FIREBASE_PROJECT_ID',
-    'NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET',
-    'NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID',
-    'NEXT_PUBLIC_FIREBASE_APP_ID'
-  ];
+  try {
+    const { initializeFirebase } = await import('./initFirebase');
+    app = initializeFirebase();
 
-  const missingEnvVars = requiredEnvVars.filter(
-    (envVar) => !process.env[envVar]
-  );
+    const { getAuth } = await import('firebase/auth');
+    const { getFirestore } = await import('firebase/firestore');
+    const { getStorage } = await import('firebase/storage');
 
-  if (missingEnvVars.length > 0) {
-    throw new Error(`Missing required Firebase environment variables: ${missingEnvVars.join(', ')}`);
+    auth = getAuth(app);
+    db = getFirestore(app);
+    storage = getStorage(app);
+  } catch (error) {
+    console.error('Failed to initialize Firebase:', error);
+    throw error;
   }
-
-  // Initialize Firebase only if all required environment variables are present
-  app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-  auth = getAuth(app);
-  db = getFirestore(app);
-  storage = getStorage(app);
-
-  return { app, auth, db, storage };
 }
 
 // Initialize Firebase only in the browser
 if (isClient) {
-  try {
-    initializeFirebase();
-  } catch (error) {
-    console.error('Failed to initialize Firebase:', error);
-    throw error; // Re-throw to prevent silent failures
-  }
+  initializeFirebase().catch(console.error);
 }
 
-// Export initialized instances or throw error if accessed server-side
+// Export functions that ensure Firebase is initialized
 export function getFirebaseApp(): FirebaseApp {
   if (!isClient) throw new Error('Firebase can only be accessed client-side');
+  if (!app) throw new Error('Firebase app not initialized');
   return app;
 }
 
 export function getFirebaseAuth(): Auth {
   if (!isClient) throw new Error('Firebase can only be accessed client-side');
+  if (!auth) throw new Error('Firebase auth not initialized');
   return auth;
 }
 
 export function getFirebaseDb(): Firestore {
   if (!isClient) throw new Error('Firebase can only be accessed client-side');
+  if (!db) throw new Error('Firebase Firestore not initialized');
   return db;
 }
 
 export function getFirebaseStorage(): FirebaseStorage {
   if (!isClient) throw new Error('Firebase can only be accessed client-side');
+  if (!storage) throw new Error('Firebase storage not initialized');
   return storage;
 }
 

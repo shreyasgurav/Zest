@@ -9,14 +9,16 @@ const CreateType = () => {
   const router = useRouter();
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [isClient, setIsClient] = useState(false);
-  const auth = getAuth();
+  const [auth, setAuth] = useState<ReturnType<typeof getAuth> | null>(null);
 
   useEffect(() => {
     setIsClient(true);
+    // Initialize auth only on the client side
+    setAuth(getAuth());
   }, []);
 
   useEffect(() => {
-    if (!isClient) return;
+    if (!isClient || !auth) return;
 
     const checkAuth = () => {
       const user = auth.currentUser;
