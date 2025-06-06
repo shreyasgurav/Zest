@@ -7,9 +7,6 @@ const nextConfig = {
     domains: ['firebasestorage.googleapis.com'],
     unoptimized: true, // Required for static export
   },
-  // Disable server-side rendering for pages that use Firebase
-  // This ensures Firebase is only initialized on the client side
-  unstable_runtimeJS: true,
   // Ensure Firebase modules are only included in client-side bundles
   webpack: (config, { isServer }) => {
     if (isServer) {
@@ -25,8 +22,8 @@ const nextConfig = {
     NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
     NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
     NEXT_PUBLIC_FIREBASE_APP_ID: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-    NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
-  },
+    NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
+  }
 };
 
 module.exports = nextConfig; 
