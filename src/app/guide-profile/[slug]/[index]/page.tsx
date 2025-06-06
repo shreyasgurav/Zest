@@ -79,6 +79,10 @@ const GuideProfile = () => {
   useEffect(() => {
     const fetchGuideItem = async () => {
       try {
+        if (!db) {
+          throw new Error("Firebase is not initialized. Please try again later.");
+        }
+
         let guideData;
         
         if (slug) {
@@ -198,159 +202,128 @@ const GuideProfile = () => {
     "address": guideItem.address,
     "telephone": guideItem.contactInfo,
     "url": guideItem.website,
-    "priceRange": `₹${guideItem.price}`,
-    "image": guideItem.photos && guideItem.photos.length > 0 ? guideItem.photos[0] : null
   };
 
   return (
     <>
       <Helmet>
-        <title>{guideItem.name} - ₹{guideItem.price} | Zest Mumbai Guide</title>
-        <meta name="description" content={`${guideItem.name} in Mumbai. Price: ₹${guideItem.price}. Location: ${guideItem.address}. Contact: ${guideItem.contactInfo}`} />
-        <meta property="og:title" content={`${guideItem.name} - ₹${guideItem.price} | Zest Mumbai Guide`} />
-        <meta property="og:description" content={`${guideItem.name} in Mumbai. Price: ₹${guideItem.price}. Location: ${guideItem.address}`} />
-        <meta property="og:type" content="place" />
-        {guideItem.photos && guideItem.photos[0] && <meta property="og:image" content={guideItem.photos[0]} />}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={`${guideItem.name} - ₹${guideItem.price} | Zest`} />
-        <meta name="twitter:description" content={`${guideItem.name} in Mumbai. Price: ₹${guideItem.price}. Location: ${guideItem.address}`} />
-        {guideItem.photos && guideItem.photos[0] && <meta name="twitter:image" content={guideItem.photos[0]} />}
+        <title>{guideItem.name} - Zest</title>
+        <meta name="description" content={`Visit ${guideItem.name} in Mumbai. ${guideItem.address}`} />
         <script type="application/ld+json">
           {JSON.stringify(structuredData)}
         </script>
       </Helmet>
+
       <div className={styles['guide-profile-container']}>
         <div className={styles['guide-content']}>
-          <div className={styles['guide-profile-image']}>
+          {/* Image Carousel */}
+          <div 
+            className={styles['guide-profile-image']}
+            ref={carouselRef}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
             {guideItem.photos && guideItem.photos.length > 0 ? (
-              <div 
-                className={styles['image-carousel']}
-                ref={carouselRef}
-                onTouchStart={handleTouchStart}
-                onTouchMove={handleTouchMove}
-                onTouchEnd={handleTouchEnd}
-              >
-                <div className={styles['carousel-track']} style={{ 
-                  transform: `translateX(-${currentImageIndex * 100}%)`
-                }}>
-                  {guideItem.photos.map((photo, index) => (
-                    <div key={index} className={styles['carousel-slide']}>
-                      <img 
-                        src={photo} 
-                        alt={`${guideItem.name} - ${index + 1}`}
-                        draggable="false"
-                      />
-                    </div>
-                  ))}
-                </div>
-                
+              <>
+                <img 
+                  src={guideItem.photos[currentImageIndex]} 
+                  alt={guideItem.name}
+                  className={styles['guide-image']}
+                />
                 {guideItem.photos.length > 1 && (
                   <>
                     <button 
-                      className={`${styles['carousel-btn']} ${styles['prev']}`}
+                      className={`${styles['carousel-button']} ${styles['prev-button']}`}
                       onClick={prevImage}
-                      style={{ opacity: currentImageIndex > 0 ? 1 : 0.5 }}
                     >
                       <FiChevronLeft />
                     </button>
                     <button 
-                      className={`${styles['carousel-btn']} ${styles['next']}`}
+                      className={`${styles['carousel-button']} ${styles['next-button']}`}
                       onClick={nextImage}
-                      style={{ opacity: currentImageIndex < guideItem.photos.length - 1 ? 1 : 0.5 }}
                     >
                       <FiChevronRight />
                     </button>
-                    
-                    <div className={styles['carousel-dots']}>
-                      {guideItem.photos.map((_, index) => (
-                        <span
-                          key={index}
-                          className={`${styles['dot']} ${index === currentImageIndex ? styles['active'] : ''}`}
-                          onClick={() => setCurrentImageIndex(index)}
-                        >
-                          {index + 1}
-                        </span>
-                      ))}
-                    </div>
                   </>
                 )}
-              </div>
+              </>
             ) : (
-              <div className={styles['no-image']}>No Image Available</div>
+              <div className={styles['no-image']}>
+                <span>No image available</span>
+              </div>
             )}
           </div>
-          
+
+          {/* Guide Info Box */}
           <div className={styles['guide-info-box']}>
             <div className={styles['guide-info']}>
-              <h2 className={styles['guide-item-title']}>{guideItem.name}</h2>
+              <h1 className={styles['guide-name']}>{guideItem.name}</h1>
               
-              <div className={`${styles['guide-detail']} ${styles['price-detail']}`}>
-                <span className={styles['price-amount']}>₹{guideItem.price}</span>
-                {guideItem.pricingUrl && (
-                  <a
-                    href={guideItem.pricingUrl.startsWith('http') ? guideItem.pricingUrl : `https://${guideItem.pricingUrl}`}
-                    target="_blank"
+              {guideItem.price && (
+                <div className={styles['guide-detail']}>
+                  <FaDollarSign />
+                  <span>{guideItem.price}</span>
+                </div>
+              )}
+              
+              {guideItem.address && (
+                <div className={styles['guide-detail']}>
+                  <FaMapMarkerAlt />
+                  <a 
+                    href={guideItem.addressLink} 
+                    target="_blank" 
                     rel="noopener noreferrer"
-                    className={styles['pricing-link']}
+                    className={styles['address-link']}
                   >
-                    <FaExternalLinkAlt />
-                    Check Pricing
+                    {guideItem.address}
                   </a>
-                )}
-              </div>
-              
-              <div className={`${styles['guide-detail']} ${styles['location-detail']}`}>
-                <FaMapMarkerAlt className={styles['icon']} />
-                <a 
-                  href={guideItem.addressLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles['address-link']}
-                >
-                  {guideItem.address}
-                </a>
-              </div>
+                </div>
+              )}
 
-              <div className={`${styles['guide-detail']} ${styles['contact-detail']}`}>
-                <FaPhone />
-                <span>{guideItem.contactInfo}</span>
-                <button className={styles['copy-button']} onClick={handleCopyPhone}>
-                  {copied ? <FaCheck className={styles['icon']} /> : <FaCopy className={styles['icon']} />}
-                </button>
-              </div>
+              {guideItem.contactInfo && (
+                <div className={styles['guide-detail']}>
+                  <FaPhone />
+                  <button 
+                    onClick={handleCopyPhone}
+                    className={styles['copy-button']}
+                  >
+                    {guideItem.contactInfo}
+                    {copied ? <FaCheck className={styles['copy-icon']} /> : <FaCopy className={styles['copy-icon']} />}
+                  </button>
+                </div>
+              )}
 
               {guideItem.website && (
-                <div className={`${styles['guide-detail']} ${styles['website-detail']}`}>
-                  <FaGlobe className={styles['icon']} />
+                <div className={styles['guide-detail']}>
+                  <FaGlobe />
                   <a 
-                    href={guideItem.website.startsWith('http') ? guideItem.website : `https://${guideItem.website}`}
-                    target="_blank"
+                    href={guideItem.website} 
+                    target="_blank" 
                     rel="noopener noreferrer"
                     className={styles['website-link']}
                   >
-                    {guideItem.website
-                      .replace(/^https?:\/\//i, '')
-                      .replace(/^www\./i, '')
-                      .split('/')[0]}
+                    Visit Website
+                    <FaExternalLinkAlt className={styles['external-link-icon']} />
+                  </a>
+                </div>
+              )}
+
+              {guideItem.pricingUrl && (
+                <div className={styles['guide-detail']}>
+                  <a 
+                    href={guideItem.pricingUrl} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className={styles['pricing-link']}
+                  >
+                    View Pricing
+                    <FaExternalLinkAlt className={styles['external-link-icon']} />
                   </a>
                 </div>
               )}
             </div>
           </div>
-        </div>
-        <div style={{ marginTop: '30px', textAlign: 'center' }}>
-          <button 
-            className={styles['back-button']}
-            onClick={() => {
-              if (slug) {
-                router.push(`/guides/${slug}`);
-              } else {
-                router.push('/guides');
-              }
-            }}
-          >
-            Back to Guide
-          </button>
         </div>
       </div>
     </>
