@@ -15,9 +15,10 @@ interface Guide {
 
 interface AllGuidesProps {
   initialGuides: Guide[]
+  error?: string | null
 }
 
-export default function AllGuides({ initialGuides }: AllGuidesProps) {
+export default function AllGuides({ initialGuides, error }: AllGuidesProps) {
   const [guides, setGuides] = useState(initialGuides)
   const [searchQuery, setSearchQuery] = useState('')
 
@@ -31,6 +32,20 @@ export default function AllGuides({ initialGuides }: AllGuidesProps) {
 
   const clearSearch = () => {
     setSearchQuery('')
+  }
+
+  if (error) {
+    return (
+      <div className={styles.allGuidesPage}>
+        <div className={styles.allGuidesContainer}>
+          <div className={styles.allGuidesContent}>
+            <div className={styles.errorMessage}>
+              <p>{error}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (
