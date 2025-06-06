@@ -1,15 +1,23 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { auth } from '@/lib/firebase';
+import { getFirebaseAuth } from '@/lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import PostLoginModal from '@/components/PostLoginFlow/PostLoginModal';
 
 export default function PostLoginPage() {
   const router = useRouter();
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isClient) return;
+
+    const auth = getFirebaseAuth();
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (!user) {
         router.push('/');
@@ -17,7 +25,11 @@ export default function PostLoginPage() {
     });
 
     return () => unsubscribe();
-  }, [router]);
+  }, [router, isClient]);
+
+  if (!isClient) {
+    return null; // Return null during server-side rendering
+  }
 
   return (
     <div className="post-login-page">

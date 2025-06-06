@@ -1,26 +1,44 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { FiSearch, FiX } from 'react-icons/fi'
 import GuideBox from '@/components/GuidesSection/GuideBox/GuideBox'
+import { getAllGuides, Guide } from '@/lib/guides'
 import styles from './AllGuides.module.css'
-
-interface Guide {
-  id: string
-  name: string
-  cover_image?: string
-  slug?: string
-  createdBy?: string
-}
 
 interface AllGuidesProps {
   initialGuides: Guide[]
   error?: string | null
 }
 
-export default function AllGuides({ initialGuides, error }: AllGuidesProps) {
+export default function AllGuides({ initialGuides, error: initialError }: AllGuidesProps) {
   const [guides, setGuides] = useState(initialGuides)
   const [searchQuery, setSearchQuery] = useState('')
+  const [error, setError] = useState(initialError)
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    const fetchGuides = async () => {
+      try {
+        setLoading(true);
+        const fetchedGuides = await getAllGuides();
+        if (fetchedGuides.length > 0) {
+          setGuides(fetchedGuides);
+          setError(null);
+        }
+      } catch (err) {
+        console.error('Error fetching guides:', err);
+        setError('Failed to load guides. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    // Only fetch if we don't have guides from server-side
+    if (initialGuides.length === 0 && !initialError) {
+      fetchGuides();
+    }
+  }, [initialGuides.length, initialError]);
 
   const filteredGuides = guides.filter(guide =>
     guide.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -41,6 +59,20 @@ export default function AllGuides({ initialGuides, error }: AllGuidesProps) {
           <div className={styles.allGuidesContent}>
             <div className={styles.errorMessage}>
               <p>{error}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (loading) {
+    return (
+      <div className={styles.allGuidesPage}>
+        <div className={styles.allGuidesContainer}>
+          <div className={styles.allGuidesContent}>
+            <div className={styles.loadingMessage}>
+              <p>Loading guides...</p>
             </div>
           </div>
         </div>

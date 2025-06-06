@@ -1,4 +1,4 @@
-import { db } from "@/lib/firebase"
+import { getFirebaseDb } from "@/lib/firebase"
 import { collection, getDocs, query, orderBy } from "firebase/firestore"
 
 export interface Guide {
@@ -12,18 +12,24 @@ export interface Guide {
 
 export async function getAllGuides(): Promise<Guide[]> {
   try {
-    const guidesCollectionRef = collection(db, "guides")
-    const q = query(guidesCollectionRef, orderBy("createdAt", "desc"))
-    const querySnapshot = await getDocs(q)
+    // Check if we're in a browser environment
+    if (typeof window === 'undefined') {
+      return []; // Return empty array during server-side rendering
+    }
+
+    const db = getFirebaseDb();
+    const guidesCollectionRef = collection(db, "guides");
+    const q = query(guidesCollectionRef, orderBy("createdAt", "desc"));
+    const querySnapshot = await getDocs(q);
     
     const guides = querySnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
-    })) as Guide[]
+    })) as Guide[];
     
-    return guides
+    return guides;
   } catch (error) {
-    console.error('Error fetching guides:', error)
-    throw new Error('Failed to fetch guides')
+    console.error('Error fetching guides:', error);
+    throw new Error('Failed to fetch guides');
   }
 } 

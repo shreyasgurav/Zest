@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, ChangeEvent, FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { db, storage } from "@/lib/firebase";
+import { getFirebaseDb, getFirebaseStorage } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -16,9 +16,16 @@ const CreateGuide = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [isClient, setIsClient] = useState(false);
   const auth = getAuth();
 
   useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isClient) return;
+
     const checkAuth = () => {
       const user = auth.currentUser;
       setIsAuthorized(user?.email === "shrreyasgurav@gmail.com");
@@ -26,7 +33,11 @@ const CreateGuide = () => {
     checkAuth();
     const unsubscribe = onAuthStateChanged(auth, checkAuth);
     return () => unsubscribe();
-  }, [auth]);
+  }, [auth, isClient]);
+
+  if (!isClient) {
+    return null; // Return null during server-side rendering
+  }
 
   if (!isAuthorized) {
     return (
@@ -74,14 +85,13 @@ const CreateGuide = () => {
       setMessage("Please upload a cover image");
       return;
     }
-    if (!db || !storage) {
-      setMessage("Firebase services are not initialized. Please try again later.");
-      return;
-    }
 
     setLoading(true);
     setMessage("");
     try {
+      const storage = getFirebaseStorage();
+      const db = getFirebaseDb();
+
       // Upload guide image
       const fileExtension = guideImage.name.split(".").pop();
       const fileName = `guides/covers/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExtension}`;
