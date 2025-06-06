@@ -1,7 +1,7 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
-import { db, storage } from "../../../lib/firebase";
-import { doc, updateDoc, arrayUnion } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getFirebaseDb, getFirebaseStorage } from "../../../lib/firebase";
+import { doc, updateDoc, arrayUnion, Firestore } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL, FirebaseStorage } from "firebase/storage";
 import styles from "./AddGuideItems.module.css";
 import { generateSlug } from '../../../utils/generateSlug';
 
@@ -15,14 +15,19 @@ interface ItemData {
   pricingUrl: string;
 }
 
-interface AddGuideItemProps {
-  guideId: string;
-  slug: string;
-  onClose: () => void;
-  onItemAdded: () => void;
+interface GuideItem extends ItemData {
+  photos: string[];
+  itemSlug: string;
 }
 
-const AddGuideItem: React.FC<AddGuideItemProps> = ({ guideId, slug, onClose, onItemAdded }) => {
+interface AddGuideItemProps {
+  guideId: string;
+  onClose: () => void;
+  onItemAdded: (newItem: GuideItem) => void;
+  getDb: () => Firestore;
+}
+
+const AddGuideItem: React.FC<AddGuideItemProps> = ({ guideId, onClose, onItemAdded }) => {
   const [itemData, setItemData] = useState<ItemData>({
     name: '',
     price: '',
@@ -66,6 +71,9 @@ const AddGuideItem: React.FC<AddGuideItemProps> = ({ guideId, slug, onClose, onI
 
     setLoading(true);
     try {
+      const storage = getFirebaseStorage();
+      const db = getFirebaseDb();
+
       // Upload all images
       const imageUrls = await Promise.all(
         itemImages.map(async (image) => {
@@ -76,17 +84,19 @@ const AddGuideItem: React.FC<AddGuideItemProps> = ({ guideId, slug, onClose, onI
         })
       );
 
+      const newItem: GuideItem = {
+        ...itemData,
+        photos: imageUrls,
+        itemSlug: generateSlug(itemData.name)
+      };
+
       // Add item to guide with multiple images
       const guideRef = doc(db, "guides", guideId);
       await updateDoc(guideRef, {
-        items: arrayUnion({
-          ...itemData,
-          photos: imageUrls,
-          itemSlug: generateSlug(itemData.name)
-        })
+        items: arrayUnion(newItem)
       });
 
-      onItemAdded();
+      onItemAdded(newItem);
       onClose();
     } catch (error) {
       console.error("Error adding guide item:", error);

@@ -7,12 +7,13 @@ import { getStorage, FirebaseStorage } from 'firebase/storage';
 const isClient = typeof window !== 'undefined';
 
 // Initialize Firebase variables with proper types
-let app: FirebaseApp | undefined;
-let auth: Auth | undefined;
-let db: Firestore | undefined;
-let storage: FirebaseStorage | undefined;
+let app: FirebaseApp;
+let auth: Auth;
+let db: Firestore;
+let storage: FirebaseStorage;
 
-if (isClient) {
+// Function to initialize Firebase
+function initializeFirebase() {
   const firebaseConfig = {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
     authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -38,14 +39,48 @@ if (isClient) {
   );
 
   if (missingEnvVars.length > 0) {
-    console.error('Missing required Firebase environment variables:', missingEnvVars);
-  } else {
-    // Initialize Firebase only if all required environment variables are present
-    app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-    auth = getAuth(app);
-    db = getFirestore(app);
-    storage = getStorage(app);
+    throw new Error(`Missing required Firebase environment variables: ${missingEnvVars.join(', ')}`);
+  }
+
+  // Initialize Firebase only if all required environment variables are present
+  app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+  auth = getAuth(app);
+  db = getFirestore(app);
+  storage = getStorage(app);
+
+  return { app, auth, db, storage };
+}
+
+// Initialize Firebase only in the browser
+if (isClient) {
+  try {
+    initializeFirebase();
+  } catch (error) {
+    console.error('Failed to initialize Firebase:', error);
+    throw error; // Re-throw to prevent silent failures
   }
 }
 
+// Export initialized instances or throw error if accessed server-side
+export function getFirebaseApp(): FirebaseApp {
+  if (!isClient) throw new Error('Firebase can only be accessed client-side');
+  return app;
+}
+
+export function getFirebaseAuth(): Auth {
+  if (!isClient) throw new Error('Firebase can only be accessed client-side');
+  return auth;
+}
+
+export function getFirebaseDb(): Firestore {
+  if (!isClient) throw new Error('Firebase can only be accessed client-side');
+  return db;
+}
+
+export function getFirebaseStorage(): FirebaseStorage {
+  if (!isClient) throw new Error('Firebase can only be accessed client-side');
+  return storage;
+}
+
+// For backward compatibility
 export { app, auth, db, storage }; 

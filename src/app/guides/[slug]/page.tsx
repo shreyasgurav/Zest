@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { db } from "@/lib/firebase";
-import { doc, getDoc, updateDoc, collection, getDocs, query, where } from "firebase/firestore";
+import { getFirebaseDb } from "@/lib/firebase";
+import { doc, getDoc, updateDoc, collection, getDocs, query, where, Firestore } from "firebase/firestore";
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
 import AddGuideItem from "@/components/GuidesSection/AddGuideItems/AddGuideItems";
 import EditGuideItem from "@/components/GuidesSection/EditGuideItem/EditGuideItem";
@@ -20,7 +20,7 @@ interface GuideItem {
   addressLink: string;
   pricingUrl: string;
   photos: string[];
-  slug: string;
+  itemSlug: string;
 }
 
 interface Guide {
@@ -30,6 +30,22 @@ interface Guide {
   slug?: string;
   cover_image?: string;
   items: GuideItem[];
+}
+
+interface AddGuideItemProps {
+  guideId: string;
+  onClose: () => void;
+  onItemAdded: (newItem: GuideItem) => void;
+  getDb: () => Firestore;
+}
+
+interface EditGuideItemProps {
+  guideId: string;
+  itemIndex: number;
+  item: GuideItem;
+  onClose: () => void;
+  onItemUpdated: (updatedItem: GuideItem) => void;
+  getDb: () => Firestore;
 }
 
 // Helper function to generate slug
@@ -86,6 +102,7 @@ const GuidePage = () => {
         let guideData: Guide | null = null;
         
         if (slug) {
+          const db = getFirebaseDb();
           // First try to fetch by slug
           const guidesRef = collection(db, "guides");
           const q = query(guidesRef, where("slug", "==", slug));
@@ -128,8 +145,13 @@ const GuidePage = () => {
   };
 
   const handleDeleteItem = async (index: number) => {
-    if (!guide) return;
+    if (!guide) {
+      console.error("Guide is not available");
+      return;
+    }
+
     try {
+      const db = getFirebaseDb();
       const actualId = guide.actualId || guide.id;
       const guideDocRef = doc(db, "guides", actualId);
       const guideSnapshot = await getDoc(guideDocRef);
@@ -194,6 +216,24 @@ const GuidePage = () => {
         <div className={styles['guide-page']}>
           <div className={styles['guide-container']}>
             <div className={styles['error-message']}>{error || "Guide not found"}</div>
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  if (!guide) {
+    return (
+      <>
+        <Helmet>
+          <title>Error - Zest</title>
+          <meta name="description" content="An error occurred while loading the guide." />
+        </Helmet>
+        <div className={styles['guide-page']}>
+          <div className={styles['guide-container']}>
+            <div className={styles['error-message']}>
+              Guide is not available. Please try again later.
+            </div>
           </div>
         </div>
       </>
@@ -363,50 +403,42 @@ const GuidePage = () => {
 
           {showAddItem && (
             <AddGuideItem
-              guideId={actualGuideId}
-              slug={guide.slug || ''}
+              guideId={guide?.actualId || guide?.id || ''}
               onClose={() => setShowAddItem(false)}
-              onItemAdded={() => {
-                const fetchGuide = async () => {
-                  const guideDocRef = doc(db, "guides", actualGuideId);
-                  const guideSnapshot = await getDoc(guideDocRef);
-                  if (guideSnapshot.exists()) {
-                    setGuide({
-                      ...guide,
-                      ...guideSnapshot.data(),
-                      id: guideSnapshot.id,
-                      actualId: actualGuideId
-                    } as Guide);
-                  }
-                };
-                fetchGuide();
+              onItemAdded={(newItem: GuideItem) => {
+                setGuide(prev => prev ? {
+                  ...prev,
+                  items: [...prev.items, newItem]
+                } : null);
+                setShowAddItem(false);
               }}
+              getDb={getFirebaseDb}
             />
           )}
 
-          {showEditItem && editingItemIndex !== null && (
+          {showEditItem && editingItemIndex !== null && guide && (
             <EditGuideItem
-              guideId={actualGuideId}
+              guideId={guide.actualId || guide.id}
+              itemIndex={editingItemIndex}
               item={guide.items[editingItemIndex]}
               onClose={() => {
                 setShowEditItem(false);
                 setEditingItemIndex(null);
               }}
-              onItemUpdated={() => {
-                const fetchGuide = async () => {
-                  const guideDocRef = doc(db, "guides", actualGuideId);
-                  const guideSnapshot = await getDoc(guideDocRef);
-                  if (guideSnapshot.exists()) {
-                    setGuide({
-                      ...guide,
-                      ...guideSnapshot.data(),
-                      id: guideSnapshot.id,
-                      actualId: actualGuideId
-                    } as Guide);
-                  }
-                };
-                fetchGuide();
+              onItemUpdated={(updatedItem: GuideItem) => {
+                setGuide(prev => {
+                  if (!prev) return null;
+                  const newItems = [...prev.items];
+                  newItems[editingItemIndex] = updatedItem;
+                  return {
+                    ...prev,
+                    items: newItems
+                  };
+                });
+                setShowEditItem(false);
+                setEditingItemIndex(null);
               }}
+              getDb={getFirebaseDb}
             />
           )}
         </div>

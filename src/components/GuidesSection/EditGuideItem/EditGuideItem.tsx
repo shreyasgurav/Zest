@@ -1,7 +1,7 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
-import { db, storage } from "../../../lib/firebase";
-import { doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
+import { getFirebaseDb, getFirebaseStorage } from "../../../lib/firebase";
+import { doc, updateDoc, arrayUnion, arrayRemove, Firestore } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL, deleteObject, FirebaseStorage } from "firebase/storage";
 import styles from "./EditGuideItem.module.css";
 import { generateSlug } from '../../../utils/generateSlug';
 
@@ -16,15 +16,21 @@ interface ItemData {
   photos: string[];
 }
 
+interface GuideItem extends ItemData {
+  itemSlug: string;
+}
+
 interface EditGuideItemProps {
   guideId: string;
-  item: ItemData;
+  itemIndex: number;
+  item: GuideItem;
   onClose: () => void;
-  onItemUpdated: () => void;
+  onItemUpdated: (updatedItem: GuideItem) => void;
+  getDb: () => Firestore;
 }
 
 const EditGuideItem: React.FC<EditGuideItemProps> = ({ guideId, item, onClose, onItemUpdated }) => {
-  const [itemData, setItemData] = useState<ItemData>(item);
+  const [itemData, setItemData] = useState<GuideItem>(item);
   const [newImages, setNewImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
@@ -65,6 +71,9 @@ const EditGuideItem: React.FC<EditGuideItemProps> = ({ guideId, item, onClose, o
 
     setLoading(true);
     try {
+      const storage = getFirebaseStorage();
+      const db = getFirebaseDb();
+
       // Upload new images
       const newImageUrls = await Promise.all(
         newImages.map(async (image) => {
@@ -81,7 +90,7 @@ const EditGuideItem: React.FC<EditGuideItemProps> = ({ guideId, item, onClose, o
         items: arrayRemove(item)
       });
 
-      const updatedItem = {
+      const updatedItem: GuideItem = {
         ...itemData,
         photos: [...itemData.photos, ...newImageUrls],
         itemSlug: generateSlug(itemData.name)
@@ -91,7 +100,7 @@ const EditGuideItem: React.FC<EditGuideItemProps> = ({ guideId, item, onClose, o
         items: arrayUnion(updatedItem)
       });
 
-      onItemUpdated();
+      onItemUpdated(updatedItem);
       onClose();
     } catch (error) {
       console.error("Error updating guide item:", error);
