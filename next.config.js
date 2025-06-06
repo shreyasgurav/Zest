@@ -1,18 +1,17 @@
 /** @type {import('next').NextConfig} */
 
 const nextConfig = {
+  output: 'export', // Generate static output
   reactStrictMode: true,
   images: {
     domains: ['firebasestorage.googleapis.com'],
-  },
-  experimental: {
-    serverActions: true,
+    unoptimized: true, // Required for static export
   },
   // Disable server-side rendering for pages that use Firebase
   // This ensures Firebase is only initialized on the client side
   unstable_runtimeJS: true,
+  // Ensure Firebase modules are only included in client-side bundles
   webpack: (config, { isServer }) => {
-    // Ensure Firebase modules are only included in client-side bundles
     if (isServer) {
       config.externals = [...(config.externals || []), 'firebase', 'firebase/app', 'firebase/auth', 'firebase/firestore', 'firebase/storage'];
     }
