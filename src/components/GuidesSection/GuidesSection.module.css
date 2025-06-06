@@ -1,0 +1,433 @@
+/* (Paste the provided CSS here as-is, since it's already in CSS module format) */
+
+/* General Event Section Styling */
+.experiences-section {
+    flex: 1;
+    margin-top: 50px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.upcoming-experiences-heading {
+    grid-column: 2;
+    text-align: center;
+    font-size: 24px;
+    color: white;
+    opacity: 0.7;
+    font-family: "Architects Daughter", cursive;
+    font-weight: 400;
+    font-style: normal;
+    margin: 0;
+}
+
+.experiences-section-heading {
+    display: grid;
+    grid-template-columns: 100px 1fr 100px;
+    align-items: center;
+    padding: 0 20px;
+    margin-bottom: 20px;
+}
+
+.see-all-link {
+    grid-column: 3;
+    justify-self: end;
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    opacity: 0.7;
+    white-space: nowrap;
+}
+
+.see-all-link:hover {
+    opacity: 1;
+}
+
+/* Error Styles */
+.error-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+    padding: 20px;
+    text-align: center;
+}
+
+.error-message {
+    color: #ff4444;
+    font-size: 16px;
+    background: rgba(255, 68, 68, 0.1);
+    padding: 15px 25px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 68, 68, 0.2);
+}
+
+/* Embla Carousel Styling */
+.embla {
+    position: relative;
+    width: 100%;
+    margin: auto;
+    overflow: hidden;
+}
+
+.embla__viewport {
+    overflow: hidden;
+    width: 100%;
+}
+
+.embla__container {
+    display: flex;
+    user-select: none;
+    -webkit-touch-callout: none;
+    -khtml-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    margin-left: -10px;
+}
+
+.embla__slide {
+    position: relative;
+    min-width: 0;
+    flex: 0 0 250px;
+    margin-left: 10px;
+}
+
+.embla-container {
+    position: relative;
+    padding: 0 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Navigation Buttons */
+.embla-button {
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 0;
+    width: 40px;
+    height: 40px;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    display: flex;
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.embla-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.embla-button svg {
+    width: 24px;
+    height: 24px;
+    color: white;
+}
+
+.embla-button-prev {
+    left: 0;
+}
+
+.embla-button-next {
+    right: 0;
+}
+
+.embla-button-disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.embla-button-disabled:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-50%);
+}
+
+.no-experiences-message {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 18px;
+    padding: 40px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    margin: 20px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .experiences-section-heading {
+        grid-template-columns: 60px 1fr 60px;
+        padding: 0 10px;
+    }
+
+    .upcoming-experiences-heading {
+        font-size: 20px;
+    }
+
+    .see-all-link {
+        font-size: 14px;
+    }
+
+    .embla__slide {
+        flex: 0 0 200px;
+    }
+
+    .embla-container {
+        padding: 0 30px;
+    }
+
+    .embla-button {
+        width: 32px;
+        height: 32px;
+    }
+
+    .embla-button svg {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .experiences-section-heading {
+        grid-template-columns: 40px 1fr 40px;
+        padding: 0 5px;
+    }
+
+    .upcoming-experiences-heading {
+        font-size: 18px;
+    }
+
+    .see-all-link {
+        font-size: 12px;
+    }
+
+    .embla__slide {
+        flex: 0 0 180px;
+    }
+
+    .embla-container {
+        padding: 0 25px;
+    }
+
+    .embla-button {
+        width: 28px;
+        height: 28px;
+    }
+
+    .embla-button svg {
+        width: 16px;
+        height: 16px;
+    }
+}
+
+/* Touch Device Optimizations */
+@media (hover: none) {
+    .embla-button {
+        opacity: 0.8;
+    }
+
+    .embla-button:hover {
+        transform: translateY(-50%);
+    }
+}
+
+/* Removed Arrows and Dots */
+.embla__controls,
+.embla__buttons,
+.embla__dots {
+    display: none;
+}
+
+/* Skeleton Loading Animation */
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.skeleton-loading {
+  background: rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  width: 100%;
+  max-width: 230px;
+  aspect-ratio: 1;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.guides-box-image-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.03) 25%,
+    rgba(255, 255, 255, 0.08) 37%,
+    rgba(255, 255, 255, 0.03) 63%
+  );
+  background-size: 400% 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+.skeleton-loading .guides-box-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.8),
+    rgba(0, 0, 0, 0.4),
+    transparent
+  );
+}
+
+.skeleton-loading .skeleton-title {
+  height: 18px;
+  width: 80%;
+  margin: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 25%,
+    rgba(255, 255, 255, 0.1) 37%,
+    rgba(255, 255, 255, 0.05) 63%
+  );
+  background-size: 400% 100%;
+  animation: shimmer 2s infinite linear;
+  border-radius: 4px;
+}
+
+.skeleton-text {
+  color: transparent !important;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 25%,
+    rgba(255, 255, 255, 0.1) 37%,
+    rgba(255, 255, 255, 0.05) 63%
+  );
+  background-size: 400% 100%;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 4px;
+}
+
+/* Skeleton Section Styles */
+.skeleton-section {
+  opacity: 0;
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.skeleton-heading {
+  width: 200px;
+  height: 32px;
+  margin-bottom: 8px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .skeleton-loading {
+    max-width: 180px;
+  }
+}
+
+@media (max-width: 480px) {
+  .skeleton-loading {
+    max-width: 170px;
+  }
+}
+
+/* Update skeleton styles to match GuideBox exactly */
+.guides-box-card {
+  position: relative;
+  width: 100%;
+  max-width: 230px;
+  aspect-ratio: 1;
+  border-radius: 20px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.skeleton-text {
+  color: transparent !important;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 25%,
+    rgba(255, 255, 255, 0.1) 37%,
+    rgba(255, 255, 255, 0.05) 63%
+  );
+  background-size: 400% 100%;
+  animation: shimmer 2s infinite linear;
+  border-radius: 4px;
+  opacity: 0.7;
+}
+
+.skeleton-loading .guides-box-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.8),
+    rgba(0, 0, 0, 0.4),
+    transparent
+  );
+}
+
+.skeleton-loading .skeleton-title {
+  height: 18px;
+  width: 80%;
+  margin: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 25%,
+    rgba(255, 255, 255, 0.1) 37%,
+    rgba(255, 255, 255, 0.05) 63%
+  );
+  background-size: 400% 100%;
+  animation: shimmer 2s infinite linear;
+  border-radius: 4px;
+}
+
+/* Update the shimmer animation */
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Maintain responsive styles */
+@media (max-width: 768px) {
+  .guides-box-card {
+    max-width: 180px;
+  }
+}
+
+@media (max-width: 480px) {
+  .guides-box-card {
+    max-width: 170px;
+  }
+} 

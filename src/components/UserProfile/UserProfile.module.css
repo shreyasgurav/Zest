@@ -1,0 +1,362 @@
+.userProfileContainer {
+    max-width: 800px;
+    margin: 80px auto 20px;
+    padding: 20px;
+}
+
+.profileHeader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.profileAvatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    position: relative;
+    cursor: pointer;
+}
+
+.avatarOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.profileAvatar:hover .avatarOverlay {
+    opacity: 1;
+}
+
+.avatarOverlay span {
+    color: white;
+    font-size: 14px;
+    text-align: center;
+}
+
+.uploadOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: white;
+    font-size: 14px;
+}
+
+.profileInfo {
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.profileMainSection {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 30px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+  
+.profileLeftSection {
+    flex-shrink: 0;
+}
+  
+.profileRightSection {
+    flex-grow: 1;
+}
+
+.editProfileButton {
+    align-items: center;
+    background-color: #1c1c1c;
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    outline: none;
+    transition: background-color 0.3s ease;
+    width: 100px;
+    justify-content: center;
+}
+
+.emailDisplay {
+    color: white;
+    opacity: 0.6;
+    margin-bottom: 10px;
+}
+
+.disabledInput {
+    opacity: 0.7;
+    cursor: not-allowed;
+    background-color: rgba(128, 128, 128, 0.1);
+}
+
+.editProfileButton:hover {
+    background-color: #333333;
+}
+
+.editProfileContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+  
+.inputGroup {
+    color: white;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+  
+.profileInput {
+    color: white;
+    padding: 8px;
+    border: 0.1px solid #7d7d7d;
+    border-radius: 6px;
+    background: none;
+}
+
+.usernameInputContainer {
+    display: flex;
+    align-items: center;
+    border: 0.1px solid #7d7d7d;
+    border-radius: 6px;
+    background: none;
+    padding: 0;
+    overflow: hidden;
+}
+
+.usernameAtSymbol {
+    color: white;
+    opacity: 0.7;
+    padding: 8px 0 8px 8px;
+    user-select: none;
+    font-size: small;
+}
+
+.usernameInput {
+    color: white;
+    padding: 8px;
+    border: none;
+    background: none;
+    flex: 1;
+}
+
+.usernameInput:focus {
+    outline: none;
+}
+  
+.error {
+    color: red;
+    font-size: 0.9em;
+}
+  
+.buttonGroup {
+    display: flex;
+    gap: 10px;
+}
+
+.profileName {
+    margin: 0;
+    color: white;
+    opacity: 0.8;
+}
+
+.usernameDisplay {
+    margin-bottom: 5px;
+    color: white;
+    opacity: 0.6;
+}
+
+.bioInput {
+    min-height: 100px;
+    resize: vertical;
+}
+  
+.bioDisplay {
+    margin: 10px 0;
+    padding: 0px;
+    color: white;
+    border-radius: 8px;
+    max-width: 400px;
+}
+
+.bioDisplay p {
+    margin: 0;
+    color: white;
+    opacity: 0.8;
+}
+
+.saveCancelButton {
+    display: flex;
+    align-items: center;
+    background-color: #1c1c1c;
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-family: Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    cursor: pointer;
+    outline: none;
+    transition: background-color 0.3s ease;
+    width: 50px;
+    justify-content: center;
+}
+
+.saveCancelButton:hover {
+    background-color: #333333;
+}
+
+.avatarImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+}
+  
+.animatePulse {
+    animation: pulse 1.5s ease-in-out infinite;
+}
+  
+.skeletonAvatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+  
+.skeletonName {
+    height: 28px;
+    width: 200px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+  
+.skeletonUsername {
+    height: 20px;
+    width: 150px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    margin-bottom: 12px;
+}
+  
+.skeletonBio {
+    height: 60px;
+    width: 300px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+  
+.skeletonButton {
+    height: 36px;
+    width: 100px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+    .userProfileContainer {
+        margin: 60px 10px 20px;
+        padding: 15px;
+    }
+    
+    .profileMainSection {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    .profileLeftSection {
+        width: 100%;
+    }
+
+    .profileAvatar {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 0;
+        margin-left: 0;
+    }
+
+    .profileName {
+        font-size: 20px;
+        margin-top: 20px;
+    }
+
+    .usernameDisplay {
+        margin: 0;
+    }
+    
+    .profileRightSection {
+        width: 100%;
+    }
+    
+    .profileInfo {
+        align-items: flex-start;
+        text-align: left;
+    }
+
+    .editProfileButton {
+        margin: 0;
+    }
+
+    .bioDisplay {
+        text-align: left;
+        margin: 10px 0;
+        max-width: 100%;
+    }
+
+    .editProfileContainer {
+        width: 100%;
+    }
+
+    .skeletonAvatar {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .skeletonName {
+        width: 150px;
+    }
+    
+    .skeletonUsername {
+        width: 120px;
+    }
+    
+    .skeletonBio {
+        width: 100%;
+    }
+}

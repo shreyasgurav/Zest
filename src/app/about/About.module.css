@@ -1,0 +1,90 @@
+.aboutContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 80px 20px 40px;
+  min-height: 100vh;
+}
+
+.title {
+  font-size: 48px;
+  font-weight: bold;
+  color: white;
+  margin-bottom: 24px;
+  text-align: center;
+  font-family: "Architects Daughter", cursive;
+}
+
+.description {
+  font-size: 18px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8);
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 36px;
+  }
+  
+  .description {
+    font-size: 16px;
+    padding: 0 20px;
+  }
+}
+
+.aboutUsContainer {
+  padding: 20px;
+  margin-top: 100px;
+  font-family: 'Roboto', sans-serif;
+  background: none;
+}
+
+.aboutUsContent {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: rgb(40, 40, 40, 0.3);
+}
+
+.aboutUsContent h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: white;
+  opacity: 0.7;
+  font-family: "Architects Daughter", cursive;
+  font-weight: 400;
+  font-style: normal;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.aboutUsContent p {
+  margin-bottom: 15px;
+  line-height: 1.6;
+  font-size: 1.1em;
+  margin: 25px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+@media (max-width: 768px) {
+  .aboutUsContainer {
+    margin-top: 80px;
+    padding: 15px;
+  }
+  
+  .aboutUsContent {
+    padding: 15px;
+  }
+  
+  .aboutUsContent h2 {
+    font-size: 20px;
+  }
+  
+  .aboutUsContent p {
+    font-size: 1em;
+    margin: 15px;
+  }
+} 

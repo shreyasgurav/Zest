@@ -1,0 +1,155 @@
+.contactUsContainer {
+    padding: 30px;
+    margin-top: 150px;
+    font-family: 'Roboto', sans-serif;
+    background: none;
+}
+
+.contactUsContent {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 30px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.contactUsContent h2 {
+    margin-bottom: 40px;
+    font-size: 24px;
+    color: white;
+    opacity: 0.7;
+    font-family: "Architects Daughter", cursive;
+    font-weight: 400;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.contactUsContent h3 {
+    margin-bottom: 10px;
+    color: #b3b3b3;
+}
+
+.contactUsContent p {
+    line-height: 1.6;
+    font-size: 1.1em;
+    margin: 10px;
+    color: white;
+}
+
+.contactItems {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.contactItem {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.contactItem:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.contactIcon {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+}
+
+.contactIcon svg {
+    color: white;
+    opacity: 0.8;
+    font-size: 18px;
+}
+
+.contactInfo {
+    flex: 1;
+    text-align: left;
+}
+
+.contactInfo h3 {
+    color: white;
+    opacity: 0.7;
+    font-size: 14px;
+    margin-bottom: 4px;
+    font-weight: normal;
+}
+
+.contactInfo p {
+    color: white;
+    font-size: 16px;
+    margin: 0;
+}
+
+.copyButton {
+    background: none;
+    border: none;
+    color: white;
+    opacity: 0.5;
+    cursor: pointer;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.copyButton svg {
+    font-size: 16px;
+}
+
+.contactItem:hover .copyButton {
+    opacity: 0.8;
+}
+
+.copyButton:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+@media (max-width: 480px) {
+    .contactUsContainer {
+        padding: 20px;
+        margin-top: 100px;
+    }
+
+    .contactUsContent {
+        padding: 20px;
+    }
+
+    .contactItem {
+        padding: 15px;
+    }
+
+    .contactIcon {
+        width: 32px;
+        height: 32px;
+    }
+
+    .contactInfo h3 {
+        font-size: 13px;
+    }
+
+    .contactInfo p {
+        font-size: 14px;
+    }
+} 
