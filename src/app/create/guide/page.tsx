@@ -74,6 +74,11 @@ const CreateGuide = () => {
       setMessage("Please upload a cover image");
       return;
     }
+    if (!db || !storage) {
+      setMessage("Firebase services are not initialized. Please try again later.");
+      return;
+    }
+
     setLoading(true);
     setMessage("");
     try {
