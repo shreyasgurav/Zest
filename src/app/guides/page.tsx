@@ -1,5 +1,6 @@
-import { Metadata } from 'next'
+import { getAllGuides } from '@/lib/guides'
 import AllGuides from './AllGuides'
+import { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'All Guides | Zest',
@@ -11,10 +12,13 @@ export const metadata: Metadata = {
   },
 }
 
-export default function GuidesPage() {
+export default async function GuidesPage() {
+  // Fetch guides on the server
+  const guides = await getAllGuides()
+  
   return (
     <main className="guides-page">
-      <AllGuides />
+      <AllGuides initialGuides={guides} />
     </main>
   )
 } 
