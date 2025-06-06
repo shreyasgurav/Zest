@@ -1,0 +1,635 @@
+/*!*****************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[11].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[11].oneOf[7].use[3]!./src/components/GuidesSection/GuideBox/GuideBox.module.css ***!
+  \*****************************************************************************************************************************************************************************************************************************************************************************************************/
+/* Container for Guide Boxes */
+.GuideBox_guides-box-wrapper__0wFvH {
+    max-width: 250px;
+    position: relative;
+    cursor: pointer;
+    padding: 10px;
+}
+
+/* Individual Guide Box */
+.GuideBox_guides-box-card__qo6_7 {
+    position: relative;
+    width: 100%;
+    max-width: 230px;
+    aspect-ratio: 1;
+    border-radius: 20px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: rgba(255, 255, 255, 0.1);
+    -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Hover Effect for Guide Box */
+.GuideBox_guides-box-card__qo6_7:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Guide Image */
+.GuideBox_guides-box-image__AzfMl {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.GuideBox_guides-box-card__qo6_7:hover .GuideBox_guides-box-image__AzfMl {
+    opacity: 1;
+}
+
+/* Guide Information */
+.GuideBox_guides-box-info__e__C5 {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    background: linear-gradient(to top, 
+        rgba(0, 0, 0, 0.8), 
+        rgba(0, 0, 0, 0.4), 
+        transparent
+    );
+}
+
+.GuideBox_guides-box-info__e__C5 h3 {
+    color: #fff;
+    font-size: 18px;
+    font-weight: 500;
+    margin: 0;
+    text-align: left;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    padding: 0;
+    font-family: "Architects Daughter", cursive;
+}
+
+/* Skeleton Loading */
+.GuideBox_skeleton-loading__l7ijn .GuideBox_guides-box-card__qo6_7 {
+    background: rgba(255, 255, 255, 0.05);
+    border: none;
+}
+
+.GuideBox_guides-box-image-placeholder__bcX1h {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #2d2d2d;
+    color: #666;
+}
+
+.GuideBox_skeleton-loading__l7ijn .GuideBox_guides-box-image-placeholder__bcX1h {
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.05) 25%,
+        rgba(255, 255, 255, 0.1) 37%,
+        rgba(255, 255, 255, 0.05) 63%
+    );
+    background-size: 400% 100%;
+    animation: GuideBox_shimmer___BGXB 1.5s infinite linear;
+}
+
+.GuideBox_skeleton-loading__l7ijn .GuideBox_guides-box-info__e__C5 {
+    background: none;
+}
+
+.GuideBox_skeleton-loading__l7ijn .GuideBox_guides-box-info__e__C5 h3 {
+    height: 24px;
+    width: 80%;
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.05) 25%,
+        rgba(255, 255, 255, 0.1) 37%,
+        rgba(255, 255, 255, 0.05) 63%
+    );
+    background-size: 400% 100%;
+    animation: GuideBox_shimmer___BGXB 1.5s infinite linear;
+    border-radius: 4px;
+}
+
+@keyframes GuideBox_shimmer___BGXB {
+    0% {
+        background-position: 100% 0;
+    }
+    100% {
+        background-position: -100% 0;
+    }
+}
+
+/* Delete and Edit Buttons */
+.GuideBox_guides-box-delete-btn__uaIVu,
+.GuideBox_guides-box-edit-btn__e3oFx {
+    position: absolute;
+    top: 10px;
+    z-index: 2;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.GuideBox_guides-box-delete-btn__uaIVu {
+    right: 10px;
+    color: #ff4444;
+}
+
+.GuideBox_guides-box-edit-btn__e3oFx {
+    right: 50px;
+    color: #33b5e5;
+}
+
+.GuideBox_guides-box-delete-btn__uaIVu:hover {
+    background: rgba(255, 68, 68, 0.2);
+}
+
+.GuideBox_guides-box-edit-btn__e3oFx:hover {
+    background: rgba(51, 181, 229, 0.2);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .GuideBox_guides-box-wrapper__0wFvH {
+        max-width: 180px;
+        padding: 5px;
+    }
+
+    .GuideBox_guides-box-card__qo6_7 {
+        max-width: 170px;
+    }
+
+    .GuideBox_guides-box-info__e__C5 {
+        padding: 15px;
+    }
+
+    .GuideBox_guides-box-info__e__C5 h3 {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .GuideBox_guides-box-wrapper__0wFvH {
+        max-width: 160px;
+        padding: 5px;
+    }
+
+    .GuideBox_guides-box-card__qo6_7 {
+        max-width: 150px;
+    }
+
+    .GuideBox_guides-box-info__e__C5 h3 {
+        font-size: 14px;
+    }
+} 
+/*!*************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[11].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[11].oneOf[7].use[3]!./src/components/GuidesSection/GuidesSection.module.css ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************************************/
+/* (Paste the provided CSS here as-is, since it's already in CSS module format) */
+
+/* General Event Section Styling */
+.GuidesSection_experiences-section__NdWER {
+    flex: 1 1;
+    margin-top: 50px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.GuidesSection_upcoming-experiences-heading__ala_d {
+    grid-column: 2;
+    text-align: center;
+    font-size: 24px;
+    color: white;
+    opacity: 0.7;
+    font-family: "Architects Daughter", cursive;
+    font-weight: 400;
+    font-style: normal;
+    margin: 0;
+}
+
+.GuidesSection_experiences-section-heading__aoNYM {
+    display: grid;
+    grid-template-columns: 100px 1fr 100px;
+    align-items: center;
+    padding: 0 20px;
+    margin-bottom: 20px;
+}
+
+.GuidesSection_see-all-link__eGGwA {
+    grid-column: 3;
+    justify-self: end;
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    opacity: 0.7;
+    white-space: nowrap;
+}
+
+.GuidesSection_see-all-link__eGGwA:hover {
+    opacity: 1;
+}
+
+/* Error Styles */
+.GuidesSection_error-container__iPKua {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+    padding: 20px;
+    text-align: center;
+}
+
+.GuidesSection_error-message__MBTDs {
+    color: #ff4444;
+    font-size: 16px;
+    background: rgba(255, 68, 68, 0.1);
+    padding: 15px 25px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 68, 68, 0.2);
+}
+
+/* Embla Carousel Styling */
+.GuidesSection_embla__jiL_h {
+    position: relative;
+    width: 100%;
+    margin: auto;
+    overflow: hidden;
+}
+
+.GuidesSection_embla__viewport___8O0P {
+    overflow: hidden;
+    width: 100%;
+}
+
+.GuidesSection_embla__container__u6K_f {
+    display: flex;
+    -webkit-user-select: none;
+       -moz-user-select: none;
+            user-select: none;
+    -webkit-touch-callout: none;
+    -khtml-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    margin-left: -10px;
+}
+
+.GuidesSection_embla__slide__R04F3 {
+    position: relative;
+    min-width: 0;
+    flex: 0 0 250px;
+    margin-left: 10px;
+}
+
+.GuidesSection_embla-container__Qiog7 {
+    position: relative;
+    padding: 0 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Navigation Buttons */
+.GuidesSection_embla-button__C3m27 {
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 0;
+    width: 40px;
+    height: 40px;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    display: flex;
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.1);
+    -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(8px);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.GuidesSection_embla-button__C3m27:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.GuidesSection_embla-button__C3m27 svg {
+    width: 24px;
+    height: 24px;
+    color: white;
+}
+
+.GuidesSection_embla-button-prev__N6Xns {
+    left: 0;
+}
+
+.GuidesSection_embla-button-next__d0UzC {
+    right: 0;
+}
+
+.GuidesSection_embla-button-disabled__CPfIZ {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.GuidesSection_embla-button-disabled__CPfIZ:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-50%);
+}
+
+.GuidesSection_no-experiences-message__EVIVz {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 18px;
+    padding: 40px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    margin: 20px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .GuidesSection_experiences-section-heading__aoNYM {
+        grid-template-columns: 60px 1fr 60px;
+        padding: 0 10px;
+    }
+
+    .GuidesSection_upcoming-experiences-heading__ala_d {
+        font-size: 20px;
+    }
+
+    .GuidesSection_see-all-link__eGGwA {
+        font-size: 14px;
+    }
+
+    .GuidesSection_embla__slide__R04F3 {
+        flex: 0 0 200px;
+    }
+
+    .GuidesSection_embla-container__Qiog7 {
+        padding: 0 30px;
+    }
+
+    .GuidesSection_embla-button__C3m27 {
+        width: 32px;
+        height: 32px;
+    }
+
+    .GuidesSection_embla-button__C3m27 svg {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .GuidesSection_experiences-section-heading__aoNYM {
+        grid-template-columns: 40px 1fr 40px;
+        padding: 0 5px;
+    }
+
+    .GuidesSection_upcoming-experiences-heading__ala_d {
+        font-size: 18px;
+    }
+
+    .GuidesSection_see-all-link__eGGwA {
+        font-size: 12px;
+    }
+
+    .GuidesSection_embla__slide__R04F3 {
+        flex: 0 0 180px;
+    }
+
+    .GuidesSection_embla-container__Qiog7 {
+        padding: 0 25px;
+    }
+
+    .GuidesSection_embla-button__C3m27 {
+        width: 28px;
+        height: 28px;
+    }
+
+    .GuidesSection_embla-button__C3m27 svg {
+        width: 16px;
+        height: 16px;
+    }
+}
+
+/* Touch Device Optimizations */
+@media (hover: none) {
+    .GuidesSection_embla-button__C3m27 {
+        opacity: 0.8;
+    }
+
+    .GuidesSection_embla-button__C3m27:hover {
+        transform: translateY(-50%);
+    }
+}
+
+/* Removed Arrows and Dots */
+.GuidesSection_embla__controls__1HgF9,
+.GuidesSection_embla__buttons__WhJZT,
+.GuidesSection_embla__dots__rW7fH {
+    display: none;
+}
+
+/* Skeleton Loading Animation */
+@keyframes GuidesSection_shimmer__CBFHw {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.GuidesSection_skeleton-loading__RHOxg {
+  background: rgba(255, 255, 255, 0.05) !important;
+  -webkit-backdrop-filter: blur(10px);
+          backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  width: 100%;
+  max-width: 230px;
+  aspect-ratio: 1;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.GuidesSection_guides-box-image-placeholder__j9Wb0 {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.03) 25%,
+    rgba(255, 255, 255, 0.08) 37%,
+    rgba(255, 255, 255, 0.03) 63%
+  );
+  background-size: 400% 100%;
+  animation: GuidesSection_shimmer__CBFHw 2s infinite linear;
+}
+
+.GuidesSection_skeleton-loading__RHOxg .GuidesSection_guides-box-info__LrAaS {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.8),
+    rgba(0, 0, 0, 0.4),
+    transparent
+  );
+}
+
+.GuidesSection_skeleton-loading__RHOxg .GuidesSection_skeleton-title__UR10q {
+  height: 18px;
+  width: 80%;
+  margin: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 25%,
+    rgba(255, 255, 255, 0.1) 37%,
+    rgba(255, 255, 255, 0.05) 63%
+  );
+  background-size: 400% 100%;
+  animation: GuidesSection_shimmer__CBFHw 2s infinite linear;
+  border-radius: 4px;
+}
+
+.GuidesSection_skeleton-text__LSF7H {
+  color: transparent !important;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 25%,
+    rgba(255, 255, 255, 0.1) 37%,
+    rgba(255, 255, 255, 0.05) 63%
+  );
+  background-size: 400% 100%;
+  animation: GuidesSection_shimmer__CBFHw 1.5s infinite linear;
+  border-radius: 4px;
+}
+
+/* Skeleton Section Styles */
+.GuidesSection_skeleton-section__tlffC {
+  opacity: 0;
+  animation: GuidesSection_fadeIn__1n5ZU 0.5s ease forwards;
+}
+
+.GuidesSection_skeleton-heading__s5W_8 {
+  width: 200px;
+  height: 32px;
+  margin-bottom: 8px;
+}
+
+@keyframes GuidesSection_fadeIn__1n5ZU {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .GuidesSection_skeleton-loading__RHOxg {
+    max-width: 180px;
+  }
+}
+
+@media (max-width: 480px) {
+  .GuidesSection_skeleton-loading__RHOxg {
+    max-width: 170px;
+  }
+}
+
+/* Update skeleton styles to match GuideBox exactly */
+.GuidesSection_guides-box-card__rNow6 {
+  position: relative;
+  width: 100%;
+  max-width: 230px;
+  aspect-ratio: 1;
+  border-radius: 20px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.1);
+  -webkit-backdrop-filter: blur(10px);
+          backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.GuidesSection_skeleton-text__LSF7H {
+  color: transparent !important;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 25%,
+    rgba(255, 255, 255, 0.1) 37%,
+    rgba(255, 255, 255, 0.05) 63%
+  );
+  background-size: 400% 100%;
+  animation: GuidesSection_shimmer__CBFHw 2s infinite linear;
+  border-radius: 4px;
+  opacity: 0.7;
+}
+
+.GuidesSection_skeleton-loading__RHOxg .GuidesSection_guides-box-info__LrAaS {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.8),
+    rgba(0, 0, 0, 0.4),
+    transparent
+  );
+}
+
+.GuidesSection_skeleton-loading__RHOxg .GuidesSection_skeleton-title__UR10q {
+  height: 18px;
+  width: 80%;
+  margin: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 25%,
+    rgba(255, 255, 255, 0.1) 37%,
+    rgba(255, 255, 255, 0.05) 63%
+  );
+  background-size: 400% 100%;
+  animation: GuidesSection_shimmer__CBFHw 2s infinite linear;
+  border-radius: 4px;
+}
+
+/* Update the shimmer animation */
+@keyframes GuidesSection_shimmer__CBFHw {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Maintain responsive styles */
+@media (max-width: 768px) {
+  .GuidesSection_guides-box-card__rNow6 {
+    max-width: 180px;
+  }
+}
+
+@media (max-width: 480px) {
+  .GuidesSection_guides-box-card__rNow6 {
+    max-width: 170px;
+  }
+} 
