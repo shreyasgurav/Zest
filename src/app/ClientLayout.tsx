@@ -14,25 +14,25 @@ interface ClientLayoutProps {
 const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
   return (
     <HelmetProvider>
-      <div className="min-h-full flex flex-col">
+      <div className="min-h-screen flex flex-col">
         <Header />
-        <main className="flex-1 bg-gradient-to-b from-black via-blue-900/20 to-black">
+        <main className="flex-grow">
           {children}
         </main>
         <Footer />
-        <ToastContainer
-          position="top-right"
-          autoClose={3000}
-          hideProgressBar={false}
-          newestOnTop
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="dark"
-        />
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
     </HelmetProvider>
   );
 };

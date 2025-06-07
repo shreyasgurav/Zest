@@ -28,6 +28,12 @@
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/profile/layout.js"
+    ],
+    "/guides/[slug]/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/guides/[slug]/page.css",
+      "static/chunks/app/guides/[slug]/page.js"
     ]
   }
 }

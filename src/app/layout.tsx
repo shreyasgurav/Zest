@@ -16,10 +16,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="h-full">
-      <body className={`${inter.className} h-full`}>
+    <html lang="en">
+      <body className={inter.className}>
         <ClientLayout>
-          {children}
+          <div className="min-h-screen bg-gradient-to-b from-black via-blue-900/20 to-black">
+            {children}
+          </div>
         </ClientLayout>
       </body>
     </html>
