@@ -1351,6 +1351,7 @@
     justify-content: center;
     text-align: center;
     position: relative;
+    margin-top: auto;
 }
 
 .footer_footer__GoTLO::before {

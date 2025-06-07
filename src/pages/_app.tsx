@@ -21,9 +21,7 @@ export default function App({ Component, pageProps }: AppProps) {
         />
       </Head>
       <div className="min-h-screen flex flex-col">
-        <main className="flex-grow">
-          <Component {...pageProps} />
-        </main>
+        <Component {...pageProps} />
       </div>
       <ToastContainer
         position="top-right"
