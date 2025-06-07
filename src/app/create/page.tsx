@@ -8,18 +8,9 @@ import styles from "./create.module.css";
 const CreateType = () => {
   const router = useRouter();
   const [isAuthorized, setIsAuthorized] = useState(false);
-  const [isClient, setIsClient] = useState(false);
-  const [auth, setAuth] = useState<ReturnType<typeof getAuth> | null>(null);
+  const auth = getAuth();
 
   useEffect(() => {
-    setIsClient(true);
-    // Initialize auth only on the client side
-    setAuth(getAuth());
-  }, []);
-
-  useEffect(() => {
-    if (!isClient || !auth) return;
-
     const checkAuth = () => {
       const user = auth.currentUser;
       setIsAuthorized(user?.email === "shrreyasgurav@gmail.com");
@@ -28,11 +19,7 @@ const CreateType = () => {
     checkAuth();
     const unsubscribe = onAuthStateChanged(auth, checkAuth);
     return () => unsubscribe();
-  }, [auth, isClient]);
-
-  if (!isClient) {
-    return null; // Return null during server-side rendering
-  }
+  }, [auth]);
 
   if (!isAuthorized) {
     return (

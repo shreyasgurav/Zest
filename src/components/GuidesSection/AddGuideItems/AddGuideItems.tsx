@@ -1,7 +1,7 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
-import { getFirebaseDb, getFirebaseStorage } from "../../../lib/firebase";
-import { doc, updateDoc, arrayUnion, Firestore } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL, FirebaseStorage } from "firebase/storage";
+import { db, storage } from "../../../lib/firebase";
+import { doc, updateDoc, arrayUnion } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import styles from "./AddGuideItems.module.css";
 import { generateSlug } from '../../../utils/generateSlug';
 
@@ -15,19 +15,14 @@ interface ItemData {
   pricingUrl: string;
 }
 
-interface GuideItem extends ItemData {
-  photos: string[];
-  itemSlug: string;
-}
-
 interface AddGuideItemProps {
   guideId: string;
+  slug: string;
   onClose: () => void;
-  onItemAdded: (newItem: GuideItem) => void;
-  getDb: () => Firestore;
+  onItemAdded: () => void;
 }
 
-const AddGuideItem: React.FC<AddGuideItemProps> = ({ guideId, onClose, onItemAdded }) => {
+const AddGuideItem: React.FC<AddGuideItemProps> = ({ guideId, slug, onClose, onItemAdded }) => {
   const [itemData, setItemData] = useState<ItemData>({
     name: '',
     price: '',
@@ -71,9 +66,6 @@ const AddGuideItem: React.FC<AddGuideItemProps> = ({ guideId, onClose, onItemAdd
 
     setLoading(true);
     try {
-      const storage = getFirebaseStorage();
-      const db = getFirebaseDb();
-
       // Upload all images
       const imageUrls = await Promise.all(
         itemImages.map(async (image) => {
@@ -84,19 +76,17 @@ const AddGuideItem: React.FC<AddGuideItemProps> = ({ guideId, onClose, onItemAdd
         })
       );
 
-      const newItem: GuideItem = {
-        ...itemData,
-        photos: imageUrls,
-        itemSlug: generateSlug(itemData.name)
-      };
-
       // Add item to guide with multiple images
       const guideRef = doc(db, "guides", guideId);
       await updateDoc(guideRef, {
-        items: arrayUnion(newItem)
+        items: arrayUnion({
+          ...itemData,
+          photos: imageUrls,
+          itemSlug: generateSlug(itemData.name)
+        })
       });
 
-      onItemAdded(newItem);
+      onItemAdded();
       onClose();
     } catch (error) {
       console.error("Error adding guide item:", error);

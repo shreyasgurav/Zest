@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { getFirebaseDb } from "@/lib/firebase";
-import { doc, getDoc, updateDoc, collection, getDocs, query, where, Firestore } from "firebase/firestore";
+import { useParams } from "next/navigation";
+import { db } from "@/lib/firebase";
+import { doc, getDoc, updateDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
 import AddGuideItem from "@/components/GuidesSection/AddGuideItems/AddGuideItems";
 import EditGuideItem from "@/components/GuidesSection/EditGuideItem/EditGuideItem";
@@ -20,7 +20,7 @@ interface GuideItem {
   addressLink: string;
   pricingUrl: string;
   photos: string[];
-  itemSlug: string;
+  slug: string;
 }
 
 interface Guide {
@@ -30,22 +30,6 @@ interface Guide {
   slug?: string;
   cover_image?: string;
   items: GuideItem[];
-}
-
-interface AddGuideItemProps {
-  guideId: string;
-  onClose: () => void;
-  onItemAdded: (newItem: GuideItem) => void;
-  getDb: () => Firestore;
-}
-
-interface EditGuideItemProps {
-  guideId: string;
-  itemIndex: number;
-  item: GuideItem;
-  onClose: () => void;
-  onItemUpdated: (updatedItem: GuideItem) => void;
-  getDb: () => Firestore;
 }
 
 // Helper function to generate slug
@@ -70,30 +54,8 @@ const GuideItemSkeleton = () => {
   );
 };
 
-// This function will be used to generate static paths at build time
-export async function generateStaticParams() {
-  try {
-    const db = getFirebaseDb();
-    const guidesSnapshot = await getDocs(collection(db, "guides"));
-    const paths: { slug: string }[] = [];
-
-    guidesSnapshot.forEach((doc) => {
-      const guideData = doc.data() as Guide;
-      if (guideData.slug) {
-        paths.push({ slug: guideData.slug });
-      }
-    });
-
-    return paths;
-  } catch (error) {
-    console.error("Error generating static params:", error);
-    return [];
-  }
-}
-
 const GuidePage = () => {
   const params = useParams();
-  const router = useRouter();
   const slug = params?.slug as string;
   const [guide, setGuide] = useState<Guide | null>(null);
   const [loading, setLoading] = useState(true);
@@ -124,7 +86,6 @@ const GuidePage = () => {
         let guideData: Guide | null = null;
         
         if (slug) {
-          const db = getFirebaseDb();
           // First try to fetch by slug
           const guidesRef = collection(db, "guides");
           const q = query(guidesRef, where("slug", "==", slug));
@@ -160,20 +121,15 @@ const GuidePage = () => {
   const handleItemClick = (index: number) => {
     if (!guide) return;
     if (guide.slug) {
-      router.push(`/guide-profile/${guide.slug}/${index}`);
+      window.location.href = `/guide-profile/${guide.slug}/${index}`;
     } else {
-      router.push(`/guide-profile/${guide.id}/${index}`);
+      window.location.href = `/guide-profile/${guide.id}/${index}`;
     }
   };
 
   const handleDeleteItem = async (index: number) => {
-    if (!guide) {
-      console.error("Guide is not available");
-      return;
-    }
-
+    if (!guide) return;
     try {
-      const db = getFirebaseDb();
       const actualId = guide.actualId || guide.id;
       const guideDocRef = doc(db, "guides", actualId);
       const guideSnapshot = await getDoc(guideDocRef);
@@ -238,24 +194,6 @@ const GuidePage = () => {
         <div className={styles['guide-page']}>
           <div className={styles['guide-container']}>
             <div className={styles['error-message']}>{error || "Guide not found"}</div>
-          </div>
-        </div>
-      </>
-    );
-  }
-
-  if (!guide) {
-    return (
-      <>
-        <Helmet>
-          <title>Error - Zest</title>
-          <meta name="description" content="An error occurred while loading the guide." />
-        </Helmet>
-        <div className={styles['guide-page']}>
-          <div className={styles['guide-container']}>
-            <div className={styles['error-message']}>
-              Guide is not available. Please try again later.
-            </div>
           </div>
         </div>
       </>
@@ -425,42 +363,50 @@ const GuidePage = () => {
 
           {showAddItem && (
             <AddGuideItem
-              guideId={guide?.actualId || guide?.id || ''}
+              guideId={actualGuideId}
+              slug={guide.slug || ''}
               onClose={() => setShowAddItem(false)}
-              onItemAdded={(newItem: GuideItem) => {
-                setGuide(prev => prev ? {
-                  ...prev,
-                  items: [...prev.items, newItem]
-                } : null);
-                setShowAddItem(false);
+              onItemAdded={() => {
+                const fetchGuide = async () => {
+                  const guideDocRef = doc(db, "guides", actualGuideId);
+                  const guideSnapshot = await getDoc(guideDocRef);
+                  if (guideSnapshot.exists()) {
+                    setGuide({
+                      ...guide,
+                      ...guideSnapshot.data(),
+                      id: guideSnapshot.id,
+                      actualId: actualGuideId
+                    } as Guide);
+                  }
+                };
+                fetchGuide();
               }}
-              getDb={getFirebaseDb}
             />
           )}
 
-          {showEditItem && editingItemIndex !== null && guide && (
+          {showEditItem && editingItemIndex !== null && (
             <EditGuideItem
-              guideId={guide.actualId || guide.id}
-              itemIndex={editingItemIndex}
+              guideId={actualGuideId}
               item={guide.items[editingItemIndex]}
               onClose={() => {
                 setShowEditItem(false);
                 setEditingItemIndex(null);
               }}
-              onItemUpdated={(updatedItem: GuideItem) => {
-                setGuide(prev => {
-                  if (!prev) return null;
-                  const newItems = [...prev.items];
-                  newItems[editingItemIndex] = updatedItem;
-                  return {
-                    ...prev,
-                    items: newItems
-                  };
-                });
-                setShowEditItem(false);
-                setEditingItemIndex(null);
+              onItemUpdated={() => {
+                const fetchGuide = async () => {
+                  const guideDocRef = doc(db, "guides", actualGuideId);
+                  const guideSnapshot = await getDoc(guideDocRef);
+                  if (guideSnapshot.exists()) {
+                    setGuide({
+                      ...guide,
+                      ...guideSnapshot.data(),
+                      id: guideSnapshot.id,
+                      actualId: actualGuideId
+                    } as Guide);
+                  }
+                };
+                fetchGuide();
               }}
-              getDb={getFirebaseDb}
             />
           )}
         </div>

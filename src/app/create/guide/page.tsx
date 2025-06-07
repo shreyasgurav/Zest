@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, ChangeEvent, FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { getFirebaseDb, getFirebaseStorage } from "@/lib/firebase";
+import { db, storage } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -16,31 +16,17 @@ const CreateGuide = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
-  const [isClient, setIsClient] = useState(false);
-  const [auth, setAuth] = useState<ReturnType<typeof getAuth> | null>(null);
+  const auth = getAuth();
 
   useEffect(() => {
-    setIsClient(true);
-    // Initialize auth only on the client side
-    setAuth(getAuth());
-  }, []);
-
-  useEffect(() => {
-    if (!isClient || !auth) return;
-
     const checkAuth = () => {
       const user = auth.currentUser;
       setIsAuthorized(user?.email === "shrreyasgurav@gmail.com");
     };
-
     checkAuth();
     const unsubscribe = onAuthStateChanged(auth, checkAuth);
     return () => unsubscribe();
-  }, [auth, isClient]);
-
-  if (!isClient) {
-    return null; // Return null during server-side rendering
-  }
+  }, [auth]);
 
   if (!isAuthorized) {
     return (
@@ -56,7 +42,7 @@ const CreateGuide = () => {
     );
   }
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       if (file.size > 5242880) {
@@ -78,7 +64,7 @@ const CreateGuide = () => {
       .trim();
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!guideName.trim()) {
       setMessage("Please enter a guide name");
@@ -88,17 +74,9 @@ const CreateGuide = () => {
       setMessage("Please upload a cover image");
       return;
     }
-    if (!auth) {
-      setMessage("Authentication not initialized. Please try again later.");
-      return;
-    }
-
     setLoading(true);
     setMessage("");
     try {
-      const storage = getFirebaseStorage();
-      const db = getFirebaseDb();
-
       // Upload guide image
       const fileExtension = guideImage.name.split(".").pop();
       const fileName = `guides/covers/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExtension}`;

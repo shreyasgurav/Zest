@@ -1,67 +1,22 @@
-import { FirebaseApp } from 'firebase/app';
-import { Auth } from 'firebase/auth';
-import { Firestore } from 'firebase/firestore';
-import { FirebaseStorage } from 'firebase/storage';
+import { initializeApp, getApps } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
 
-// Check if we're in the browser
-const isClient = typeof window !== 'undefined';
+const firebaseConfig = {
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
+};
 
-// Initialize Firebase variables with proper types
-let app: FirebaseApp;
-let auth: Auth;
-let db: Firestore;
-let storage: FirebaseStorage;
+// Initialize Firebase
+const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+const auth = getAuth(app);
+const db = getFirestore(app);
+const storage = getStorage(app);
 
-// Function to initialize Firebase
-async function initializeFirebase() {
-  if (!isClient) return;
-
-  try {
-    const { initializeFirebase } = await import('./initFirebase');
-    app = initializeFirebase();
-
-    const { getAuth } = await import('firebase/auth');
-    const { getFirestore } = await import('firebase/firestore');
-    const { getStorage } = await import('firebase/storage');
-
-    auth = getAuth(app);
-    db = getFirestore(app);
-    storage = getStorage(app);
-  } catch (error) {
-    console.error('Failed to initialize Firebase:', error);
-    throw error;
-  }
-}
-
-// Initialize Firebase only in the browser
-if (isClient) {
-  initializeFirebase().catch(console.error);
-}
-
-// Export functions that ensure Firebase is initialized
-export function getFirebaseApp(): FirebaseApp {
-  if (!isClient) throw new Error('Firebase can only be accessed client-side');
-  if (!app) throw new Error('Firebase app not initialized');
-  return app;
-}
-
-export function getFirebaseAuth(): Auth {
-  if (!isClient) throw new Error('Firebase can only be accessed client-side');
-  if (!auth) throw new Error('Firebase auth not initialized');
-  return auth;
-}
-
-export function getFirebaseDb(): Firestore {
-  if (!isClient) throw new Error('Firebase can only be accessed client-side');
-  if (!db) throw new Error('Firebase Firestore not initialized');
-  return db;
-}
-
-export function getFirebaseStorage(): FirebaseStorage {
-  if (!isClient) throw new Error('Firebase can only be accessed client-side');
-  if (!storage) throw new Error('Firebase storage not initialized');
-  return storage;
-}
-
-// For backward compatibility
 export { app, auth, db, storage }; 

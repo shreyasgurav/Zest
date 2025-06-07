@@ -1,4 +1,4 @@
-import { getAllGuides, Guide } from '@/lib/guides'
+import { getAllGuides } from '@/lib/guides'
 import AllGuides from './AllGuides'
 import { Metadata } from 'next'
 
@@ -13,20 +13,12 @@ export const metadata: Metadata = {
 }
 
 export default async function GuidesPage() {
-  let guides: Guide[] = [];
-  let error: string | null = null;
-
-  try {
-    // Fetch guides on the server
-    guides = await getAllGuides();
-  } catch (err) {
-    console.error('Error fetching guides:', err);
-    error = 'Failed to load guides. Please try again later.';
-  }
+  // Fetch guides on the server
+  const guides = await getAllGuides()
   
   return (
     <main className="guides-page">
-      <AllGuides initialGuides={guides} error={error} />
+      <AllGuides initialGuides={guides} />
     </main>
   )
 } 
