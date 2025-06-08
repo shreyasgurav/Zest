@@ -3,7 +3,7 @@
 import React from 'react';
 import { HelmetProvider } from 'react-helmet-async';
 import Header from '../components/Header/header';
-import Footer from '@/components/Footer/Footer';
+import Footer from '../components/Footer/Footer';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -14,9 +14,9 @@ interface ClientLayoutProps {
 const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
   return (
     <HelmetProvider>
-      <div className="min-h-screen flex flex-col">
+      <div id="root"> {/* Add id="root" */}
         <Header />
-        <main className="flex-grow">
+        <main className="content-wrapper"> {/* Use content-wrapper class */}
           {children}
         </main>
         <Footer />
@@ -37,4 +37,4 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
   );
 };
 
-export default ClientLayout; 
+export default ClientLayout;
