@@ -1318,24 +1318,24 @@
 .header_globalStyles__T8ulF a {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 } 
-/*!****************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./src/components/footer.module.css ***!
-  \****************************************************************************************************************************************************************************************************************************************************************************/
+/*!***********************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./src/components/Footer/footer.module.css ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************************/
 /* Footer CSS */
 /* First, ensure the root element and body take full height */
-#footer_root__ezR_H {
+#footer_root__rj_DU {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
 }
 
 /* Main content wrapper - add this class to your main content wrapper */
-.footer_content-wrapper__WcnBq {
+.footer_content-wrapper__LhHNd {
     flex: 1 0 auto;
 }
 
 /* Footer */
-.footer_footer__GoTLO {
+.footer_footer__ysJQv {
     flex-shrink: 0;
     width: 100%;
     background: linear-gradient(
@@ -1354,7 +1354,7 @@
     margin-top: auto;
 }
 
-.footer_footer__GoTLO::before {
+.footer_footer__ysJQv::before {
     content: '';
     position: absolute;
     top: 0;
@@ -1364,7 +1364,7 @@
     background-color: rgba(255, 255, 255, 0.3);
 }
 
-.footer_row__jJCcb {
+.footer_row__WRdEc {
     width: 100%;
     margin: 1% 0%;
     padding: 0.6% 0%;
@@ -1376,7 +1376,7 @@
     gap: 32px;
 }
 
-.footer_iconWrapper__kxO7d {
+.footer_iconWrapper__lbQZv {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1384,7 +1384,7 @@
     width: 40px;
 }
 
-.footer_icon__C_jTK {
+.footer_icon__DgXvy {
     font-size: 2em;
     color: gray;
     transition: 0.5s;
@@ -1392,7 +1392,7 @@
     line-height: 1;
 }
 
-.footer_x-link__R3_wZ {
+.footer_x-link__DsClF {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1400,7 +1400,7 @@
     width: 40px;
 }
 
-.footer_x-icon__4Wr7J {
+.footer_x-icon__Ol09t {
     width: 1.6em;
     height: 1.6em;
     fill: gray;
@@ -1409,7 +1409,7 @@
     margin-top: 2px;
 }
 
-.footer_row__jJCcb a {
+.footer_row__WRdEc a {
     text-decoration: none;
     color: gray;
     transition: 0.5s;
@@ -1418,21 +1418,21 @@
     justify-content: center;
 }
 
-.footer_row__jJCcb a:hover,
-.footer_row__jJCcb a:focus {
+.footer_row__WRdEc a:hover,
+.footer_row__WRdEc a:focus {
     color: #fff;
 }
 
-.footer_row__jJCcb a:hover .footer_icon__C_jTK,
-.footer_row__jJCcb a:focus .footer_icon__C_jTK {
+.footer_row__WRdEc a:hover .footer_icon__DgXvy,
+.footer_row__WRdEc a:focus .footer_icon__DgXvy {
     color: #fff;
 }
 
-.footer_x-link__R3_wZ:hover .footer_x-icon__4Wr7J {
+.footer_x-link__DsClF:hover .footer_x-icon__Ol09t {
     fill: white;
 }
 
-.footer_row__jJCcb ul {
+.footer_row__WRdEc ul {
     list-style: none;
     padding: 0;
     margin: 0;
@@ -1440,38 +1440,38 @@
     justify-content: center;
 }
 
-.footer_row__jJCcb ul li {
+.footer_row__WRdEc ul li {
     display: inline-block;
     margin: 0px 30px;
 }
 
-.footer_iconRow__vJ7XS {
+.footer_iconRow__ndwfI {
     flex-direction: row !important;
 }
 
 @media (max-width: 764px) {
-    .footer_footer__GoTLO {
+    .footer_footer__ysJQv {
         padding: 5%;
     }
-    .footer_footer__GoTLO::before {
+    .footer_footer__ysJQv::before {
         left: 20px;
         right: 20px;
     }
-    .footer_row__jJCcb {
+    .footer_row__WRdEc {
         gap: 18px;
     }
-    .footer_iconWrapper__kxO7d, .footer_x-link__R3_wZ {
+    .footer_iconWrapper__lbQZv, .footer_x-link__DsClF {
         height: 32px;
         width: 32px;
     }
-    .footer_icon__C_jTK {
+    .footer_icon__DgXvy {
         font-size: 1.5em;
     }
-    .footer_x-icon__4Wr7J {
+    .footer_x-icon__Ol09t {
         width: 1.2em;
         height: 1.2em;
     }
-    .footer_row__jJCcb ul li {
+    .footer_row__WRdEc ul li {
         display: block;
         margin: 10px;
     }
@@ -1479,37 +1479,37 @@
 
 /* Responsive Design */
 @media (max-width: 900px) {
-    .footer_footer__GoTLO .footer_row__jJCcb {
+    .footer_footer__ysJQv .footer_row__WRdEc {
         max-width: 98vw;
         gap: 18px;
     }
-    .footer_footer__GoTLO::before {
+    .footer_footer__ysJQv::before {
         left: 2vw;
         right: 2vw;
     }
 }
 
 @media (max-width: 600px) {
-    .footer_footer__GoTLO {
+    .footer_footer__ysJQv {
         padding: 8vw 0 24px 0;
     }
-    .footer_footer__GoTLO .footer_row__jJCcb {
+    .footer_footer__ysJQv .footer_row__WRdEc {
         flex-direction: column;
         gap: 10px;
         max-width: 100vw;
     }
-    .footer_footer__GoTLO .footer_row__jJCcb ul {
+    .footer_footer__ysJQv .footer_row__WRdEc ul {
         flex-direction: column;
         gap: 0;
     }
-    .footer_footer__GoTLO .footer_row__jJCcb ul li {
+    .footer_footer__ysJQv .footer_row__WRdEc ul li {
         margin: 8px 0;
     }
-    .footer_footer__GoTLO::before {
+    .footer_footer__ysJQv::before {
         left: 0;
         right: 0;
     }
-    .footer_footer__GoTLO .footer_iconRow__vJ7XS {
+    .footer_footer__ysJQv .footer_iconRow__ndwfI {
         flex-direction: row !important;
     }
 } 
