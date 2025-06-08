@@ -14,13 +14,13 @@ interface ClientLayoutProps {
 const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
   return (
     <HelmetProvider>
-      <div id="root"> {/* Add id="root" */}
+      <>
         <Header />
-        <main className="content-wrapper"> {/* Use content-wrapper class */}
+        <main className="flex-1">
           {children}
         </main>
         <Footer />
-      </div>
+      </>
       <ToastContainer
         position="top-right"
         autoClose={3000}

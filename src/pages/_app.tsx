@@ -20,9 +20,7 @@ export default function App({ Component, pageProps }: AppProps) {
           rel="stylesheet"
         />
       </Head>
-      <div className="min-h-screen flex flex-col">
-        <Component {...pageProps} />
-      </div>
+      <Component {...pageProps} />
       <ToastContainer
         position="top-right"
         autoClose={3000}

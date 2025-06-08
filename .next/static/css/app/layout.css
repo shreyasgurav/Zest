@@ -1321,18 +1321,6 @@
 /*!***********************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./src/components/Footer/footer.module.css ***!
   \***********************************************************************************************************************************************************************************************************************************************************************************/
-/* Footer CSS */
-/* First, ensure the root element and body take full height */
-#footer_root__rj_DU {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-
-/* Main content wrapper - add this class to your main content wrapper */
-.footer_content-wrapper__LhHNd {
-    flex: 1 0 auto;
-}
 
 /* Footer */
 .footer_footer__ysJQv {
@@ -2327,6 +2315,9 @@
 }
 .min-h-screen {
   min-height: 100vh;
+}
+.flex-1 {
+  flex: 1;
 }
 .flex-grow {
   flex-grow: 1;

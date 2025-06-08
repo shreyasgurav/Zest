@@ -1,15 +1,3 @@
-/* Footer CSS */
-/* First, ensure the root element and body take full height */
-#root {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-
-/* Main content wrapper - add this class to your main content wrapper */
-.content-wrapper {
-    flex: 1 0 auto;
-}
 
 /* Footer */
 .footer {
