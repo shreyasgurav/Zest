@@ -452,10 +452,8 @@
 
     .menu-icon {
         position: relative;
-        width: 20px;
-        padding: 10px;
-        margin: -10px;
-        height: 20px;
+        width: 18px;
+        height: 18px;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -465,7 +463,7 @@
     .menu-icon .line-2 {
         position: absolute;
         height: 1.5px;
-        width: 100%;
+        width: 18px;
         background: #fff;
         transition-property: transform, top;
         transition-delay: 0ms, 160ms;
