@@ -8,6 +8,9 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: 'Zest',
   description: 'Your guide to everything',
+  icons: {
+    icon: '/Zest Logo.jpeg',
+  },
 };
 
 export default function RootLayout({
