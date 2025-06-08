@@ -19,8 +19,9 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
         <main className="flex-1">
           {children}
         </main>
-        <Footer />
+        
       </div>
+      <Footer />
       <ToastContainer
         position="top-right"
         autoClose={3000}
