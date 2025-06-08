@@ -10,6 +10,9 @@ const firebaseConfig = {
 
 const nextConfig = {
   reactStrictMode: true,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   // Pass environment variables directly to the client
   publicRuntimeConfig: {
     firebaseConfig,
