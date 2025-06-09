@@ -129,7 +129,7 @@ const GuidesSection = () => {
     return (
       <div className={styles['experiences-section']}>
         <div className={styles['experiences-section-heading']}>
-          <h1 className={styles['upcoming-experiences-heading']}>The Bombay Guide</h1>
+          <h1 className={styles['upcoming-experiences-heading'] }>The Bombay Guide</h1>
           <Link href="/guides" className={styles['see-all-link']}>See All</Link>
         </div>
         <div className={styles['no-experiences-message']}>No guides available.</div>

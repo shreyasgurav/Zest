@@ -15,7 +15,7 @@ html, body {
   padding: 0;
   width: 100%;
   overflow-x: hidden;
-  font-family: Arial, sans-serif;
+  font-family: var(--font-lexend), Arial, sans-serif;
 }
 
 /* Sticky Footer Layout - ensure all containers take full height */
@@ -32,6 +32,23 @@ html, body, #__next {
 
 body {
   color: rgb(var(--foreground-rgb));
+}
+
+/* Font utility classes */
+.font-barrio {
+  font-family: var(--font-barrio), cursive;
+}
+
+.font-schoolbell {
+  font-family: var(--font-schoolbell), cursive;
+}
+
+.font-lexend-peta {
+  font-family: var(--font-lexend-peta), sans-serif;
+}
+
+.font-lexend {
+  font-family: var(--font-lexend), sans-serif;
 }
 
 /* Profile page specific styles */
@@ -53,7 +70,7 @@ body {
 }
 
 .Toastify__toast-body {
-  font-family: Arial, sans-serif;
+  font-family: var(--font-lexend), Arial, sans-serif;
 }
 
 .Toastify__progress-bar {
