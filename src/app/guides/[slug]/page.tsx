@@ -204,21 +204,24 @@ const GuidePage = () => {
   
   // Generate SEO-friendly title based on guide name
   const generateSEOTitle = (guideName: string): string => {
-    // If the guide name already contains "Best" and "in Mumbai", return it as is
-    if (guideName.includes('Best') && guideName.includes('in Mumbai')) {
-      return guideName;
+    const name = guideName.trim();
+    const lower = name.toLowerCase();
+
+    // If already starts with "best" and ends with "in mumbai", return as is
+    if (lower.startsWith("best") && lower.endsWith("in mumbai")) {
+      return name;
     }
-    
-    // If the guide name already contains "in Mumbai", just add "Best" prefix
-    if (guideName.includes('in Mumbai')) {
-      return `Best ${guideName}`;
+
+    // If ends with "in mumbai" but doesn't start with "best"
+    if (lower.endsWith("in mumbai")) {
+      return `Best ${name}`;
     }
-    
-    // If the guide name already contains "Best", just add "in Mumbai" suffix
-    if (guideName.includes('Best')) {
-      return `${guideName} in Mumbai`;
+
+    // If starts with "best" but doesn't end with "in mumbai"
+    if (lower.startsWith("best")) {
+      return `${name} in Mumbai`;
     }
-    
+
     // Default mapping for specific guide names
     const titleMap: Record<string, string> = {
       'Go Karting': 'Best Go-Karting Tracks in Mumbai',
@@ -228,9 +231,8 @@ const GuidePage = () => {
       'Trampoline Parks': 'Best Trampoline Parks in Mumbai',
       'Escape Rooms': 'Best Escape Rooms in Mumbai'
     };
-    
-    // Return mapped title if exists, otherwise create a generic one
-    return titleMap[guideName] || `Best ${guideName} in Mumbai`;
+
+    return titleMap[name] || `Best ${name} in Mumbai`;
   };
   
   // Generate rich meta description with keywords

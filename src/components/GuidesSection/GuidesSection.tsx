@@ -91,7 +91,7 @@ const GuidesSection = () => {
         if (!db) throw new Error('Firebase is not initialized');
 
         const guidesCollectionRef = collection(db, "guides");
-        const q = query(guidesCollectionRef, orderBy("createdAt", "desc"));
+        const q = query(guidesCollectionRef, orderBy("createdAt", "asc"));
         const querySnapshot = await getDocs(q);
         
         const guidesData = querySnapshot.docs.map(doc => ({
