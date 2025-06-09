@@ -90,9 +90,6 @@ const Header = () => {
                             </li>
                         )}
                         <li>
-                            <a className={styles['link-search']} onClick={toggleSearch}></a>
-                        </li>
-                        <li>
                             <a className={styles['link-Profile-logo']} onClick={handleNavItemClick}><PersonLogo /></a>
                         </li>
                     </ul>
