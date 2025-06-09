@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { db } from "@/lib/firebase";
 import { doc, getDoc, updateDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
@@ -56,6 +56,7 @@ const GuideItemSkeleton = () => {
 
 const GuidePage = () => {
   const params = useParams();
+  const router = useRouter();
   const slug = params?.slug as string;
   const [guide, setGuide] = useState<Guide | null>(null);
   const [loading, setLoading] = useState(true);
@@ -320,8 +321,14 @@ const GuidePage = () => {
             <h1 className={styles['guide-title']}>{seoTitle}</h1>
             {isAuthorized && (
               <div className={styles['header-actions']}>
+                <button 
+                  className={styles['edit-guide-button']} 
+                  onClick={() => router.push(`/edit-guide/${actualGuideId}`)}
+                >
+                  Edit Guide
+                </button>
                 <button className={styles['add-item-button']} onClick={() => setShowAddItem(true)}>
-                  Add New
+                  Add New Item
                 </button>
               </div>
             )}
@@ -406,6 +413,7 @@ const GuidePage = () => {
           {showEditItem && editingItemIndex !== null && (
             <EditGuideItem
               guideId={actualGuideId}
+              itemIndex={editingItemIndex}
               item={guide.items[editingItemIndex]}
               onClose={() => {
                 setShowEditItem(false);

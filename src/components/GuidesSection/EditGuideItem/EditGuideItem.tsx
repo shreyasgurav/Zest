@@ -1,12 +1,22 @@
-import React, { useState, ChangeEvent, FormEvent } from 'react';
-import { db, storage } from "../../../lib/firebase";
-import { doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
-import styles from "./EditGuideItem.module.css";
-import { generateSlug } from '../../../utils/generateSlug';
+import React, { useState } from 'react';
+import { db, storage } from "@/lib/firebase";
+import { doc, updateDoc, getDoc } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import styles from './EditGuideItem.module.css';
 
-interface ItemData {
+// Generate slug utility function
+const generateSlug = (title: string): string => {
+  return title
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .trim();
+};
+
+interface GuideItem {
   name: string;
+  slug: string;
   price: string;
   contactInfo: string;
   website: string;
@@ -18,19 +28,36 @@ interface ItemData {
 
 interface EditGuideItemProps {
   guideId: string;
-  item: ItemData;
+  itemIndex: number;
+  item: GuideItem;
   onClose: () => void;
   onItemUpdated: () => void;
 }
 
-const EditGuideItem: React.FC<EditGuideItemProps> = ({ guideId, item, onClose, onItemUpdated }) => {
-  const [itemData, setItemData] = useState<ItemData>(item);
+const EditGuideItem: React.FC<EditGuideItemProps> = ({ 
+  guideId, 
+  itemIndex, 
+  item, 
+  onClose, 
+  onItemUpdated 
+}) => {
+  const [itemData, setItemData] = useState<GuideItem>({
+    name: item.name || '',
+    slug: item.slug || generateSlug(item.name) || '',
+    price: item.price || '',
+    contactInfo: item.contactInfo || '',
+    website: item.website || '',
+    address: item.address || '',
+    addressLink: item.addressLink || '',
+    pricingUrl: item.pricingUrl || '',
+    photos: item.photos || []
+  });
   const [newImages, setNewImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
 
-  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     
     if (files.length + itemData.photos.length > 10) {
@@ -50,13 +77,14 @@ const EditGuideItem: React.FC<EditGuideItemProps> = ({ guideId, item, onClose, o
     setImagePreviews(validFiles.map(file => URL.createObjectURL(file)));
   };
 
-  const handleRemoveExistingImage = (index: number) => {
-    const updatedPhotos = [...itemData.photos];
-    updatedPhotos.splice(index, 1);
-    setItemData({ ...itemData, photos: updatedPhotos });
+  const removeExistingImage = (index: number) => {
+    setItemData(prev => ({
+      ...prev,
+      photos: prev.photos.filter((_, i) => i !== index)
+    }));
   };
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!itemData.name || !itemData.price || !itemData.contactInfo || !itemData.address || !itemData.addressLink) {
       setError('Please fill in all required fields');
@@ -65,7 +93,7 @@ const EditGuideItem: React.FC<EditGuideItemProps> = ({ guideId, item, onClose, o
 
     setLoading(true);
     try {
-      // Upload new images
+      // Upload new images if any
       const newImageUrls = await Promise.all(
         newImages.map(async (image) => {
           const fileName = `guides/items/${Date.now()}-${Math.random().toString(36).substring(7)}.${image.name.split('.').pop()}`;
@@ -75,21 +103,21 @@ const EditGuideItem: React.FC<EditGuideItemProps> = ({ guideId, item, onClose, o
         })
       );
 
-      // Update guide item
+      // Get current guide data
       const guideRef = doc(db, "guides", guideId);
-      await updateDoc(guideRef, {
-        items: arrayRemove(item)
-      });
+      const guideSnap = await getDoc(guideRef);
+      const guideData = guideSnap.data();
+      const items = [...(guideData?.items || [])];
 
-      const updatedItem = {
+      // Update the specific item with new slug
+      items[itemIndex] = {
         ...itemData,
-        photos: [...itemData.photos, ...newImageUrls],
-        itemSlug: generateSlug(itemData.name)
+        slug: generateSlug(itemData.name),
+        photos: [...itemData.photos, ...newImageUrls]
       };
 
-      await updateDoc(guideRef, {
-        items: arrayUnion(updatedItem)
-      });
+      // Update the guide document
+      await updateDoc(guideRef, { items });
 
       onItemUpdated();
       onClose();
@@ -106,15 +134,15 @@ const EditGuideItem: React.FC<EditGuideItemProps> = ({ guideId, item, onClose, o
       <div className={styles.modalContent}>
         <form onSubmit={handleSubmit}>
           <div className={styles.formGroup}>
-            <label>Existing Images</label>
-            <div className={styles.existingImages}>
+            <label>Current Images</label>
+            <div className={styles.currentImages}>
               {itemData.photos.map((photo, index) => (
-                <div key={index} className={styles.imageItem}>
-                  <img src={photo} alt={`Item ${index + 1}`} />
+                <div key={index} className={styles.previewItem}>
+                  <img src={photo} alt={`Current ${index + 1}`} />
                   <button
                     type="button"
                     className={styles.removeImage}
-                    onClick={() => handleRemoveExistingImage(index)}
+                    onClick={() => removeExistingImage(index)}
                   >
                     ×
                   </button>
@@ -124,7 +152,7 @@ const EditGuideItem: React.FC<EditGuideItemProps> = ({ guideId, item, onClose, o
           </div>
 
           <div className={styles.formGroup}>
-            <label>Add More Images (Max 10 total)</label>
+            <label>Add New Images (Max 10 total)</label>
             <input
               type="file"
               accept="image/*"
@@ -222,7 +250,7 @@ const EditGuideItem: React.FC<EditGuideItemProps> = ({ guideId, item, onClose, o
 
           <div className={styles.modalActions}>
             <button type="submit" className={styles.submitButton} disabled={loading}>
-              {loading ? "Updating Item..." : "Update Item"}
+              {loading ? "Updating..." : "Update Item"}
             </button>
             <button type="button" className={styles.cancelButton} onClick={onClose}>
               Cancel
