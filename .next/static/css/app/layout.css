@@ -1,9 +1,9 @@
 /*!********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[2].use[1]!./node_modules/next/dist/build/webpack/loaders/next-font-loader/index.js??ruleSet[1].rules[13].oneOf[2].use[2]!./node_modules/next/font/google/target.css?{"path":"src/app/layout.tsx","import":"Inter","arguments":[{"subsets":["latin"]}],"variableName":"inter"} ***!
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[11].oneOf[2].use[1]!./node_modules/next/dist/build/webpack/loaders/next-font-loader/index.js??ruleSet[1].rules[11].oneOf[2].use[2]!./node_modules/next/font/google/target.css?{"path":"src/app/layout.tsx","import":"Inter","arguments":[{"subsets":["latin"]}],"variableName":"inter"} ***!
   \********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /* cyrillic-ext */
 @font-face {
-  font-family: 'Inter';
+  font-family: '__Inter_e8ce0c';
   font-style: normal;
   font-weight: 100 900;
   font-display: swap;
@@ -12,7 +12,7 @@
 }
 /* cyrillic */
 @font-face {
-  font-family: 'Inter';
+  font-family: '__Inter_e8ce0c';
   font-style: normal;
   font-weight: 100 900;
   font-display: swap;
@@ -21,7 +21,7 @@
 }
 /* greek-ext */
 @font-face {
-  font-family: 'Inter';
+  font-family: '__Inter_e8ce0c';
   font-style: normal;
   font-weight: 100 900;
   font-display: swap;
@@ -30,7 +30,7 @@
 }
 /* greek */
 @font-face {
-  font-family: 'Inter';
+  font-family: '__Inter_e8ce0c';
   font-style: normal;
   font-weight: 100 900;
   font-display: swap;
@@ -39,7 +39,7 @@
 }
 /* vietnamese */
 @font-face {
-  font-family: 'Inter';
+  font-family: '__Inter_e8ce0c';
   font-style: normal;
   font-weight: 100 900;
   font-display: swap;
@@ -48,7 +48,7 @@
 }
 /* latin-ext */
 @font-face {
-  font-family: 'Inter';
+  font-family: '__Inter_e8ce0c';
   font-style: normal;
   font-weight: 100 900;
   font-display: swap;
@@ -57,18 +57,18 @@
 }
 /* latin */
 @font-face {
-  font-family: 'Inter';
+  font-family: '__Inter_e8ce0c';
   font-style: normal;
   font-weight: 100 900;
   font-display: swap;
   src: url(/_next/static/media/e4af272ccee01ff0-s.p.woff2) format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}@font-face {font-family: 'Inter Fallback';src: local("Arial");ascent-override: 90.44%;descent-override: 22.52%;line-gap-override: 0.00%;size-adjust: 107.12%
-}.__className_e8ce0c {font-family: 'Inter', 'Inter Fallback';font-style: normal
+}@font-face {font-family: '__Inter_Fallback_e8ce0c';src: local("Arial");ascent-override: 90.20%;descent-override: 22.48%;line-gap-override: 0.00%;size-adjust: 107.40%
+}.__className_e8ce0c {font-family: '__Inter_e8ce0c', '__Inter_Fallback_e8ce0c';font-style: normal
 }
 
 /*!***********************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./src/components/GoogleSignin/GoogleButton.module.css ***!
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[11].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[11].oneOf[7].use[3]!./src/components/GoogleSignin/GoogleButton.module.css ***!
   \***********************************************************************************************************************************************************************************************************************************************************************************************/
 .GoogleButton_googleButton__osUN7 {
   display: flex;
@@ -103,7 +103,7 @@
   color: #757575;
 } 
 /*!***************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./src/components/GoogleSignin/SignInwithGoogle.module.css ***!
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[11].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[11].oneOf[7].use[3]!./src/components/GoogleSignin/SignInwithGoogle.module.css ***!
   \***************************************************************************************************************************************************************************************************************************************************************************************************/
 .SignInwithGoogle_loginContinueText__1vju5 {
   text-align: center;
@@ -113,7 +113,7 @@
   font-size: 14px;
 } 
 /*!**********************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./src/components/Authentication/LoginPopup/LoginPopup.module.css ***!
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[11].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[11].oneOf[7].use[3]!./src/components/Authentication/LoginPopup/LoginPopup.module.css ***!
   \**********************************************************************************************************************************************************************************************************************************************************************************************************/
 .LoginPopup_container__Swqic {
     background: white;
@@ -414,7 +414,7 @@
     opacity: 0.8;
 } 
 /*!*******************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./src/components/PersonLogo/PersonLogo.module.css ***!
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[11].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[11].oneOf[7].use[3]!./src/components/PersonLogo/PersonLogo.module.css ***!
   \*******************************************************************************************************************************************************************************************************************************************************************************************/
 .PersonLogo_person-logo-container__kZNPk {
     position: relative;
@@ -503,7 +503,7 @@
 }
 
 /* Fallback for browsers that don't support backdrop-filter */
-@supports not (backdrop-filter: blur(12px)) {
+@supports not ((-webkit-backdrop-filter: blur(12px)) or (backdrop-filter: blur(12px))) {
     .PersonLogo_person-dropdown__FeN2z {
         background: rgba(18, 18, 18, 0.98);
     }
@@ -596,6 +596,7 @@
 .PersonLogo_imagePreviews__wUp0W {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    grid-gap: 10px;
     gap: 10px;
     margin-top: 15px;
 }
@@ -629,7 +630,7 @@
 }
 
 .PersonLogo_submitButton__CGcQm {
-    flex: 1;
+    flex: 1 1;
     padding: 12px;
     background-color: #007bff;
     color: white;
@@ -679,7 +680,7 @@
     }
 } 
 /*!***********************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./src/components/Header/header.module.css ***!
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[11].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[11].oneOf[7].use[3]!./src/components/Header/header.module.css ***!
   \***********************************************************************************************************************************************************************************************************************************************************************************/
 /* Desktop Nav */
 .header_nav-container__mLsY3 {
@@ -695,7 +696,7 @@
 }
 
 /* Fallback for browsers that don't support backdrop-filter */
-@supports not (backdrop-filter: blur(8px)) {
+@supports not ((-webkit-backdrop-filter: blur(8px)) or (backdrop-filter: blur(8px))) {
     .header_nav-container__mLsY3 {
         background: rgba(6, 9, 63, 0.9);
     }
@@ -1244,7 +1245,7 @@
     }
 
     .header_mobile-search-container__ZPhVw .header_search-bar__BqOsS {
-        flex: 1;
+        flex: 1 1;
     }
 
     .header_desktop-nav__P7d8e.header_move-down__dMcVr li:first-child {
@@ -1317,7 +1318,7 @@
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 } 
 /*!***********************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./src/components/Footer/footer.module.css ***!
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[11].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[11].oneOf[7].use[3]!./src/components/Footer/footer.module.css ***!
   \***********************************************************************************************************************************************************************************************************************************************************************************/
 
 /* Footer */
@@ -1337,7 +1338,6 @@
     justify-content: center;
     text-align: center;
     position: relative;
-    margin-top: auto;
 }
 
 .footer_footer__ysJQv::before {
@@ -1500,7 +1500,7 @@
     }
 } 
 /*!************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[3]!./node_modules/react-toastify/dist/ReactToastify.css ***!
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[11].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[11].oneOf[12].use[3]!./node_modules/react-toastify/dist/ReactToastify.css ***!
   \************************************************************************************************************************************************************************************************************************************************************************************************/
 :root {
   --toastify-color-light: #fff;
@@ -1611,7 +1611,7 @@
   z-index: 0;
   /* inner swag */
   display: flex;
-  flex: 1 auto;
+  flex: 1 1 auto;
   align-items: center;
   word-break: break-word;
 }
@@ -1714,7 +1714,8 @@
 }
 
 .Toastify__toast-icon {
-  margin-inline-end: 10px;
+  -webkit-margin-end: 10px;
+          margin-inline-end: 10px;
   width: 22px;
   flex-shrink: 0;
   display: flex;
@@ -2304,58 +2305,45 @@
 }
 
 /*!*****************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[3]!./src/app/globals.css ***!
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[11].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[11].oneOf[12].use[3]!./src/app/globals.css ***!
   \*****************************************************************************************************************************************************************************************************************************************************************/
-/*! tailwindcss v4.1.8 | MIT License | https://tailwindcss.com */
-@layer properties;
-.flex {
-  display: flex;
-}
-.min-h-screen {
-  min-height: 100vh;
-}
-.flex-1 {
-  flex: 1;
-}
-.transform {
-  transform: var(--tw-rotate-x,) var(--tw-rotate-y,) var(--tw-rotate-z,) var(--tw-skew-x,) var(--tw-skew-y,);
-}
-.flex-col {
-  flex-direction: column;
-}
-.items-center {
-  align-items: center;
-}
-.justify-center {
-  justify-content: center;
-}
-.bg-gradient-to-b {
-  --tw-gradient-position: to bottom in oklab;
-  background-image: linear-gradient(var(--tw-gradient-stops));
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   --foreground-rgb: 255, 255, 255;
   --background-start-rgb: 6, 9, 63;
   --background-end-rgb: 0, 0, 0;
 }
+
 html, body {
   background: linear-gradient(to bottom, rgb(6, 9, 63) 0%, black 30%);
-  min-height: 10vh;
+  height: 100%;
   margin: 0;
   padding: 0;
   width: 100%;
-  height: 100%;
   overflow-x: hidden;
   font-family: Arial, sans-serif;
 }
-.App {
+
+/* Sticky Footer Layout - ensure all containers take full height */
+html, body, #__next {
+  min-height: 100vh;
+  height: 100%;
+}
+
+.layout-container {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  min-height: 80vh;
 }
+
 body {
   color: rgb(var(--foreground-rgb));
 }
+
+/* Profile page specific styles */
 .pageContainer {
   min-height: 100vh;
   padding: 20px;
@@ -2366,47 +2354,21 @@ body {
     rgb(var(--background-end-rgb))
   );
 }
+
+/* Toast styles */
 .Toastify__toast {
   background: #1c1c1c !important;
   color: white !important;
 }
+
 .Toastify__toast-body {
   font-family: Arial, sans-serif;
 }
+
 .Toastify__progress-bar {
   background: #333333 !important;
 }
+
 .Toastify__close-button {
   color: white !important;
-}
-@property --tw-rotate-x {
-  syntax: "*";
-  inherits: false;
-}
-@property --tw-rotate-y {
-  syntax: "*";
-  inherits: false;
-}
-@property --tw-rotate-z {
-  syntax: "*";
-  inherits: false;
-}
-@property --tw-skew-x {
-  syntax: "*";
-  inherits: false;
-}
-@property --tw-skew-y {
-  syntax: "*";
-  inherits: false;
-}
-@layer properties {
-  @supports ((-webkit-hyphens: none) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color:rgb(from red r g b)))) {
-    *, ::before, ::after, ::backdrop {
-      --tw-rotate-x: initial;
-      --tw-rotate-y: initial;
-      --tw-rotate-z: initial;
-      --tw-skew-x: initial;
-      --tw-skew-y: initial;
-    }
-  }
 } 
