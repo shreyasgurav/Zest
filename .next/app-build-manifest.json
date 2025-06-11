@@ -12,29 +12,17 @@
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
     ],
-    "/about/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/about/page.css",
-      "static/chunks/app/about/page.js"
-    ],
     "/guides/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/css/app/guides/page.css",
       "static/chunks/app/guides/page.js"
     ],
-    "/guides/[slug]/page": [
+    "/about/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/css/app/guides/[slug]/page.css",
-      "static/chunks/app/guides/[slug]/page.js"
-    ],
-    "/guide-profile/[slug]/[index]/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/guide-profile/[slug]/[index]/page.css",
-      "static/chunks/app/guide-profile/[slug]/[index]/page.js"
+      "static/css/app/about/page.css",
+      "static/chunks/app/about/page.js"
     ]
   }
 }
