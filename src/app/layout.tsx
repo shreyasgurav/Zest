@@ -3,6 +3,8 @@ import { Lexend, Barrio, Schoolbell, Lexend_Peta } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
 import './globals.css';
 import ClientLayout from './ClientLayout';
+import { Toaster } from "react-hot-toast";
+import AnimatedBackground from "@/components/AnimatedBackground";
 
 // Initialize Lexend font with all weights
 const lexend = Lexend({
@@ -28,7 +30,7 @@ const schoolbell = Schoolbell({
 // Initialize Lexend Peta font
 const lexendPeta = Lexend_Peta({
   subsets: ['latin'],
-  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+  weight: ['400', '500', '600', '700', '800', '900'],
   variable: '--font-lexend-peta',
 });
 
@@ -51,10 +53,12 @@ export default function RootLayout({
   return (
     <html lang="en" className={fontVariables}>
       <body>
+        <AnimatedBackground />
         <ClientLayout>
           {children}
         </ClientLayout>
         <Analytics />
+        <Toaster position="top-center" />
       </body>
     </html>
   );

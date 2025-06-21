@@ -53,7 +53,7 @@
     padding: 12px;
     border: 1px solid #e0e0e0;
     border-radius: 8px;
-    background: white;
+    background: none;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -62,11 +62,6 @@
     color: #333;
     cursor: pointer;
     transition: all 0.2s ease;
-}
-
-.googleButton:hover {
-    background: #f5f5f5;
-    border-color: #d0d0d0;
 }
 
 .googleIcon {
@@ -89,210 +84,118 @@
 
 .signinModalInner {
     width: 100%;
-    max-width: 300px;
-    background-color: rgb(12, 12, 12, 0.5);
-    border-radius: 13px;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-    padding: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.18);
+    max-width: 360px;
+    background-color: rgba(12, 12, 12, 0.95);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    padding: 32px 24px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     position: relative;
+    backdrop-filter: blur(20px);
 }
 
 .signinModalInner * {
     color: #ffffff;
 }
 
-.signinToggleLink {
-    margin-top: 20px;
-    text-align: center;
-}
-
-.signinToggleText {
-    font-size: 14px;
-    color: #b1b1b1;
-    margin: 0;
-}
-
-.signinToggleButton {
-    color: #007bff;
-    cursor: pointer;
-    text-decoration: underline;
-    font-weight: 500;
-    transition: color 0.3s;
-}
-
-.signinToggleButton:hover {
-    color: #0056b3;
-}
-
-.signinForm {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.signinInput {
-    background-color: rgb(174, 174, 174);
-    border: 1px solid #b2b2b2;
-    border-radius: 5px;
-    font-size: 14px;
-}
-
-.signinHeading {
-    color: white;
-    opacity: 0.8;
-    margin-bottom: 20px;
-}
-
-.loginContinueText {
-    margin-bottom: 15px;
-    color: #c5c5c5;
-}
-
-.signinContinueText {
-    margin-bottom: 20px;
-    color: #ffffff;
-    opacity: 0.7;
-}
-
 .signinCloseBtn {
     position: absolute;
-    top: 10px;
-    right: 20px;
+    top: 16px;
+    right: 16px;
+    background: none;
     border: none;
+    color: rgba(255, 255, 255, 0.6);
     font-size: 24px;
-    color: #ffffff !important;
-    background: transparent !important;
     cursor: pointer;
-    transition: color 0.3s;
-    z-index: 10;
-    width: 32px;
-    height: 32px;
+    padding: 8px;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0;
+    transition: all 0.2s ease;
     line-height: 1;
 }
 
-.signinCloseBtn:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px #007bff;
+.signinCloseBtn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.9);
 }
 
-/* New divider styles */
-.signinDivider {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    margin: 20px 0;
-    gap: 10px;
+.signinHeading {
+    font-size: 24px;
+    font-weight: 300;
+    text-align: center;
+    margin: 0 0 8px 0;
+    padding-top: 16px;
 }
 
-.signinDividerLine {
-    flex-grow: 1;
-    height: 1px;
-    background-color: rgba(255, 255, 255, 0.2);
+.signinSubtext {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    text-align: center;
+    margin: 0 0 32px 0;
+    line-height: 1.4;
 }
 
-@media screen and (max-width: 480px) {
-    .signinModalInner {
-        width: 95%;
-        padding: 15px;
-    }
-
-    .signinInput {
-        width: 95%;
-        min-width: unset;
-    }
+.googleSigninContainer {
+    margin-bottom: 24px;
 }
 
-/* Add these styles to your LoginPopup.css */
-
-.orgQuestionContainer {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
+.organizationLink {
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.orgQuestionText {
+.organizationText {
     font-size: 13px;
-    color: #ffffff;
-    opacity: 0.9;
-    margin: 0;
+    color: rgba(255, 255, 255, 0.6);
+    margin: 0 0 8px 0;
 }
 
-.continueOrgBtn {
-    background-color: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 8px;
-    padding: 7px;
-    color: #ffffff;
-    font-size: 10px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    width: 100%;
-    max-width: 150px;
+.organizationLinkBtn {
+    color: #60a5fa;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid rgba(96, 165, 250, 0.3);
+    background: rgba(96, 165, 250, 0.1);
+    display: inline-block;
+    transition: all 0.2s ease;
 }
 
-.continueOrgBtn:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.5);   
+.organizationLinkBtn:hover {
+    color: #93c5fd;
+    background: rgba(96, 165, 250, 0.2);
+    border-color: rgba(96, 165, 250, 0.5);
 }
 
-.orgFlowButton {
-    background-color: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 8px;
-    padding: 10px;
-    color: #ffffff;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    width: 100%;
-    max-width: 250px;
-}
+/* Mobile responsiveness */
+@media (max-width: 480px) {
+    .signinModalInner {
+        max-width: 320px;
+        margin: 16px;
+        padding: 28px 20px;
+    }
 
-.orgFlowButton:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.5);
-}
+    .signinHeading {
+        font-size: 22px;
+    }
 
-.orgFlowContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
+    .signinSubtext {
+        font-size: 13px;
+        margin-bottom: 28px;
+    }
 
-.orgCreateButton {
-    background-color: #007bff;
-    border: none;
-    border-radius: 8px;
-    padding: 12px 24px;
-    color: #ffffff;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    width: 100%;
-    max-width: 250px;
-}
+    .googleSigninContainer {
+        margin-bottom: 20px;
+    }
 
-.orgCreateButton:hover {
-    background-color: #0056b3;
-}
-
-.createOrgInfo {
-    color: white;
-    opacity: 0.8;
-    margin-bottom: 20px;
-}
-
-.verifyTitle {
-    display: flex;
-    justify-content: center;
-    color: white;
-    opacity: 0.8;
+    .organizationLink {
+        padding-top: 16px;
+    }
 } 

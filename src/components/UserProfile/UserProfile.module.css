@@ -240,6 +240,26 @@
     object-fit: cover;
 }
 
+.defaultAvatar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #c084fc, #f472b6);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 48px;
+    font-weight: 600;
+    border-radius: 50%;
+}
+
+.defaultAvatar.showInitials {
+    display: flex;
+}
+
 @keyframes pulse {
     0% { opacity: 0.6; }
     50% { opacity: 1; }
@@ -359,4 +379,266 @@
     .skeletonBio {
         width: 100%;
     }
+
+    .defaultAvatar {
+        font-size: 32px;
+    }
+}
+
+/* Modal Styles */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.photoModal {
+  background: rgba(30, 30, 30, 0.95);
+  border-radius: 16px;
+  padding: 0;
+  min-width: 300px;
+  max-width: 400px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(20px);
+}
+
+.uploadModal {
+  background: rgba(30, 30, 30, 0.95);
+  border-radius: 16px;
+  padding: 0;
+  min-width: 400px;
+  max-width: 600px;
+  width: 90vw;
+  max-height: 80vh;
+  overflow-y: auto;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(20px);
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modalHeader h3 {
+  color: white;
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.closeButton:hover {
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.modalContent {
+  padding: 24px;
+}
+
+.photoOption {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: 16px 20px;
+  background: none;
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 8px;
+}
+
+.photoOption:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.photoOption:last-child {
+  margin-bottom: 0;
+}
+
+.optionIcon {
+  font-size: 20px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.photoOption:hover .optionIcon {
+  color: rgba(255, 255, 255, 1);
+}
+
+/* Animation classes for skeleton loading */
+.animatePulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.skeletonAvatar {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+}
+
+.skeletonName {
+  height: 32px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  margin-bottom: 12px;
+  width: 200px;
+}
+
+.skeletonUsername {
+  height: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  margin-bottom: 12px;
+  width: 150px;
+}
+
+.skeletonBio {
+  height: 60px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.skeletonButton {
+  height: 40px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  width: 120px;
+}
+
+/* Enhanced avatar styles for better photo display */
+.avatarImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.defaultAvatar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-size: 24px;
+  font-weight: 600;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.defaultAvatar.showInitials {
+  opacity: 1;
+}
+
+/* Responsive design for modals */
+@media (max-width: 768px) {
+  .modalOverlay {
+    padding: 16px;
+  }
+
+  .photoModal {
+    min-width: 280px;
+    max-width: 350px;
+  }
+
+  .uploadModal {
+    min-width: 320px;
+    max-width: 500px;
+    width: 95vw;
+    max-height: 85vh;
+  }
+
+  .modalHeader {
+    padding: 16px 20px;
+  }
+
+  .modalHeader h3 {
+    font-size: 16px;
+  }
+
+  .modalContent {
+    padding: 20px;
+  }
+
+  .photoOption {
+    padding: 14px 16px;
+    font-size: 15px;
+  }
+
+  .optionIcon {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .uploadModal {
+    min-width: 300px;
+    width: 100vw;
+    max-height: 90vh;
+    border-radius: 12px;
+  }
+
+  .modalHeader {
+    padding: 14px 16px;
+  }
+
+  .modalContent {
+    padding: 16px;
+  }
+
+  .photoOption {
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+
+  .optionIcon {
+    font-size: 16px;
+  }
 }

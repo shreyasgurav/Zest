@@ -1,0 +1,47 @@
+/* Updated button style to be text-like */
+.locationButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.locationButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.mapPinIcon {
+  width: 16px;
+  height: 16px;
+  stroke-width: 2;
+  margin-bottom: 2px;
+  color: rgba(255, 255, 255, 0.6);
+  transition: color 0.2s ease;
+}
+
+.locationButton:hover .mapPinIcon {
+  color: #fff;
+}
+
+.selectedCity {
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .locationButton {
+      padding: 6px;
+      font-size: 14px;
+  }
+}

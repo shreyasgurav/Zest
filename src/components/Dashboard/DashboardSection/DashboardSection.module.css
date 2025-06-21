@@ -1,0 +1,81 @@
+.dashboardSection {
+  padding: 2rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.dashboardTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: white;
+}
+
+.dashboardEventsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.noEventsMessage {
+  text-align: center;
+  padding: 2rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  color: #666;
+}
+
+/* Loading Skeleton Styles */
+.loadingSkeleton {
+  width: 100%;
+}
+
+.skeletonTitle {
+  height: 2rem;
+  width: 200px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 25%,
+    rgba(255, 255, 255, 0.1) 37%,
+    rgba(255, 255, 255, 0.05) 63%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+}
+
+.skeletonBox {
+  height: 100px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 25%,
+    rgba(255, 255, 255, 0.1) 37%,
+    rgba(255, 255, 255, 0.05) 63%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .dashboardSection {
+    padding: 1rem;
+  }
+
+  .dashboardTitle {
+    font-size: 1.25rem;
+  }
+} 

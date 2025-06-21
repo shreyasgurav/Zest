@@ -8,8 +8,54 @@
   --background-end-rgb: 0, 0, 0;
 }
 
+/* Animated Background */
+.background {
+  position: fixed;
+  background-color: none;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+
+
+.backgroundBlob1 {
+  position: absolute;
+  top: 25%;
+  left: 25%;
+  width: 16rem;
+  height: 16rem;
+  background-color: rgba(59, 130, 246, 0.05);
+  border-radius: 9999px;
+  filter: blur(16px);
+  animation: pulse 4s ease-in-out infinite;
+}
+
+.backgroundBlob2 {
+  position: absolute;
+  bottom: 25%;
+  right: 25%;
+  width: 20rem;
+  height: 20rem;
+  background-color: rgba(236, 72, 153, 0.05);
+  border-radius: 9999px;
+  filter: blur(24px);
+  animation: pulse 4s ease-in-out infinite 1s;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.05);
+  }
+}
+
 html, body {
-  background: linear-gradient(to bottom, rgb(6, 9, 63) 0%, black 30%);
+  background-color: #030712;
   height: 100%;
   margin: 0;
   padding: 0;
@@ -79,4 +125,44 @@ body {
 
 .Toastify__close-button {
   color: white !important;
+}
+
+/* PhoneInput global styles for react-phone-number-input */
+.PhoneInput {
+  background-color: black;
+  margin-bottom: 15px;
+}
+.PhoneInput input {
+  background-color: black;
+  color: white;
+  border: 1px solid #333;
+  padding: 8px;
+  border-radius: 4px;
+  width: 200px;
+}
+.PhoneInputCountry {
+  background-color: black;
+  padding: 8px;
+}
+.PhoneInputCountrySelect option {
+  background-color: black;
+  color: white;
+}
+.PhoneInputCountryIcon {
+  opacity: 0.8;
+}
+.PhoneInput input:hover,
+.PhoneInput input:focus {
+  border-color: #666;
+  outline: none;
 } 
+
+/* Global Utilities */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  overflow-x: hidden;
+} 
+

@@ -1,155 +1,298 @@
-.contactUsContainer {
-    padding: 30px;
-    margin-top: 150px;
-    font-family: 'Roboto', sans-serif;
-    background: none;
+.container {
+  min-height: 100vh;
+  background-color: none;
+  color: white;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 50px;
 }
 
-.contactUsContent {
-    max-width: 800px;
-    margin: 0 auto;
-    text-align: center;
-    padding: 30px;
-    border-radius: 20px;
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+/* Background */
+.background {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
 }
 
-.contactUsContent h2 {
-    margin-bottom: 40px;
-    font-size: 24px;
-    color: white;
-    opacity: 0.7;
-    font-family: "Architects Daughter", cursive;
-    font-weight: 400;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+.mouseFollow {
+  position: absolute;
+  width: 24rem;
+  height: 24rem;
+  background-color: rgba(168, 85, 247, 0.1);
+  border-radius: 9999px;
+  filter: blur(24px);
+  transition: all 1000ms ease-out;
 }
 
-.contactUsContent h3 {
-    margin-bottom: 10px;
-    color: #b3b3b3;
+.backgroundBlob1 {
+  position: absolute;
+  top: 25%;
+  left: 25%;
+  width: 16rem;
+  height: 16rem;
+  background-color: rgba(59, 130, 246, 0.05);
+  border-radius: 9999px;
+  filter: blur(16px);
+  animation: pulse 4s ease-in-out infinite;
 }
 
-.contactUsContent p {
-    line-height: 1.6;
-    font-size: 1.1em;
-    margin: 10px;
-    color: white;
+.backgroundBlob2 {
+  position: absolute;
+  bottom: 25%;
+  right: 25%;
+  width: 20rem;
+  height: 20rem;
+  background-color: rgba(236, 72, 153, 0.05);
+  border-radius: 9999px;
+  filter: blur(24px);
+  animation: pulse 4s ease-in-out infinite 1s;
 }
 
-.contactItems {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    max-width: 400px;
-    margin: 0 auto;
+/* Hero Section */
+.heroSection {
+  position: relative;
+  z-index: 10;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.contactItem {
-    display: flex;
-    align-items: center;
-    padding: 20px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
+.heroContainer {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1rem;
 }
 
-.contactItem:hover {
-    transform: translateY(-2px);
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.2);
+.heroContent {
+  max-width: 64rem;
+  margin: 0 auto;
+  text-align: center;
 }
 
-.contactIcon {
-    width: 40px;
-    height: 40px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 15px;
+.heroAnimation {
+  transform: translateY(0);
+  opacity: 1;
+  transition: all 1500ms ease-out;
 }
 
-.contactIcon svg {
-    color: white;
-    opacity: 0.8;
-    font-size: 18px;
+.heroHeading {
+  margin-bottom: 4rem;
 }
 
-.contactInfo {
-    flex: 1;
-    text-align: left;
+.heroTitle {
+  font-size: 6rem;
+  line-height: 1;
+  font-weight: 900;
+  margin-bottom: 2rem;
 }
 
-.contactInfo h3 {
-    color: white;
-    opacity: 0.7;
-    font-size: 14px;
-    margin-bottom: 4px;
-    font-weight: normal;
+@media (min-width: 1024px) {
+  .heroTitle {
+    font-size: 8rem;
+  }
 }
 
-.contactInfo p {
-    color: white;
-    font-size: 16px;
-    margin: 0;
+.titleGradient1 {
+  display: block;
+  background: linear-gradient(to right, white, #e5e7eb, #9ca3af);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.titleGradient2 {
+  display: block;
+  background: linear-gradient(to right, #c084fc, #cd72f4, #60a5fa);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.heroDescription {
+  font-size: 1.25rem;
+  line-height: 1.75;
+  color: #9ca3af;
+  max-width: 32rem;
+  margin: 0 auto;
+}
+
+@media (min-width: 1024px) {
+  .heroDescription {
+    font-size: 1.5rem;
+  }
+}
+
+.descriptionHighlight {
+  color: white;
+}
+
+/* Contact Grid */
+.contactGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  max-width: 48rem;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .contactGrid {
+    gap: 1.5rem;
+  }
+}
+
+.contactCard {
+  background-color: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 500ms;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+.contactCard:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+.cardContent {
+  padding: 2rem;
+}
+
+@media (max-width: 767px) {
+  .cardContent {
+    padding: 1.25rem;
+  }
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 767px) {
+  .cardHeader {
+    margin-bottom: 0.75rem;
+  }
+}
+
+.cardIcon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 300ms;
+}
+
+@media (max-width: 767px) {
+  .cardIcon {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+}
+
+.contactCard:hover .cardIcon {
+  transform: rotate(12deg);
+}
+
+.icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: white;
 }
 
 .copyButton {
-    background: none;
-    border: none;
-    color: white;
-    opacity: 0.5;
-    cursor: pointer;
-    padding: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-}
-
-.copyButton svg {
-    font-size: 16px;
-}
-
-.contactItem:hover .copyButton {
-    opacity: 0.8;
+  color: #9ca3af;
+  padding: 0.5rem;
+  transition: color 300ms;
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 
 .copyButton:hover {
-    opacity: 1;
-    transform: scale(1.1);
+  color: white;
 }
 
-@media (max-width: 480px) {
-    .contactUsContainer {
-        padding: 20px;
-        margin-top: 100px;
-    }
+.checkIcon {
+  width: 1rem;
+  height: 1rem;
+  color: #4ade80;
+}
 
-    .contactUsContent {
-        padding: 20px;
-    }
+.copyIcon {
+  width: 1rem;
+  height: 1rem;
+}
 
-    .contactItem {
-        padding: 15px;
-    }
+.cardInfo {
+  text-align: left;
+}
 
-    .contactIcon {
-        width: 32px;
-        height: 32px;
-    }
+.cardTitle {
+  font-size: 0.875rem;
+  color: #9ca3af;
+  margin-bottom: 0.25rem;
+}
 
-    .contactInfo h3 {
-        font-size: 13px;
-    }
+.cardValue {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 0.5rem;
+  transition: all 300ms;
+}
 
-    .contactInfo p {
-        font-size: 14px;
-    }
+@media (max-width: 767px) {
+  .cardValue {
+    font-size: 0.9rem;
+  }
+  
+  .cardTitle {
+    font-size: 0.75rem;
+  }
+  
+  .cardDescription {
+    font-size: 0.75rem;
+  }
+}
+
+.contactCard:hover .cardValue {
+  background: linear-gradient(to right, white, #d1d5db);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.cardDescription {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+/* Gradient Colors */
+.from-blue-500-to-cyan-500 {
+  background: linear-gradient(to right, #3b82f6, #06b6d4);
+}
+
+.from-green-500-to-emerald-500 {
+  background: linear-gradient(to right, #22c55e, #10b981);
+}
+
+/* Animations */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.05);
+  }
 } 

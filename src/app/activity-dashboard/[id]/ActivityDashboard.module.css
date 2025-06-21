@@ -1,0 +1,248 @@
+.activityDashboard {
+  max-width: 1200px;
+  margin: 50px auto;
+  padding: 24px;
+  background-color: rgb(66, 66, 66, 0.5);
+  border-radius: 12px;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+}
+
+.title {
+  color: #ffffff;
+  font-size: 1.8rem;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #edf2f7;
+}
+
+/* Table Styles */
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: rgb(103, 103, 103, 0.5);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.tableHeader {
+  background: rgb(103, 103, 103, 0.5);
+  color: #ffffff;
+  font-weight: 600;
+  padding: 16px;
+  text-align: left;
+  border-bottom: 2px solid #edf2f7;
+}
+
+.tableCell {
+  padding: 16px;
+  border-bottom: 1px solid #edf2f7;
+  color: #ffffff;
+}
+
+.tableRow:last-child .tableCell {
+  border-bottom: none;
+}
+
+.tableRow:hover {
+  background-color: #626262;
+  transition: background-color 0.2s ease;
+}
+
+/* Status Indicators */
+.statusBadge {
+  padding: 4px 8px;
+  margin: 2px 0;
+  border-radius: 4px;
+  background: rgb(103, 103, 103, 0.5);
+  color: #ffffff;
+  font-size: 0.9rem;
+  display: inline-block;
+}
+
+/* Loading State */
+.loadingState {
+  text-align: center;
+  padding: 40px;
+  color: #4a5568;
+  font-size: 1.1rem;
+}
+
+/* Error State */
+.errorState {
+  background: #fff5f5;
+  color: #e53e3e;
+  padding: 16px;
+  border-radius: 8px;
+  text-align: center;
+  margin: 20px 0;
+}
+
+/* Empty State */
+.emptyState {
+  text-align: center;
+  padding: 48px 24px;
+  background: #f7fafc;
+  border-radius: 8px;
+  color: #718096;
+  font-size: 1.1rem;
+}
+
+/* Time Slot Style */
+.timeSlot {
+  white-space: nowrap;
+  color: #ffffff;
+  font-size: 0.9rem;
+}
+
+/* Phone Number Style */
+.phoneNumber {
+  font-family: monospace;
+  font-size: 0.9rem;
+}
+
+/* Email Style */
+.email {
+  color: #ffffff;
+  font-size: 0.9rem;
+}
+
+/* Dashboard Header */
+.dashboardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #edf2f7;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 12px;
+}
+
+.editButton,
+.deleteButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.editButton {
+  background: #4CAF50;
+  color: white;
+}
+
+.editButton:hover {
+  background: #39883d;
+}
+
+.deleteButton {
+  background: #dc3545;
+  color: white;
+}
+
+.deleteButton:hover {
+  background: #c82333;
+}
+
+.deleteConfirmation {
+  background: rgba(220, 53, 69, 0.1);
+  border: 1px solid #dc3545;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.deleteConfirmation p {
+  color: #dc3545;
+  margin-bottom: 16px;
+  font-size: 1rem;
+}
+
+.confirmationButtons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.confirmDeleteButton,
+.cancelDeleteButton {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.confirmDeleteButton {
+  background: #dc3545;
+  color: white;
+}
+
+.confirmDeleteButton:hover {
+  background: #c82333;
+}
+
+.cancelDeleteButton {
+  background: #6c757d;
+  color: white;
+}
+
+.cancelDeleteButton:hover {
+  background: #5a6268;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .activityDashboard {
+    margin: 10px;
+    padding: 16px;
+  }
+
+  .table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .tableCell, 
+  .tableHeader {
+    padding: 12px;
+    font-size: 0.9rem;
+  }
+  
+  .dashboardHeader {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .actionButtons {
+    width: 100%;
+  }
+
+  .editButton,
+  .deleteButton {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .confirmationButtons {
+    flex-direction: column;
+  }
+
+  .confirmDeleteButton,
+  .cancelDeleteButton {
+    width: 100%;
+  }
+} 

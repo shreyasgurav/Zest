@@ -1,0 +1,518 @@
+.loginPageContainer {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    font-family: 'Inter', sans-serif;
+}
+
+.loginCard {
+    background: rgba(17, 17, 17, 0.95);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    padding: 40px;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    position: relative;
+    overflow: hidden;
+}
+
+.loginCard::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+}
+
+.loginHeader {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.backToHome {
+    display: inline-flex;
+    align-items: center;
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    font-size: 14px;
+    margin-bottom: 20px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+
+.backToHome:hover {
+    color: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.loginTitle {
+    color: #ffffff;
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    letter-spacing: -0.5px;
+}
+
+.loginSubtitle {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 16px;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.loginForm {
+    margin-bottom: 30px;
+}
+
+/* Message Container Styles */
+.messageContainer {
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+}
+
+.notAvailableMessage {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 40px 30px;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(8px);
+    animation: fadeInUp 0.6s ease;
+}
+
+.notAvailableMessage::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(255, 193, 7, 0.6), transparent);
+}
+
+.messageTitle {
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 0 20px 0;
+    letter-spacing: -0.3px;
+    position: relative;
+}
+
+.messageTitle::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, #ffc107, #ff9800);
+    border-radius: 1px;
+}
+
+.messageText {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 0 0 25px 0;
+    font-weight: 400;
+}
+
+.contactText {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 15px;
+    line-height: 1.5;
+    margin: 0;
+    font-weight: 500;
+}
+
+.contactEmail {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    background: rgba(0, 123, 255, 0.1);
+    border: 1px solid rgba(0, 123, 255, 0.2);
+    display: inline-block;
+    margin-left: 4px;
+}
+
+.contactEmail:hover {
+    color: #0056b3;
+    background: rgba(0, 123, 255, 0.2);
+    border-color: rgba(0, 123, 255, 0.3);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.inputGroup {
+    margin-bottom: 20px;
+}
+
+.inputLabel {
+    display: block;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.phoneInput {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    padding: 16px;
+    color: #ffffff;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.phoneInput:focus {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.25);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+}
+
+.otpInput {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    padding: 16px;
+    color: #ffffff;
+    font-size: 18px;
+    text-align: center;
+    letter-spacing: 4px;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.otpInput:focus {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.25);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+}
+
+.otpInput::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+    letter-spacing: normal;
+}
+
+.recaptchaContainer {
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+}
+
+/* Initializing message */
+.initializingMessage {
+    text-align: center;
+    margin: 15px 0;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    animation: fadeIn 0.3s ease;
+}
+
+.initializingMessage p {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    margin: 0;
+    font-weight: 500;
+}
+
+.submitButton {
+    width: 100%;
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    border: none;
+    border-radius: 12px;
+    padding: 16px;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 12px;
+    position: relative;
+    overflow: hidden;
+}
+
+.submitButton::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.submitButton:hover::before {
+    left: 100%;
+}
+
+.submitButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 123, 255, 0.3);
+}
+
+.submitButton:disabled {
+    background: rgba(255, 255, 255, 0.1);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.submitButton:disabled::before {
+    display: none;
+}
+
+.backButton {
+    width: 100%;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 14px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.backButton:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.backButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.loginFooter {
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 20px;
+}
+
+.userLoginText {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+    margin: 0;
+}
+
+.userLoginLink {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 500;
+    margin-left: 8px;
+    transition: color 0.3s ease;
+}
+
+.userLoginLink:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .loginPageContainer {
+        padding: 10px;
+    }
+
+    .loginCard {
+        padding: 30px 20px;
+        max-width: 100%;
+        margin: 0 10px;
+    }
+
+    .backToHome {
+        position: static;
+        margin-bottom: 15px;
+        justify-content: center;
+    }
+
+    .loginTitle {
+        font-size: 24px;
+    }
+
+    .loginSubtitle {
+        font-size: 14px;
+    }
+
+    .phoneInput,
+    .otpInput {
+        padding: 14px;
+        font-size: 16px;
+    }
+
+    .submitButton {
+        padding: 14px;
+        font-size: 15px;
+    }
+
+    .initializingMessage {
+        margin: 12px 0;
+        padding: 10px;
+    }
+
+    .initializingMessage p {
+        font-size: 13px;
+    }
+
+    /* Message Container Mobile Styles */
+    .messageContainer {
+        min-height: 150px;
+    }
+
+    .notAvailableMessage {
+        padding: 30px 20px;
+        border-radius: 12px;
+    }
+
+    .messageTitle {
+        font-size: 20px;
+        margin-bottom: 16px;
+    }
+
+    .messageText {
+        font-size: 15px;
+        margin-bottom: 20px;
+    }
+
+    .contactText {
+        font-size: 14px;
+    }
+
+    .contactEmail {
+        padding: 3px 6px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .loginCard {
+        padding: 25px 15px;
+        border-radius: 20px;
+    }
+
+    .loginTitle {
+        font-size: 22px;
+    }
+
+    .phoneInput,
+    .otpInput,
+    .submitButton {
+        padding: 12px;
+    }
+
+    /* Small Mobile Message Styles */
+    .messageContainer {
+        min-height: 120px;
+    }
+
+    .notAvailableMessage {
+        padding: 25px 15px;
+        border-radius: 10px;
+    }
+
+    .messageTitle {
+        font-size: 18px;
+        margin-bottom: 14px;
+    }
+
+    .messageTitle::after {
+        width: 40px;
+    }
+
+    .messageText {
+        font-size: 14px;
+        margin-bottom: 18px;
+    }
+
+    .contactText {
+        font-size: 13px;
+    }
+
+    .contactEmail {
+        padding: 2px 4px;
+        font-size: 13px;
+        margin-left: 2px;
+    }
+}
+
+/* Phone Input Component Overrides */
+.phoneInput .PhoneInputInput {
+    background: transparent !important;
+    border: none !important;
+    color: #ffffff !important;
+    font-size: 16px !important;
+    padding: 0 !important;
+}
+
+.phoneInput .PhoneInputInput::placeholder {
+    color: rgba(255, 255, 255, 0.4) !important;
+}
+
+.phoneInput .PhoneInputCountrySelect {
+    background: transparent !important;
+    border: none !important;
+    color: #ffffff !important;
+    margin-right: 8px !important;
+}
+
+.phoneInput .PhoneInputCountrySelectArrow {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.phoneInput .PhoneInputCountryIcon {
+    margin-right: 8px !important;
+} 

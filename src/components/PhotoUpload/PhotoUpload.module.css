@@ -1,0 +1,346 @@
+.photoUploadContainer {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.uploadArea {
+  width: 100%;
+}
+
+.currentImageContainer {
+  position: relative;
+  background: rgba(20, 20, 20, 0.5);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.profilePreview {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  display: block;
+  margin: 0 auto 15px;
+}
+
+.bannerPreview {
+  width: 100%;
+  height: 150px;
+  border-radius: 8px;
+  object-fit: cover;
+  margin-bottom: 15px;
+}
+
+.imageActions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.changeButton,
+.removeButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.changeButton {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.changeButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.removeButton {
+  background: rgba(255, 68, 68, 0.1);
+  color: #ff4444;
+  border: 1px solid rgba(255, 68, 68, 0.2);
+}
+
+.removeButton:hover {
+  background: rgba(255, 68, 68, 0.2);
+  transform: translateY(-1px);
+}
+
+.uploadPrompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  border: 2px dashed rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  background: rgba(20, 20, 20, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 20px;
+}
+
+.uploadPrompt:hover {
+  border-color: rgba(102, 126, 234, 0.5);
+  background: rgba(102, 126, 234, 0.05);
+  transform: translateY(-2px);
+}
+
+.profilePrompt {
+  aspect-ratio: 1;
+  max-width: 200px;
+  margin: 0 auto 20px;
+}
+
+.bannerPrompt {
+  aspect-ratio: 3;
+  width: 100%;
+}
+
+.uploadIcon {
+  font-size: 32px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 12px;
+}
+
+.uploadPrompt span {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.uploadPrompt small {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+/* Cropper Styles */
+.cropperContainer {
+  background: rgba(20, 20, 20, 0.95);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.cropperHeader {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.cropperHeader h3 {
+  color: #fff;
+  font-size: 18px;
+  margin: 0 0 8px 0;
+}
+
+.cropperHeader p {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  margin: 0;
+}
+
+.cropperWrapper {
+  position: relative;
+  max-width: 400px;
+  max-height: 400px;
+  margin: 0 auto 20px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #000;
+}
+
+.cropperImage {
+  width: 100%;
+  height: auto;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.cropOverlay {
+  position: absolute;
+  cursor: move;
+  user-select: none;
+}
+
+.cropBorder {
+  width: 100%;
+  height: 100%;
+  border: 2px solid #fff;
+  border-radius: 4px;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+}
+
+.cropperActions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.cancelButton,
+.confirmButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 100px;
+  justify-content: center;
+}
+
+.cancelButton {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.cancelButton:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.confirmButton {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.confirmButton:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.confirmButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.hiddenCanvas {
+  display: none;
+}
+
+/* Spinner Animation */
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .photoUploadContainer {
+    max-width: 100%;
+  }
+
+  .currentImageContainer {
+    padding: 15px;
+  }
+
+  .profilePreview {
+    width: 100px;
+    height: 100px;
+  }
+
+  .bannerPreview {
+    height: 120px;
+  }
+
+  .uploadPrompt {
+    padding: 30px 15px;
+  }
+
+  .uploadIcon {
+    font-size: 28px;
+  }
+
+  .uploadPrompt span {
+    font-size: 15px;
+  }
+
+  .cropperContainer {
+    padding: 15px;
+  }
+
+  .cropperWrapper {
+    max-width: 300px;
+    max-height: 300px;
+  }
+
+  .cropperActions {
+    flex-direction: column;
+  }
+
+  .cancelButton,
+  .confirmButton {
+    width: 100%;
+  }
+
+  .imageActions {
+    flex-direction: column;
+  }
+
+  .changeButton,
+  .removeButton {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .uploadPrompt {
+    padding: 25px 10px;
+  }
+
+  .uploadIcon {
+    font-size: 24px;
+  }
+
+  .uploadPrompt span {
+    font-size: 14px;
+  }
+
+  .uploadPrompt small {
+    font-size: 12px;
+  }
+
+  .cropperWrapper {
+    max-width: 250px;
+    max-height: 250px;
+  }
+
+  .cropperHeader h3 {
+    font-size: 16px;
+  }
+
+  .cropperHeader p {
+    font-size: 13px;
+  }
+} 

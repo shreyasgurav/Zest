@@ -1,13 +1,7 @@
-
 /* Footer */
 .footer {
     flex-shrink: 0;
     width: 100%;
-    background: linear-gradient(
-        to top,
-        rgb(6, 9, 63) 0%,
-        rgba(6, 9, 63, 0) 100%
-    );
     font-family: 'Play', sans-serif;
     padding: 20px;
     display: flex;
@@ -22,10 +16,16 @@
     content: '';
     position: absolute;
     top: 0;
-    left: 300px;
-    right: 300px;
+    left: 5%;
+    right: 5%;
     height: 1px;
-    background-color: rgba(255, 255, 255, 0.3);
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.1) 0%,
+        rgba(255, 255, 255, 0.2) 50%,
+        rgba(255, 255, 255, 0.1) 100%
+    );
+    z-index: 0;
 }
 
 .row {
@@ -38,6 +38,52 @@
     justify-content: center;
     align-items: center;
     gap: 32px;
+}
+
+/* Links Container - Two Column Layout */
+.linksContainer {
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin: 1% 0%;
+    padding: 0.6% 0%;
+    gap: 60px;
+}
+
+.linksColumn {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.linksColumn ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+}
+
+.linksColumn ul li {
+    display: block;
+}
+
+.linksColumn a {
+    text-decoration: none;
+    color: gray;
+    transition: 0.5s;
+    font-size: 0.8em;
+    display: block;
+    padding: 4px 0;
+}
+
+.linksColumn a:hover,
+.linksColumn a:focus {
+    color: #fff;
 }
 
 .iconWrapper {
@@ -102,24 +148,51 @@
     margin: 0;
     display: flex;
     justify-content: center;
+    gap: 30px;
 }
 
 .row ul li {
     display: inline-block;
-    margin: 0px 30px;
 }
 
 .iconRow {
     flex-direction: row !important;
 }
 
-@media (max-width: 764px) {
+@media (max-width: 1200px) {
+    .footer::before {
+        left: 5%;
+        right: 5%;
+    }
+    
+    .linksContainer {
+        gap: 40px;
+    }
+}
+
+@media (max-width: 900px) {
+    .footer .row {
+        max-width: 98vw;
+        gap: 18px;
+    }
+    .footer::before {
+        left: 5%;
+        right: 5%;
+    }
+    
+    .linksContainer {
+        gap: 30px;
+        max-width: 98vw;
+    }
+}
+
+@media (max-width: 768px) {
     .footer {
         padding: 5%;
     }
     .footer::before {
-        left: 20px;
-        right: 20px;
+        left: 5%;
+        right: 5%;
     }
     .row {
         gap: 18px;
@@ -135,21 +208,26 @@
         width: 1.2em;
         height: 1.2em;
     }
+    .row ul {
+        flex-direction: row;
+        gap: 30px;
+    }
     .row ul li {
-        display: block;
-        margin: 10px;
+        margin: 0;
     }
-}
-
-/* Responsive Design */
-@media (max-width: 900px) {
-    .footer .row {
+    
+    .linksContainer {
+        gap: 20px;
         max-width: 98vw;
-        gap: 18px;
     }
-    .footer::before {
-        left: 2vw;
-        right: 2vw;
+    
+    .linksColumn ul {
+        gap: 10px;
+    }
+    
+    .linksColumn a {
+        font-size: 0.75em;
+        padding: 3px 0;
     }
 }
 
@@ -163,17 +241,60 @@
         max-width: 100vw;
     }
     .footer .row ul {
-        flex-direction: column;
-        gap: 0;
+        flex-direction: row;
+        gap: 30px;
+        margin: 10px 0;
     }
     .footer .row ul li {
-        margin: 8px 0;
+        margin: 0;
     }
     .footer::before {
-        left: 0;
-        right: 0;
+        left: 5%;
+        right: 5%;
     }
     .footer .iconRow {
         flex-direction: row !important;
+    }
+    
+    .linksContainer {
+        gap: 15px;
+        padding: 0;
+        max-width: 100vw;
+    }
+    
+    .linksColumn ul {
+        gap: 8px;
+    }
+    
+    .linksColumn a {
+        font-size: 0.7em;
+        padding: 2px 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .linksContainer {
+        gap: 10px;
+        padding: 0 10px;
+    }
+    
+    .linksColumn ul {
+        gap: 6px;
+    }
+    
+    .linksColumn a {
+        font-size: 0.65em;
+        padding: 1px 0;
+    }
+}
+
+@media (max-width: 360px) {
+    .linksContainer {
+        gap: 8px;
+        padding: 0 5px;
+    }
+    
+    .linksColumn a {
+        font-size: 0.6em;
     }
 } 

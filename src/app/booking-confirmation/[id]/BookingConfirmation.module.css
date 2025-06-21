@@ -1,0 +1,217 @@
+/* Base styles */
+.bookingConfirmation {
+  min-height: 100vh;
+  background-color: #111827;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  font-family: system-ui, -apple-system, sans-serif;
+  color: #e5e7eb;
+}
+
+/* Card container */
+.confirmationCard {
+  width: 100%;
+  max-width: 42rem;
+  background-color: #1f2937;
+  border-radius: 1rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  padding: 2rem;
+}
+
+/* Loading state */
+.loadingState {
+  text-align: center;
+  padding: 2rem;
+}
+
+.loadingSpinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #3b82f6;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Error state */
+.errorState {
+  background-color: rgba(127, 29, 29, 0.5);
+  border: 1px solid #dc2626;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  text-align: center;
+  max-width: 32rem;
+  margin: 0 auto;
+}
+
+.errorIcon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 1rem;
+  color: #f87171;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.errorTitle {
+  color: #f87171;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.errorMessage {
+  color: #d1d5db;
+  margin-bottom: 1.5rem;
+}
+
+/* Success state */
+.successHeader {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.successIcon {
+  width: 64px;
+  height: 64px;
+  background-color: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.successTitle {
+  font-size: 1.875rem;
+  font-weight: bold;
+  color: #f9fafb;
+  margin-bottom: 0.5rem;
+}
+
+.bookingId {
+  color: #93c5fd;
+  font-family: monospace;
+}
+
+/* Booking details */
+.bookingDetails {
+  margin-top: 2rem;
+  border-top: 1px solid #374151;
+  padding-top: 2rem;
+}
+
+.detailsTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #f9fafb;
+  margin-bottom: 1.5rem;
+}
+
+.detailRow {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background-color: #374151;
+  border-radius: 0.5rem;
+}
+
+.detailIcon {
+  width: 20px;
+  height: 20px;
+  margin-right: 1rem;
+  color: #60a5fa;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.detailLabel {
+  color: #d1d5db;
+  flex: 1;
+  font-weight: 500;
+}
+
+.detailValue {
+  color: #f9fafb;
+  font-weight: 500;
+}
+
+/* Tickets list */
+.ticketsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+/* Action buttons */
+.confirmationActions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #374151;
+}
+
+.actionButton {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.actionButton.primary {
+  background-color: #2563eb;
+  color: white;
+}
+
+.actionButton.primary:hover {
+  background-color: #1d4ed8;
+}
+
+.actionButton.secondary {
+  background-color: #4b5563;
+  color: #e5e7eb;
+}
+
+.actionButton.secondary:hover {
+  background-color: #374151;
+}
+
+.buttonIcon {
+  margin-right: 0.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .confirmationCard {
+    padding: 1.5rem;
+  }
+
+  .confirmationActions {
+    flex-direction: column;
+  }
+
+  .actionButton {
+    width: 100%;
+    justify-content: center;
+  }
+} 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import SignInwithGoogle from "../../GoogleSignin/SignInwithGoogle";
 import styles from "./LoginPopup.module.css";
 
@@ -7,11 +7,8 @@ interface LoginPopupProps {
 }
 
 function LoginPopup({ onClose }: LoginPopupProps) {
-    const [showPhoneLogin, setShowPhoneLogin] = useState(false);
-
-    // Show phone login directly when clicking organiser button
-    const handleOrgClick = () => {
-        setShowPhoneLogin(true);
+    const handleLoginSuccess = () => {
+        onClose();
     };
 
     return (
@@ -19,10 +16,18 @@ function LoginPopup({ onClose }: LoginPopupProps) {
             <div className={styles.signinModalInner}>
                 <button className={styles.signinCloseBtn} onClick={onClose}>×</button>
                 <h1 className={styles.signinHeading}>Welcome to Zest</h1>
-                <div className={styles.signinDivider}>
-                    <div className={styles.signinDividerLine}></div>
+                <p className={styles.signinSubtext}>Sign in to discover amazing events and activities</p>
+                
+                <div className={styles.googleSigninContainer}>
+                    <SignInwithGoogle onSuccess={handleLoginSuccess} />
                 </div>
-                <SignInwithGoogle />
+                
+                <div className={styles.organizationLink}>
+                    <p className={styles.organizationText}>Are you an organizer?</p>
+                    <a href="/login/organisation" className={styles.organizationLinkBtn}>
+                        Organization Login
+                    </a>
+                </div>
             </div>
         </div>
     );

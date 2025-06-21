@@ -4,11 +4,12 @@
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     height: 44px;
-    z-index: 300;
+    z-index: 1000;
     position: fixed;
     left: 0;
     top: 0;
     right: 0;
+    overflow: visible;
 }
 
 /* Fallback for browsers that don't support backdrop-filter */
@@ -24,10 +25,12 @@
     margin: 0 auto;
     padding: 0 8px;
     height: 100%;
+    position: relative;
+    z-index: 1000;
 }
 
 .desktop-nav {
-    display: flex;
+    display: none; /* Hidden on mobile by default */
     justify-content: space-around;
     align-items: center;
     list-style: none;
@@ -36,6 +39,14 @@
     width: 100%;
     gap: 20px;
 }
+
+/* Show desktop nav on larger screens */
+@media (min-width: 769px) {
+    .desktop-nav {
+        display: flex;
+    }
+}
+
 
 .desktop-nav li {
     display: flex;
@@ -94,9 +105,10 @@
     background-position: center;
     background-size: contain;
     height: 44px;
-    width: 20px;
+    width: auto; /* Allow width to be flexible for the icon */
     background-repeat: no-repeat;
     color: #fff;
+    cursor: pointer;
 }
 
 .link-close {
@@ -109,527 +121,983 @@
     z-index: 1001;
 }
 
-/* Search Container */
-.search-container.hide {
-    opacity: 0;
-    pointer-events: none;
-}
-
-.search-container {
-    width: 60%;
-    margin: 0 auto;
-    padding: 0 42px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 200;
-}
-
-.search-container .link-search {
-    position: absolute;
-    left: 12px;
-    opacity: 0.5;
-}
-
-.search-container .link-close {
-    position: absolute;
-    top: 0;
-    right: 12px;
-    opacity: 0.5;
+/* Search Nav Button */
+.searchNavButton {
+    background: none;
+    border: none;
+    padding: 8px;
     cursor: pointer;
-    transition: all 400ms;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.6);
+    transition: all 0.2s ease;
+    border-radius: 8px;
+    margin-left: 150px;
 }
 
-.search-container .link-close:hover {
-    opacity: 0.7;
+.searchNavButton:hover {
+    color: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.searchNavIcon {
+    width: 20px;
+    height: 20px;
+    stroke-width: 2;
+}
+
+/* Search Background */
+.searchBackground {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+}
+
+/* Search Container */
+.search-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 800px;
+    background: rgba(17, 17, 17, 0.95);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    padding: 24px;
+    z-index: 1001;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    animation: searchSlideIn 0.3s ease-out forwards;
+}
+
+@keyframes searchSlideIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -48%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
 }
 
 .search-container form {
+    position: relative;
     width: 100%;
     margin: 0 auto;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
-.search-container form input {
-    width: 100%;
-    height: 44px;
-    border: 0;
-    outline: none;
-    background: transparent;
-    color: #fff;
-    font-family: "Inter", sans-serif;
-    font-size: 17px;
+.search-container form:focus-within {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
 }
 
-/* Overlay */
-.overlay.show {
-    position: fixed;
-    background: rgba(0, 0, 0, 0.48);
-    width: 100%;
-    height: 100vh;
-    left: 0;
-    top: 0;
-    z-index: 100;
-}
-
-/* Quick Links */
-.search-container .quick-links {
-    background: #fff;
+.searchIcon {
     position: absolute;
-    left: 0;
-    right: 0;
-    padding: 16px 8px;
-    border-radius: 0 0 16px 16px;
-}
-
-.search-container .quick-links h2 {
-    text-transform: uppercase;
-    font-size: 12px;
-    color: #6e6e73;
-    margin: 0 32px;
-    margin-top: 10px;
-}
-
-.search-container .quick-links ul {
-    list-style: none;
-    margin-top: 12px;
-}
-
-.search-container .quick-links ul li a {
-    display: inline-block;
-    width: 100%;
-    padding: 8px 50px;
-    font-size: 14px;
-    color: #1d1d1f;
-    text-decoration: none;
-    font-weight: 400;
-}
-
-.search-container .quick-links ul li a:hover {
-    background: #f5f5f5;
-    color: #2997ff;
-}
-
-/* Desktop Nav Animation */
-.desktop-nav li {
-    transition: all 400ms ease;
-}
-
-.desktop-nav.hide li {
-    opacity: 0;
-    transform: scale(0.8);
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    color: rgba(255, 255, 255, 0.6);
     pointer-events: none;
 }
 
-/* Navigation Menu Items Transition Delay */
-.desktop-nav li:nth-of-type(1),
-.desktop-nav.hide li:nth-of-type(10) {
-    transition-delay: 0ms;
+.searchInput {
+    width: 100%;
+    height: 56px;
+    padding: 0 140px 0 48px;
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    outline: none;
 }
 
-.desktop-nav li:nth-of-type(2),
-.desktop-nav.hide li:nth-of-type(9) {
-    transition-delay: 30ms;
+.searchInput::placeholder {
+    color: rgba(255, 255, 255, 0.5);
 }
 
-.desktop-nav li:nth-of-type(3),
-.desktop-nav.hide li:nth-of-type(8) {
-    transition-delay: 60ms;
+.searchButton {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
 }
 
-.desktop-nav li:nth-of-type(4),
-.desktop-nav.hide li:nth-of-type(7) {
-    transition-delay: 90ms;
+.searchButton:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-50%) scale(1.05);
 }
 
-.desktop-nav li:nth-of-type(5),
-.desktop-nav.hide li:nth-of-type(6) {
-    transition-delay: 120ms;
-}
-
-.desktop-nav li:nth-of-type(6),
-.desktop-nav.hide li:nth-of-type(5) {
-    transition-delay: 150ms;
-}
-
-.desktop-nav li:nth-of-type(7),
-.desktop-nav.hide li:nth-of-type(4) {
-    transition-delay: 180ms;
-}
-
-.desktop-nav li:nth-of-type(8),
-.desktop-nav.hide li:nth-of-type(3) {
-    transition-delay: 210ms;
-}
-
-.desktop-nav li:nth-of-type(9),
-.desktop-nav.hide li:nth-of-type(2) {
-    transition-delay: 240ms;
-}
-
-.desktop-nav li:nth-of-type(10),
-.desktop-nav.hide li:nth-of-type(1) {
-    transition-delay: 270ms;
-}
-
-/* Search Container Animation */
-.search-container form,
-.search-container .link-search {
-    opacity: 1;
-    transform: translateX(0);
-    transition: all 400ms ease;
-    transition-delay: 300ms;
-}
-
-.search-container.hide form,
-.search-container.hide .link-search {
-    opacity: 0;
-    transform: translateX(50px);
-}
-
-.search-container .link-search {
-    opacity: 0.6;
-}
-
-.search-container.hide .link-close {
-    opacity: 0;
-}
-
-.search-container .link-close {
+.searchButton:disabled {
     opacity: 0.5;
-    transition: all 400ms ease;
-    transition-delay: 400ms;
+    cursor: not-allowed;
 }
 
-.search-container.hide .quick-links h2 {
-    opacity: 0;
-    transform: translateX(50px);
+.searchButtonIcon {
+    width: 18px;
+    height: 18px;
 }
 
-.search-container .quick-links h2 {
-    opacity: 1;
-    transform: translateX(0);
-    transition: all 400ms ease;
-    transition-delay: 100ms;
+.clearButton {
+    position: absolute;
+    right: 60px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.6);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
 }
 
-.search-container.hide .quick-links ul li {
-    transform: translateX(60px);
-    opacity: 0;
+.clearButton:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.9);
 }
 
-.search-container .quick-links ul li {
-    opacity: 1;
-    transform: translateX(0);
-    transition: all 400ms ease;
+.clearIcon {
+    width: 16px;
+    height: 16px;
 }
 
-.search-container .quick-links ul li:nth-of-type(1) {
-    transition-delay: 120ms;
+/* Search Results */
+.searchResults {
+    margin-top: 12px;
+    background: rgba(26, 26, 26, 0.98);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    max-height: 480px;
+    overflow-y: auto;
+    animation: slideDown 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
-.search-container .quick-links ul li:nth-of-type(2) {
-    transition-delay: 140ms;
-}
-
-.search-container .quick-links ul li:nth-of-type(3) {
-    transition-delay: 160ms;
-}
-
-.search-container .quick-links ul li:nth-of-type(4) {
-    transition-delay: 180ms;
-}
-
-.search-container .quick-links ul li:nth-of-type(5) {
-    transition-delay: 200ms;
-}
-
-/* Hidden Items */
-.mobile-nav,
-.mobile-search-container {
-    display: none;
-}
-
-/* Media Queries */
-@media (max-width: 1100px) {
-    .nav-container nav {
-        width: 100%;
-    }
-}
-
-@media (max-width: 768px) {
-    .nav-container .desktop-nav {
-        flex-direction: column;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 0vh;
-        background: #000;
-        justify-content: start;
-        overflow: hidden;
-        z-index: 1000;
-        transition: all 1000ms ease;
-    }
-
-    .desktop-nav .link-add-event {
-        display: none;
-    }
-
-    .mobile-nav {
-        display: flex;
-        width: 100%;
-        justify-content: space-between;
-        align-items: center;
-        list-style: none;
-        z-index: 1000;
-        padding: 0;
-        margin: 0;
-    }
-
-    .mobile-nav li {
-        margin-left: 20px;
-        margin-right: 20px;
-    }
-
-    .mobile-nav li:last-child {
-        display: flex;
-        align-items: center;
-    }
-
-    .link-logo,
-    .link-Profile-logo,
-    .menu-icon {
-        z-index: 1001;
-        position: relative;
-    }
-
-    .nav-container.active .desktop-nav {
-        height: 100vh;
-    }
-
-    .nav-container .desktop-nav li {
-        width: 100%;
-        padding: 0 32px;
-    }
-
-    .nav-container .desktop-nav li:first-child {
-        margin-top: 120px;
-    }
-
-    .nav-container .desktop-nav .link-logo,
-    .nav-container .desktop-nav .link-search,
-    .nav-container .desktop-nav .link-Profile-logo {
-        display: none;
-    }
-
-    .nav-container .desktop-nav li a {
-        padding: 16px 0;
-        display: inline-block;
-        border-bottom: 1px solid #616161;
-        width: 100%;
-        font-size: 17px;
-        transform: translateY(-80px);
+@keyframes slideDown {
+    from {
         opacity: 0;
-        transition: all 700ms ease;
+        transform: translateY(-10px);
     }
-
-    .nav-container.active .desktop-nav li a {
+    to {
+        opacity: 1;
         transform: translateY(0);
+    }
+}
+
+.searchResult {
+    display: flex;
+    padding: 16px;
+    gap: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.searchResult:last-child {
+    border-bottom: none;
+}
+
+.searchResult:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.resultIconContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.resultIcon {
+    width: 20px;
+    height: 20px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.resultContent {
+    flex: 1;
+    min-width: 0;
+}
+
+.resultContent h3 {
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 4px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.resultDescription {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    margin: 0 0 8px 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.resultMeta {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.resultMetaItem {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 13px;
+}
+
+.metaIcon {
+    width: 14px;
+    height: 14px;
+}
+
+/* Loading State */
+.loadingResults {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 24px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.loadingSpinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-top-color: rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* No Results */
+.noResults {
+    padding: 24px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Quick Links */
+.quickLinks {
+    margin-top: 24px;
+    padding: 24px;
+    background: rgba(26, 26, 26, 0.98);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    animation: fadeIn 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
         opacity: 1;
     }
+}
 
-    .menu-icon-container {
-        width: 44px;
-        height: 44px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        position: relative;
-        margin-left: -12px;
+.quickLinks h2 {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0 0 16px 0;
+}
+
+.quickLinksGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+}
+
+.quickLink {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.quickLink:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+.quickLinkIcon {
+    width: 20px;
+    height: 20px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Location Popup Styles */
+.locationBackground {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+}
+
+.location-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 500px;
+    background: rgba(17, 17, 17, 0.95);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    padding: 24px;
+    z-index: 1001;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    animation: locationSlideIn 0.3s ease-out forwards;
+    max-height: 85vh;
+    overflow-y: auto;
+}
+
+@keyframes locationSlideIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -48%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+.locationHeader {
+    text-align: center;
+    margin-bottom: 20px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.locationHeader h2 {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.locationCloseButton {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.6);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    min-width: 36px;
+    min-height: 36px;
+    touch-action: manipulation;
+}
+
+.locationCloseButton:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.locationCloseIcon {
+    width: 18px;
+    height: 18px;
+}
+
+.locationSearchWrapper {
+    position: relative;
+    margin-bottom: 20px;
+    background: rgba(246, 245, 245, 0.08);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.locationSearchWrapper:focus-within {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+}
+
+.locationSearchIcon {
+    position: absolute;
+    left: 18px;
+    width: 20px;
+    height: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.6);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.locationInput {
+    width: 100%;
+    height: 52px;
+    padding: 0 48px 0 56px;
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    line-height: 52px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+}
+
+.locationInput::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 16px;
+}
+
+.locationClearButton {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 6px;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.6);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    min-width: 32px;
+    min-height: 32px;
+}
+
+.locationClearButton:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.locationClearIcon {
+    width: 16px;
+    height: 16px;
+}
+
+.popularCitiesContainer {
+    animation: fadeIn 0.3s ease;
+}
+
+.locationSectionTitle {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0 0 16px 0;
+    text-align: center;
+}
+
+.locationCityGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.locationCityButton {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    padding: 14px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    font-weight: 500;
+    min-height: 48px;
+    touch-action: manipulation;
+}
+
+.locationCityButton:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.locationCityButton:active {
+    transform: translateY(0);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.locationCityIcon {
+    width: 16px;
+    height: 16px;
+    color: rgba(255, 255, 255, 0.7);
+    flex-shrink: 0;
+}
+
+.locationSearchResults {
+    max-height: 300px;
+    overflow-y: auto;
+    animation: slideDown 0.3s ease;
+}
+
+.locationSearchResults::-webkit-scrollbar {
+    width: 6px;
+}
+
+.locationSearchResults::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.locationSearchResults::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
+
+.locationSearchResults::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.locationResultItem {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    text-align: left;
+    padding: 14px 12px;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.9);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-bottom: 4px;
+    min-height: 48px;
+    touch-action: manipulation;
+}
+
+.locationResultItem:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.locationResultItem:active {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.locationResultIcon {
+    width: 16px;
+    height: 16px;
+    color: rgba(255, 255, 255, 0.6);
+    flex-shrink: 0;
+}
+
+.locationNoResults {
+    padding: 24px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+}
+
+.locationNoResults p {
+    margin: 0 0 8px 0;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 15px;
+}
+
+.locationNoResultsSubtext {
+    margin: 0 !important;
+    color: rgba(255, 255, 255, 0.5) !important;
+    font-size: 13px !important;
+}
+
+/* --- Mobile Nav Styles --- */
+.mobile-nav {
+    display: none; /* Hidden by default, shown in media query */
+}
+
+/* FIX: Added a new class for the right-side action buttons on mobile */
+.mobileNavActions {
+    display: flex;
+    align-items: center;
+    gap: 12px; /* Adjust gap as needed */
+}
+
+.mobileSearchButton {
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.6);
+    transition: all 0.2s ease;
+    border-radius: 8px;
+    min-width: 44px;
+    min-height: 44px;
+    touch-action: manipulation;
+}
+.mobileSearchButton:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.9);
+}
+.mobileSearchIcon {
+    width: 20px;
+    height: 20px;
+    stroke-width: 2;
+}
+
+
+/* Media Queries for Mobile */
+@media (max-width: 768px) {
+    .desktop-nav {
+        display: none; /* Hide desktop nav on mobile */
     }
 
-    .menu-icon {
+    /* FIX: Use grid for the mobile nav for robust alignment */
+    .mobile-nav {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr; /* col1: flexible, col2: auto, col3: flexible */
+        align-items: center;
+        width: 100%;
+        height: 44px;
+        padding: 0 16px;
+        margin: 0;
+        box-sizing: border-box;
+        list-style: none;
+    }
+
+    /* FIX: Align grid items */
+    .mobile-nav li {
+        display: flex;
+        align-items: center;
+    }
+    .mobile-nav li:nth-child(1) { justify-self: start; } /* location */
+    .mobile-nav li:nth-child(2) { justify-self: center; } /* logo */
+    .mobile-nav li:nth-child(3) { justify-self: end; } /* actions */
+
+    /* FIX: Remove fixed margins that caused overflow */
+    .link-logo {
+        margin-left: 0;
         position: relative;
+        z-index: 1001;
+    }
+
+    .mobileSearchButton {
+        margin: 0;
+        padding: 6px;
+        min-width: 40px;
+        min-height: 40px;
+    }
+
+    /* Mobile location popup adjustments */
+    .location-container {
+        width: 92%;
+        max-width: none;
+        padding: 20px;
+        max-height: 85vh;
+        border-radius: 20px;
+        margin: 0 auto;
+    }
+
+    .locationHeader h2 {
+        font-size: 18px;
+        margin-bottom: 4px;
+    }
+
+    .locationCloseButton {
+        padding: 10px;
+        min-width: 40px;
+        min-height: 40px;
+    }
+
+    .locationCloseIcon {
+        width: 20px;
+        height: 20px;
+    }
+
+    .locationSearchWrapper {
+        margin-bottom: 24px;
+    }
+
+    .locationInput {
+        height: 52px;
+        font-size: 16px;
+        padding: 0 48px 0 56px;
+        line-height: 52px;
+    }
+
+    .locationSearchIcon {
+        left: 18px;
+        width: 20px;
+        height: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .locationClearButton {
+        right: 12px;
+        padding: 8px;
+        min-width: 36px;
+        min-height: 36px;
+    }
+
+    .locationClearIcon {
         width: 18px;
         height: 18px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
     }
 
-    .menu-icon .line-1,
-    .menu-icon .line-2 {
-        position: absolute;
-        height: 1.5px;
+    /* Keep 2 columns on mobile for popular cities */
+    .locationCityGrid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .locationCityButton {
+        padding: 16px 12px;
+        min-height: 56px;
+        font-size: 15px;
+        gap: 8px;
+        border-radius: 12px;
+    }
+
+    .locationCityIcon {
+        width: 16px;
+        height: 16px;
+    }
+
+    .locationResultItem {
+        padding: 16px 20px;
+        min-height: 56px;
+        font-size: 16px;
+        gap: 16px;
+        border-radius: 12px;
+        margin-bottom: 8px;
+    }
+
+    .locationResultIcon {
         width: 18px;
-        background: #fff;
-        transition-property: transform, top;
-        transition-delay: 0ms, 160ms;
-        transition-duration: 200ms;
-        left: 0;
+        height: 18px;
     }
 
-    .menu-icon .line-1 {
-        top: 6px;
+    .locationSearchResults {
+        max-height: 50vh;
     }
 
-    .menu-icon .line-2 {
-        top: 14px;
+    .locationSectionTitle {
+        font-size: 13px;
+        margin-bottom: 20px;
     }
 
-    .nav-container.active .menu-icon-container .menu-icon .line-1,
-    .nav-container.active .menu-icon-container .menu-icon .line-2 {
-        top: 50%;
-        margin-top: -1px;
+    .locationNoResults {
+        padding: 32px 20px;
+        font-size: 16px;
     }
 
-    .nav-container.active .menu-icon-container .menu-icon .line-1 {
-        transform: rotateZ(45deg);
+    .locationNoResults p {
+        font-size: 16px;
+        margin-bottom: 12px;
     }
 
-    .nav-container.active .menu-icon-container .menu-icon .line-2 {
-        transform: rotateZ(-45deg);
-    }
-
-    .nav-container.active .mobile-nav .link-Profile-logo {
-        transform: translateY(8px);
-        opacity: 0;
-        pointer-events: none;
-    }
-
-    .nav-container .mobile-nav .link-Profile-logo {
-        transition: all 1000ms ease;
-    }
-
-    .mobile-search-container input {
-        width: 100%;
-        padding: 12px 36px;
-        font-family: "Inter", sans-serif;
-        font-size: 17px;
-        background: #1b1b1b;
-        border: 0;
-        color: #fff;
-        border-radius: 8px;
-        outline: none;
-    }
-
-    .mobile-search-container {
-        position: relative;
-        padding: 0 16px;
-        margin-top: -30px;
-        border-bottom: 1px solid #616161;
-        display: flex;
-        padding-bottom: 16px;
-        align-items: center;
-        transform: rotateX(90deg);
-        opacity: 0;
-        transition: all 600ms ease;
-    }
-
-    .nav-container.active .mobile-search-container {
-        transform: rotateX(0deg);
-        margin-top: 10px;
-        opacity: 1;
-    }
-
-    .mobile-search-container .link-search {
-        position: absolute;
-        left: 24px;
-        opacity: .5;
-        background-size: 15px;
-    }
-
-    .nav-container nav.move-up {
-        margin-top: -40px;
-    }
-
-    .mobile-search-container .cancel-btn {
-        color: #2997ff;
-        font-size: 17px;
-        font-weight: 400;
-        cursor: pointer;
-        width: 0px;
-        overflow: hidden;
-        transition: all 400ms ease;
-    }
-
-    .mobile-search-container .search-bar.active + .cancel-btn {
-        padding: 0 16px;
-        width: 74px;
-    }
-
-    .mobile-search-container .search-bar {
-        flex: 1;
-    }
-
-    .desktop-nav.move-down li:first-child {
-        margin-top: 150px;
-    }
-
-    .desktop-nav.move-down li {
-        opacity: 0;
-        pointer-events: none;
-    }
-
-    .mobile-search-container .search-bar.active ~ .quick-links {
-        top: 80px;
-        opacity: 1;
-        pointer-events: auto;
-        transition-delay: 40ms;
-    }
-
-    .mobile-search-container .quick-links {
-        position: absolute;
-        left: 0;
-        right: 0;
-        padding: 0 32px;
-        opacity: 0;
-        pointer-events: none;
-        top: 10px;
-        transition: all 400ms ease;
-    }
-
-    .mobile-search-container .quick-links ul {
-        list-style: none;
-    }
-
-    .mobile-search-container .quick-links h2 {
-        color: #86868b;
-        font-size: 12px;
-        text-transform: uppercase;
-        font-weight: 400;
-    }
-
-    .mobile-search-container .quick-links ul li a {
-        padding: 16px 0;
-        display: inline-block;
-        text-decoration: none;
-        color: #fff;
-        font-size: 14px;
-        font-weight: 400;
-        border-bottom: 1px solid #616161;
-        width: 100%;
-    }
-
-    .mobile-search-container .quick-links ul li a:hover {
-        color: #2997ff;
-    }
-
-    .nav-container nav {
-        transition: all 400ms ease;
-    }
-
-    .nav-container .mobile-nav .link-Profile-logo img {
-        filter: brightness(0) invert(1);
+    .locationNoResultsSubtext {
+        font-size: 14px !important;
     }
 }
 
-/* Remove tap highlight on mobile */
-.globalStyles :global(input),
-.globalStyles :global(div),
-.globalStyles :global(span),
-.globalStyles :global(a) {
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-} 
+/* Extra small screens */
+@media (max-width: 480px) {
+    .location-container {
+        width: 96%;
+        padding: 16px;
+        border-radius: 16px;
+        max-height: 80vh;
+    }
+
+    .locationHeader h2 {
+        font-size: 16px;
+    }
+
+    .locationInput {
+        height: 48px;
+        font-size: 16px;
+        padding: 0 44px 0 52px;
+        line-height: 48px;
+    }
+
+    .locationCityButton {
+        padding: 14px 10px;
+        min-height: 52px;
+        font-size: 14px;
+        gap: 6px;
+    }
+
+    .locationCityIcon {
+        width: 14px;
+        height: 14px;
+    }
+
+    .locationResultItem {
+        padding: 14px 16px;
+        min-height: 52px;
+        font-size: 15px;
+    }
+}
+
+/* --- Secondary Mobile Nav --- */
+
+.mobile-nav-secondary {
+    display: flex;
+    width: 100%;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 44px;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    list-style: none;
+    padding: 12px 0;
+    margin: 0;
+    background: none;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 999;
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+@supports not (backdrop-filter: blur(8px)) {
+    .mobile-nav-secondary {
+        background: rgba(6, 9, 63, 0.9);
+    }
+}
+
+/* FIX: This class is added via JS to hide the nav on scroll down */
+.mobile-nav-secondary.hide {
+    transform: translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.mobile-nav-secondary .navLinkWithIcon {
+    font-size: 16px;
+    padding: 8px 16px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #fff;
+    text-decoration: none;
+    opacity: 0.8;
+}
+.mobile-nav-secondary .navLinkWithIcon:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.mobile-nav-secondary .navIcon {
+    width: 20px;
+    height: 20px;
+}
+ 
+@media (min-width: 769px) {
+    .mobile-nav-secondary {
+        display: none;
+    }
+}
+
+
+/* --- Other Component Styles (Location, Search etc.) --- */
+.navItemWithIcon { display: flex; align-items: center; }
+.navLinkWithIcon { display: flex; align-items: center; gap: 6px; color: #fff; text-decoration: none; font-size: 14px; opacity: 0.6; transition: all 400ms; white-space: nowrap; }
+.navLinkWithIcon:hover { opacity: 1; }
+.navIcon { width: 16px; height: 16px; stroke-width: 2; }
+.locationContainer { position: relative; margin-left: 20px; }
+.locationButton{display:flex;align-items:center;gap:5px;background:none;border:none;padding:6px 12px;color:rgba(255,255,255,.6);font-size:15px;cursor:pointer;border-radius:8px;transition:all .2s ease}.locationButton:hover{background:rgba(255,255,255,.1);color:rgba(255,255,255,.9)}.locationIcon{width:16px;height:16px;stroke-width:2}.chevronIcon{width:14px;height:14px;transition:transform .2s ease}.chevronIcon.rotate{transform:rotate(180deg)}.locationDropdown{position:absolute;top:100%;left:0;margin-top:8px;background:rgba(26,26,26,.98);border:1px solid rgba(255,255,255,.2);border-radius:12px;width:280px;box-shadow:0 4px 20px rgba(0,0,0,.3);animation:slideDown .2s ease;z-index:1000}.locationSearch{padding:12px;border-bottom:1px solid rgba(255,255,255,.1)}.locationInput{width:100%;padding:8px 12px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:8px;color:#fff;font-size:14px;outline:none;transition:all .2s ease}.locationInput:focus{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.3)}.locationInput::placeholder{color:rgba(255,255,255,.5)}.popularCities{padding:8px 0;max-height:300px;overflow-y:auto}.popularCities h3{padding:8px 16px;color:rgba(255,255,255,.5);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}.popularCities ul{list-style:none;padding:0;margin:0}.popularCities li{padding:8px 16px;color:rgba(255,255,255,.8);font-size:14px;cursor:pointer;transition:all .2s ease}.popularCities li:hover{background:rgba(255,255,255,.1);color:#fff}.popularCities li.selected{color:#2997ff;background:rgba(41,151,255,.1)}@media (max-width:768px){.locationContainer{margin-left:12px}.locationButton{padding:4px 8px;font-size:13px}.locationIcon{width:14px;height:14px}.chevronIcon{width:12px;height:12px}.locationDropdown{width:240px;right:0;left:auto}}
+.mobileLocationContainer{position:relative;}.mobileLocationButton{display:flex;align-items:center;font-size:15px;gap:3px;background:none;border:none;padding:6px;color:rgba(255,255,255,.6);cursor:pointer;border-radius:8px;transition:all .2s ease}.mobileLocationButton:hover{background:rgba(255,255,255,.1);color:rgba(255,255,255,.9)}.mobileLocationIcon{width:16px;height:16px;stroke-width:2}.mobileChevronIcon{width:14px;height:14px;transition:transform .2s ease}.mobileChevronIcon.rotate{transform:rotate(180deg)}.mobileLocationDropdown{position:fixed;top:44px;left:0;right:0;width:100%;background:rgba(26,26,26,.98);border:1px solid rgba(255,255,255,.2);border-top:none;border-radius:0 0 12px 12px;box-shadow:0 4px 20px rgba(0,0,0,.3);animation:slideDown .2s ease;z-index:1000}
+
+.orgLoginLink {
+    color: #007bff !important;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    opacity: 0.9 !important;
+    transition: all 400ms;
+    white-space: nowrap;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid rgba(0, 123, 255, 0.3);
+    background: rgba(0, 123, 255, 0.1);
+}
+
+.orgLoginLink:hover {
+    opacity: 1 !important;
+    background: rgba(0, 123, 255, 0.2);
+    border-color: rgba(0, 123, 255, 0.5);
+    transform: translateY(-1px);
+}

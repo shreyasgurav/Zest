@@ -70,7 +70,7 @@
   }
 }
 
-.unauthorized-message-container {
+.unauthorizedMessageContainer {
   min-height: 100vh;
   display: flex;
   justify-content: center;
@@ -79,7 +79,7 @@
   background: rgba(0, 0, 0, 0.1);
 }
 
-.unauthorized-message {
+.unauthorizedMessage {
   background: rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(10px);
   padding: 40px;
@@ -91,19 +91,19 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.unauthorized-message h1 {
+.unauthorizedMessage h1 {
   font-size: 24px;
   margin-bottom: 16px;
   color: #ff4444;
 }
 
-.unauthorized-message p {
+.unauthorizedMessage p {
   margin-bottom: 24px;
   opacity: 0.8;
   line-height: 1.5;
 }
 
-.back-button {
+.backButton {
   background: #007bff;
   color: white;
   border: none;
@@ -114,6 +114,6 @@
   transition: background-color 0.3s ease;
 }
 
-.back-button:hover {
+.backButton:hover {
   background: #0056b3;
 } 

@@ -1,0 +1,581 @@
+.bookingFlow {
+  background: none;
+  min-height: 100vh;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.bookingContainer {
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  background: rgba(33, 6, 47, 0.7);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  box-shadow: 0 25px 50px -12px rgba(88, 28, 135, 0.25);
+  padding: 32px;
+  margin-top: 80px;
+}
+
+.bookingProgress {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+  padding: 0;
+  position: relative;
+}
+
+.bookingProgress::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  border-top: 2px dashed rgba(192, 132, 252, 0.2);
+  transform: translateY(-50%);
+  z-index: 0;
+}
+
+.progressStep {
+  background: rgba(33, 6, 47, 0.8);
+  color: #c084fc;
+  padding: 12px 24px;
+  border-radius: 30px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  position: relative;
+  z-index: 1;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.progressStep::before {
+  content: '';
+  width: 24px;
+  height: 24px;
+  background: #210630;
+  border: 2px solid #c084fc;
+  border-radius: 50%;
+  margin-right: 8px;
+  transition: all 0.3s ease;
+}
+
+.progressStep.active {
+  color: #d7d7d7;
+  background: rgb(33, 6, 47);
+}
+
+.progressStep.active::before {
+  background: #c084fc;
+  border-color: #c084fc;
+}
+
+.bookingStep {
+  background: rgba(33, 6, 47, 0.6);
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 4px 6px -1px rgba(88, 28, 135, 0.1);
+  margin-bottom: 24px;
+}
+
+.bookingStep h2 {
+  color: #f3f4f6;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.dateSelector,
+.timeSelector {
+  margin-bottom: 32px;
+}
+
+.dateSelector h4,
+.timeSelector h4 {
+  color: #d1d5db;
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.availableDates {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.dateOption {
+  background: rgba(33, 6, 47, 0.7);
+  color: #d1d5db;
+  padding: 16px;
+  border: 1px solid rgba(192, 132, 252, 0.4);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  font-weight: 500;
+}
+
+.dateOption:hover {
+  background: rgba(192, 132, 252, 0.1);
+  border-color: #c084fc;
+  transform: translateY(-2px);
+}
+
+.dateOption.selected {
+  background: rgba(192, 132, 252, 0.15);
+  border-color: #c084fc;
+  color: #c084fc;
+}
+
+.availableSlots {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.slotOption {
+  background: rgba(33, 6, 47, 0.7);
+  color: #d1d5db;
+  padding: 16px;
+  border: 1px solid rgba(192, 132, 252, 0.4);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  font-weight: 500;
+}
+
+.slotOption:hover:not(:disabled) {
+  background: rgba(192, 132, 252, 0.1);
+  border-color: #c084fc;
+  transform: translateY(-2px);
+}
+
+.slotOption.selected {
+  background: rgba(192, 132, 252, 0.15);
+  border-color: #c084fc;
+  color: #c084fc;
+}
+
+.slotOption:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: rgba(31, 41, 55, 0.3);
+}
+
+.ticketTypes {
+  display: grid;
+  gap: 16px;
+}
+
+.ticketType {
+  background: rgba(33, 6, 47, 0.7);
+  border: 1px solid rgba(192, 132, 252, 0.4);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.ticketType:hover {
+  background: rgba(33, 6, 47, 0.9);
+  transform: translateY(-2px);
+  border-color: #c084fc;
+}
+
+.ticketDetails h3 {
+  color: #f3f4f6;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.ticketPrice {
+  color: #c084fc;
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.ticketsLeft {
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
+
+.ticketQuantity {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(17, 24, 39, 0.4);
+  padding: 8px 16px;
+  border-radius: 12px;
+}
+
+.quantityButton {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: rgba(192, 132, 252, 0.1);
+  color: #c084fc;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.quantityButton:hover:not(:disabled) {
+  background: rgba(192, 132, 252, 0.2);
+  transform: scale(1.05);
+}
+
+.quantityButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.bookingSummary {
+  background: rgba(33, 6, 47, 0.7);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.eventSummary {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgba(75, 85, 99, 0.4);
+}
+
+.eventSummary img {
+  width: 140px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.eventDetails h3 {
+  color: #f3f4f6;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.eventDetails p {
+  color: #9ca3af;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ticketInfo {
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgba(75, 85, 99, 0.4);
+}
+
+.ticketInfo h3,
+.userInfo h3 {
+  color: #f3f4f6;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ticketSummary {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(75, 85, 99, 0.2);
+  color: #9ca3af;
+}
+
+.totalAmount {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 2px solid rgba(192, 132, 252, 0.4);
+  text-align: right;
+  color: #c084fc;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.nextButton,
+.bookButton {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #c084fc 0%, #8b5cf6 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 24px;
+  transition: all 0.2s ease;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.nextButton:hover,
+.bookButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px -10px rgba(192, 132, 252, 0.5);
+}
+
+.nextButton:disabled,
+.bookButton:disabled {
+  background: #4b5563;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.error {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  text-align: center;
+  padding: 16px;
+  border-radius: 12px;
+  margin: 16px 0;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #9ca3af;
+}
+
+@media (max-width: 768px) {
+  .bookingContainer {
+    padding: 16px;
+    margin-top: 40px;
+    border-radius: 16px;
+  }
+
+  .bookingProgress {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 0 4px;
+    margin-bottom: 24px;
+    position: relative;
+    width: 100%;
+  }
+
+  .progressStep {
+    flex: 1;
+    font-size: 0.75rem;
+    padding: 8px 10px;
+    white-space: nowrap;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-width: 0;
+  }
+
+  .progressStep::before {
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+    flex-shrink: 0;
+  }
+
+  .progressStep span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .bookingStep {
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+
+  .bookingStep h2 {
+    font-size: 1.2rem;
+    margin-bottom: 16px;
+  }
+
+  .dateSelector,
+  .availableSlots {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .dateOption,
+  .slotOption {
+    padding: 12px;
+    font-size: 0.9rem;
+  }
+
+  .ticketType {
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+    text-align: center;
+  }
+
+  .ticketDetails {
+    width: 100%;
+  }
+
+  .ticketDetails h3 {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+  }
+
+  .ticketPrice {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+  }
+
+  .ticketsLeft {
+    font-size: 0.9rem;
+  }
+
+  .ticketQuantity {
+    width: 100%;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .quantityButton {
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
+  }
+
+  .bookingSummary {
+    padding: 16px;
+  }
+
+  .eventSummary {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+
+  .eventSummary img {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto;
+  }
+
+  .eventDetails {
+    width: 100%;
+  }
+
+  .eventDetails h3 {
+    font-size: 1.2rem;
+    margin-bottom: 12px;
+  }
+
+  .eventDetails p {
+    font-size: 0.9rem;
+  }
+
+  .ticketInfo {
+    margin-top: 16px;
+  }
+
+  .ticketInfo h3 {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+  }
+
+  .ticketSummary {
+    font-size: 0.9rem;
+  }
+
+  .totalAmount {
+    font-size: 1.2rem;
+    margin-top: 12px;
+    padding-top: 12px;
+  }
+
+  .nextButton,
+  .bookButton {
+    padding: 14px;
+    font-size: 1rem;
+    margin-top: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .progressStep {
+    font-size: 0.7rem;
+    padding: 6px 8px;
+  }
+
+  .progressStep::before {
+    width: 14px;
+    height: 14px;
+    margin-right: 3px;
+  }
+
+  .bookingStep {
+    padding: 16px;
+  }
+
+  .dateOption,
+  .slotOption {
+    padding: 10px;
+    font-size: 0.85rem;
+  }
+
+  .ticketType {
+    padding: 12px;
+  }
+
+  .ticketDetails h3 {
+    font-size: 1rem;
+  }
+
+  .ticketPrice {
+    font-size: 1.1rem;
+  }
+
+  .quantityButton {
+    width: 28px;
+    height: 28px;
+  }
+
+  .eventSummary img {
+    width: 100px;
+    height: 100px;
+  }
+
+  .totalAmount {
+    font-size: 1.1rem;
+  }
+} 

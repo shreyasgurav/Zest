@@ -1,0 +1,22 @@
+{
+  "storage": {
+    "rules": "storage.rules",
+    "cors": [
+      {
+        "origin": ["http://localhost:3000", "https://zest-bookings.vercel.app"],
+        "method": ["GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"],
+        "maxAgeSeconds": 3600,
+        "responseHeader": [
+          "Content-Type",
+          "Authorization",
+          "Content-Length",
+          "User-Agent",
+          "x-goog-resumable",
+          "Access-Control-Allow-Origin",
+          "Access-Control-Allow-Methods",
+          "Access-Control-Allow-Headers"
+        ]
+      }
+    ]
+  }
+} 

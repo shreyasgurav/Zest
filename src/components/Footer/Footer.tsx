@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { FaInstagram, FaLinkedin } from "react-icons/fa";
+import { FaInstagram, FaLinkedinIn } from "react-icons/fa";
 import styles from "./footer.module.css";
 
 function Footer() {
@@ -11,7 +11,7 @@ function Footer() {
                     <span className={styles.iconWrapper}><FaInstagram className={styles.icon} /></span>
                 </a>
                 <a href="https://www.linkedin.com/company/zestlive/about/?viewAsMember=true" target="_blank" rel="noopener noreferrer">
-                    <span className={styles.iconWrapper}><FaLinkedin className={styles.icon} /></span>
+                    <span className={styles.iconWrapper}><FaLinkedinIn className={styles.icon} /></span>
                 </a>
                 <a href="https://x.com/zestlivein" className={styles["x-link"]} target="_blank" rel="noopener noreferrer">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={styles["x-icon"]}>
@@ -19,14 +19,21 @@ function Footer() {
                     </svg>
                 </a>
             </div>
-            <div className={styles.row}>
-                <ul>
-                    <li><Link href="/about">About</Link></li>
-                    <li><Link href="/contact">Contact</Link></li>
-                </ul>
-            </div>
-            <div className={styles.row}>
-                Zest Copyright © 2025 Zest - All rights reserved
+            <div className={styles.linksContainer}>
+                <div className={styles.linksColumn}>
+                    <ul>
+                        <li><Link href="/termsandconditions">Terms & Conditions</Link></li>
+                        <li><Link href="/privacypolicy">Privacy Policy</Link></li>
+                        <li><Link href="/refundpolicy">Refund Policy</Link></li>
+                    </ul>
+                </div>
+                <div className={styles.linksColumn}>
+                    <ul>
+                        <li><Link href="/about">About</Link></li>
+                        <li><Link href="/contact">Contact</Link></li>
+                        <li><Link href="/listevents">List Events</Link></li>
+                    </ul>
+                </div>
             </div>
         </footer>
     );

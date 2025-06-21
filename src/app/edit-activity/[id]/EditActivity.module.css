@@ -1,0 +1,398 @@
+.editActivityPage {
+    min-height: 100vh;
+    padding: 80px 20px 40px;
+    background: var(--background-color);
+}
+
+.editActivityContainer {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: rgba(40, 40, 40, 0.5);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.pageTitle {
+    color: #aeadad;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2em;
+}
+
+.editActivityForm {
+    width: 100%;
+}
+
+.formGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.formSection {
+    background: rgba(30, 30, 30, 0.5);
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 30px;
+}
+
+.formSection h2 {
+    color: #aeadad;
+    font-size: 1.2em;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #444;
+    padding-bottom: 10px;
+}
+
+.formGroup {
+    margin-bottom: 20px;
+}
+
+.formGroup label {
+    display: block;
+    color: #888;
+    margin-bottom: 8px;
+}
+
+.formGroup input,
+.formGroup select,
+.formGroup textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #444;
+    border-radius: 5px;
+    background: rgba(20, 20, 20, 0.5);
+    color: #fff;
+}
+
+.formGroup textarea {
+    resize: vertical;
+    min-height: 120px;
+    padding: 15px;
+}
+
+.imageSection {
+    grid-column: 1 / -1;
+}
+
+.imageTip {
+    color: #888;
+    margin-bottom: 15px;
+    font-size: 0.9em;
+}
+
+.fileInput {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+    padding: 10px;
+    background: rgba(20, 20, 20, 0.5);
+    border-radius: 5px;
+    border: 1px solid #444;
+    color: #fff;
+}
+
+.imagePreview {
+    margin: 20px auto;
+    width: 300px;
+    height: 300px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 2px dashed #444;
+    text-align: center;
+}
+
+.imagePreview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.formRow {
+    display: flex;
+    gap: 15px;
+    align-items: flex-end;
+}
+
+/* Weekly Schedule Styles */
+.daySchedule {
+    background: rgba(20, 20, 20, 0.5);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.dayHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #444;
+}
+
+.dayHeader h3 {
+    color: #aeadad;
+    margin: 0;
+    font-size: 1.1em;
+}
+
+/* Toggle Switch Styles */
+.toggleSwitch {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.toggleSwitch input {
+    display: none;
+}
+
+.slider {
+    position: relative;
+    width: 50px;
+    height: 24px;
+    background-color: #444;
+    border-radius: 24px;
+    transition: 0.3s;
+}
+
+.slider:before {
+    content: "";
+    position: absolute;
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    border-radius: 50%;
+    transition: 0.3s;
+}
+
+.toggleSwitch input:checked + .slider {
+    background-color: #4CAF50;
+}
+
+.toggleSwitch input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+.toggleLabel {
+    color: #888;
+    font-size: 0.9em;
+    min-width: 50px;
+}
+
+/* Time Slots Container */
+.timeSlotsContainer {
+    margin-top: 15px;
+}
+
+.timeSlot {
+    background: rgba(40, 40, 40, 0.5);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.addSlotButton {
+    background: #2196F3;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: 0.25s ease-in-out;
+}
+
+.addSlotButton:hover {
+    background: #1976D2;
+}
+
+.removeSlotButton {
+    background: #ff4444;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: 0.25s ease-in-out;
+    font-size: 0.9em;
+}
+
+.removeSlotButton:hover {
+    background: #b13030;
+}
+
+/* Closed Dates Styles */
+.closedDatesList {
+    margin-top: 15px;
+}
+
+.closedDateItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(20, 20, 20, 0.5);
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+.removeDateButton {
+    background: #ff4444;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.25s ease-in-out;
+    font-size: 0.9em;
+}
+
+.removeDateButton:hover {
+    background: #b13030;
+}
+
+.formActions {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.submitButton,
+.cancelButton {
+    padding: 10px 25px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1em;
+    cursor: pointer;
+    transition: 0.25s ease-in-out;
+}
+
+.submitButton {
+    background: #4CAF50;
+    color: white;
+}
+
+.submitButton:hover {
+    background: #39883d;
+}
+
+.submitButton:disabled {
+    background: #666;
+    cursor: not-allowed;
+}
+
+.cancelButton {
+    background: #666;
+    color: white;
+}
+
+.cancelButton:hover {
+    background: #555;
+}
+
+.cancelButton:disabled {
+    background: #444;
+    cursor: not-allowed;
+}
+
+.message {
+    text-align: center;
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+.success {
+    background: rgba(76, 175, 80, 0.2);
+    color: #4CAF50;
+}
+
+.error {
+    background: rgba(244, 67, 54, 0.2);
+    color: #f44336;
+}
+
+/* Loading and Unauthorized States */
+.loadingState {
+    text-align: center;
+    padding: 40px;
+    color: #888;
+    font-size: 1.1rem;
+}
+
+.unauthorizedMessage {
+    text-align: center;
+    padding: 40px;
+    color: #ff4444;
+}
+
+.unauthorizedMessage h1 {
+    font-size: 24px;
+    margin-bottom: 16px;
+}
+
+.unauthorizedMessage p {
+    margin-bottom: 24px;
+    opacity: 0.8;
+}
+
+.backButton {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.backButton:hover {
+    background: #0056b3;
+}
+
+@media (max-width: 768px) {
+    .editActivityContainer {
+        padding: 20px;
+    }
+
+    .formActions {
+        flex-direction: column;
+    }
+
+    .submitButton,
+    .cancelButton {
+        width: 100%;
+    }
+
+    .formRow {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .removeSlotButton,
+    .removeDateButton {
+        margin-left: 0;
+        margin-top: 10px;
+    }
+
+    .dayHeader {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+
+    .toggleSwitch {
+        align-self: flex-end;
+    }
+} 

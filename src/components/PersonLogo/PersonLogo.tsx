@@ -1,24 +1,94 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { auth } from '../../lib/firebase';
+import { auth, db } from '../../lib/firebase';
 import { signOut, User, onAuthStateChanged } from "firebase/auth";
-import LoginPopup from '../Authentication/LoginPopup/LoginPopup';
+import { doc, getDoc } from 'firebase/firestore';
 import { useRouter, usePathname } from 'next/navigation';
+import { FaTicketAlt, FaUser, FaCog, FaSignOutAlt } from 'react-icons/fa';
 import styles from "./PersonLogo.module.css";
+import Link from 'next/link';
+
+interface UserData {
+  name?: string;
+  username?: string;
+  profilePicture?: string;
+  photoURL?: string;
+  photo?: string;
+  profile_image?: string;
+  phone?: string;
+  email?: string;
+}
 
 function PersonLogo() {
     const [showDropdown, setShowDropdown] = useState(false);
-    const [isPopupOpen, setPopupOpen] = useState(false);
     const [user, setUser] = useState<User | null>(null);
+    const [userData, setUserData] = useState<UserData | null>(null);
+    const [isOrganization, setIsOrganization] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
     const pathname = usePathname();
 
+    // Check if we're on organization-specific routes
+    const isOrganizationRoute = pathname?.startsWith('/organisation') || 
+                               pathname?.startsWith('/organization') || 
+                               pathname?.startsWith('/login/organisation') ||
+                               pathname?.startsWith('/create/') ||
+                               pathname?.startsWith('/edit-') ||
+                               pathname?.includes('dashboard');
+
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+        const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
             setUser(currentUser);
+            if (currentUser) {
+                try {
+                    // Only check organization profile if we're on organization routes
+                    if (isOrganizationRoute) {
+                        const orgDoc = await getDoc(doc(db, "Organisations", currentUser.uid));
+                        if (orgDoc.exists()) {
+                            setIsOrganization(true);
+                            const orgData = orgDoc.data() as UserData;
+                            console.log('👤 Loaded organization data from Firestore:', orgData);
+                            setUserData(orgData);
+                            return; // Exit early to avoid checking user profile
+                        }
+                    }
+                    
+                    // Always prioritize user profile for general authentication
+                    setIsOrganization(false);
+                    const userDoc = await getDoc(doc(db, "Users", currentUser.uid));
+                    if (userDoc.exists()) {
+                        const firestoreData = userDoc.data() as UserData;
+                        console.log('👤 Loaded user data from Firestore:', firestoreData);
+                        setUserData(firestoreData);
+                    } else {
+                        // Fallback to Firebase Auth data
+                        setUserData({
+                            name: currentUser.displayName || currentUser.phoneNumber || 'User',
+                            username: currentUser.email?.split('@')[0] || currentUser.phoneNumber?.replace(/\D/g, '') || 'user',
+                            photoURL: currentUser.photoURL || undefined,
+                            photo: currentUser.photoURL || undefined,
+                            phone: currentUser.phoneNumber || undefined,
+                            email: currentUser.email || undefined
+                        });
+                    }
+                } catch (error) {
+                    console.error("Error fetching user data:", error);
+                    // Fallback to Firebase Auth data
+                    setUserData({
+                        name: currentUser.displayName || currentUser.phoneNumber || 'User',
+                        username: currentUser.email?.split('@')[0] || currentUser.phoneNumber?.replace(/\D/g, '') || 'user',
+                        photoURL: currentUser.photoURL || undefined,
+                        photo: currentUser.photoURL || undefined,
+                        phone: currentUser.phoneNumber || undefined,
+                        email: currentUser.email || undefined
+                    });
+                }
+            } else {
+                setUserData(null);
+                setIsOrganization(false);
+            }
         });
         return () => unsubscribe();
-    }, []);
+    }, [isOrganizationRoute]);
 
     useEffect(() => {
         document.addEventListener('mousedown', handleClickOutside);
@@ -36,6 +106,7 @@ function PersonLogo() {
     const handleLogout = async () => {
         try {
             await signOut(auth);
+            setShowDropdown(false);
             router.push('/');
             console.log("User logged out successfully!");
         } catch (error) {
@@ -44,60 +115,156 @@ function PersonLogo() {
     };
 
     const handleProfileClick = () => {
-        // Check if user exists
-        if (!user) return;
-
-        // Check the authentication provider
-        const isPhoneAuth = user.providerData[0]?.providerId === 'phone';
-        
-        // Navigate based on auth method
-        if (isPhoneAuth) {
-            router.push('/organisation');
-        } else {
-            router.push('/profile');
-        }
+        setShowDropdown(false);
+        router.push('/profile');
     };
 
-    return (
-        <div className={styles["person-logo-container"]} ref={dropdownRef}>
-            <svg
-                width="18"
-                height="17"
-                viewBox="0 0 15 15"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                onClick={() => setShowDropdown(prev => !prev)}
-                style={{ cursor: 'pointer' }}
-            >
-                <path
-                    d="M7.5 0.875C5.49797 0.875 3.875 2.49797 3.875 4.5C3.875 6.15288 4.98124 7.54738 6.49373 7.98351C5.2997 8.12901 4.27557 8.55134 3.50407 9.31167C2.52216 10.2794 2.02502 11.72 2.02502 13.5999C2.02502 13.8623 2.23769 14.0749 2.50002 14.0749C2.76236 14.0749 2.97502 13.8623 2.97502 13.5999C2.97502 11.8799 3.42786 10.7206 4.17091 9.9883C4.91536 9.25463 6.02674 8.87499 7.49995 8.87499C8.97317 8.87499 10.0846 9.25463 10.8291 9.98831C11.5721 10.7206 12.025 11.8799 12.025 13.5999C12.025 13.8623 12.2376 14.0749 12.5 14.0749C12.7623 14.075 12.975 13.8623 12.975 13.6C12.975 11.72 12.4778 10.2794 11.4959 9.31166C10.7244 8.55135 9.70025 8.12903 8.50625 7.98352C10.0187 7.5474 11.125 6.15289 11.125 4.5C11.125 2.49797 9.50203 0.875 7.5 0.875ZM4.825 4.5C4.825 3.02264 6.02264 1.825 7.5 1.825C8.97736 1.825 10.175 3.02264 10.175 4.5C10.175 5.97736 8.97736 7.175 7.5 7.175C6.02264 7.175 4.825 5.97736 4.825 4.5Z"
-                    fill="currentColor"
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                />
-            </svg>
+    const handleTicketsClick = () => {
+        setShowDropdown(false);
+        router.push('/tickets');
+    };
 
-            <div className={`${styles["person-dropdown"]} ${showDropdown ? styles["active"] : ''}`}>
-                {!user ? (
-                    <div className={styles["dropdown-item"]} onClick={() => setPopupOpen(true)}>
-                        Login
-                    </div>
-                ) : (
-                    <>
-                        <div className={styles["dropdown-item"]} onClick={handleProfileClick}>
-                            Profile
-                        </div>
-                        <div className={styles["dropdown-item"]} onClick={handleLogout}>
-                            Logout
-                        </div>
-                    </>
-                )}
+    const handleSettingsClick = () => {
+        setShowDropdown(false);
+        // Add settings route when available
+        console.log("Settings clicked");
+    };
+
+    const handleSignInClick = () => {
+        router.push('/login');
+    };
+
+    const toggleDropdown = () => {
+        setShowDropdown(!showDropdown);
+    };
+
+    // Get profile picture URL
+    const getProfilePictureUrl = () => {
+        // Check all possible field names for profile image
+        if (userData?.profilePicture) {
+            console.log('👤 Using profilePicture:', userData.profilePicture);
+            return userData.profilePicture;
+        }
+        if (userData?.photo) {
+            console.log('👤 Using photo:', userData.photo);
+            return userData.photo;
+        }
+        if (userData?.profile_image) {
+            console.log('👤 Using profile_image:', userData.profile_image);
+            return userData.profile_image;
+        }
+        if (userData?.photoURL) {
+            console.log('👤 Using photoURL:', userData.photoURL);
+            return userData.photoURL;
+        }
+        
+        // Only log when no image is found
+        if (userData) {
+            console.log('👤 No profile image found. Available fields:', {
+                profilePicture: userData?.profilePicture,
+                photo: userData?.photo,
+                profile_image: userData?.profile_image,
+                photoURL: userData?.photoURL,
+                allUserData: userData
+            });
+        }
+        return null;
+    };
+
+    // Get user initials for default avatar
+    const getUserInitials = () => {
+        const name = userData?.name || userData?.phone || 'User';
+        return name.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2);
+    };
+
+    if (!user) {
+        // Show Sign In button when not logged in
+        return (
+            <button 
+                className={styles.signInButton}
+                onClick={handleSignInClick}
+            >
+                Sign In
+            </button>
+        );
+    }
+
+    // Show profile when logged in
+    return (
+        <div className={styles.personLogoContainer} ref={dropdownRef}>
+            <div 
+                className={styles.profileButton}
+                onClick={toggleDropdown}
+            >
+                {getProfilePictureUrl() ? (
+                    <img 
+                        src={getProfilePictureUrl()!}
+                        alt="Profile"
+                        className={styles.profileImage}
+                        onError={(e) => {
+                            // Fallback to initials if image fails to load
+                            e.currentTarget.style.display = 'none';
+                            e.currentTarget.nextElementSibling?.classList.add(styles.show);
+                        }}
+                    />
+                ) : null}
+                <div className={`${styles.profileInitials} ${!getProfilePictureUrl() ? styles.show : ''}`}>
+                    {getUserInitials()}
+                </div>
             </div>
 
-            {isPopupOpen && !user && (
-                <div className={styles["login-popup-overlay"]}>
-                    <div className={styles["login-popup-content"]}>
-                        <LoginPopup onClose={() => setPopupOpen(false)} />
+            {showDropdown && (
+                <div className={styles.dropdown}>
+                    {/* User Info Header */}
+                    <div className={styles.userInfo}>
+                        <div className={styles.userInfoImage}>
+                            {getProfilePictureUrl() ? (
+                                <img 
+                                    src={getProfilePictureUrl()!}
+                                    alt="Profile"
+                                    className={styles.userInfoAvatar}
+                                />
+                            ) : (
+                                <div className={styles.userInfoInitials}>
+                                    {getUserInitials()}
+                                </div>
+                            )}
+                        </div>
+                        <div className={styles.userInfoText}>
+                            <div className={styles.userName}>
+                                {userData?.name || userData?.phone || 'User'}
+                            </div>
+                            <div className={styles.userUsername}>
+                                @{userData?.username || userData?.phone?.replace(/\D/g, '') || 'user'}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Dropdown Items */}
+                    <div className={styles.dropdownItems}>
+                        <div className={styles.dropdownItem} onClick={handleProfileClick}>
+                            <FaUser className={styles.dropdownIcon} />
+                            <span>View Profile</span>
+                        </div>
+
+                        {!isOrganization && (
+                            <div className={styles.dropdownItem} onClick={handleTicketsClick}>
+                                <FaTicketAlt className={styles.dropdownIcon} />
+                                <span>Tickets</span>
+                            </div>
+                        )}
+
+                        <div className={styles.dropdownItem} onClick={handleSettingsClick}>
+                            <FaCog className={styles.dropdownIcon} />
+                            <span>Settings</span>
+                        </div>
+
+                        <div className={styles.dropdownDivider}></div>
+
+                        <div className={styles.dropdownItem} onClick={handleLogout}>
+                            <FaSignOutAlt className={styles.dropdownIcon} />
+                            <span>Sign Out</span>
+                        </div>
                     </div>
                 </div>
             )}

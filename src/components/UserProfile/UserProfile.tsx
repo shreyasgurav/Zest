@@ -6,6 +6,8 @@ import { doc, getDoc, updateDoc, collection, query, where, getDocs } from "fireb
 import { updateProfile, User } from "firebase/auth";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { toast } from "react-toastify";
+import PhotoUpload from "../PhotoUpload/PhotoUpload";
+import { FaCamera, FaCrop, FaTimes } from 'react-icons/fa';
 import styles from "./UserProfile.module.css";
 
 interface UserDetails {
@@ -52,7 +54,9 @@ function UserProfile() {
   const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [uploading, setUploading] = useState(false);
+  const [showPhotoModal, setShowPhotoModal] = useState(false);
+  const [showPhotoUpload, setShowPhotoUpload] = useState(false);
+  const [isEditingExistingPhoto, setIsEditingExistingPhoto] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState<FormData>({
     name: "",
@@ -97,40 +101,49 @@ function UserProfile() {
     fetchUserData();
   }, []);
 
-  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const handlePhotoClick = () => {
+    setShowPhotoModal(true);
+  };
 
-    if (!file.type.startsWith('image/')) {
-      toast.error('Please select an image file');
-      return;
-    }
-    if (file.size > 2 * 1024 * 1024) {
-      toast.error('Image size should be less than 2MB');
-      return;
-    }
+  const handleUploadPhotoClick = () => {
+    setShowPhotoModal(false);
+    setIsEditingExistingPhoto(false);
+    setShowPhotoUpload(true);
+  };
+
+  const handleEditPhotoClick = () => {
+    setShowPhotoModal(false);
+    setIsEditingExistingPhoto(true);
+    setShowPhotoUpload(true);
+  };
+
+  const handlePhotoChange = async (imageUrl: string) => {
     try {
-      setUploading(true);
       const user = auth.currentUser;
       if (!user) return;
-      const storageRef = ref(storage, `profilePics/${user.uid}`);
-      await uploadBytes(storageRef, file);
-      const downloadURL = await getDownloadURL(storageRef);
-      await updateProfile(user, { photoURL: downloadURL });
+
+      // Update Firebase Auth profile
+      await updateProfile(user, { photoURL: imageUrl });
+      
+      // Update Firestore document
       const userRef = doc(db, "Users", user.uid);
-      await updateDoc(userRef, { photo: downloadURL });
-      setUserDetails(prev => prev ? { ...prev, photo: downloadURL } : null);
+      await updateDoc(userRef, { photo: imageUrl });
+      
+      // Update local state
+      setUserDetails(prev => prev ? { ...prev, photo: imageUrl } : null);
+      setShowPhotoUpload(false);
+      
       toast.success('Profile picture updated successfully!');
     } catch (error) {
-      console.error('Error uploading profile picture:', error);
+      console.error('Error updating profile picture:', error);
       toast.error('Failed to update profile picture');
-    } finally {
-      setUploading(false);
     }
   };
 
-  const handlePhotoClick = () => {
-    fileInputRef.current?.click();
+  const closePhotoModal = () => {
+    setShowPhotoModal(false);
+    setShowPhotoUpload(false);
+    setIsEditingExistingPhoto(false);
   };
 
   const checkUsernameAvailability = async (username: string): Promise<boolean> => {
@@ -226,28 +239,25 @@ function UserProfile() {
             <div className={styles.profileMainSection}>
               <div className={styles.profileLeftSection}>
                 <div className={styles.profileAvatar} onClick={handlePhotoClick} style={{ cursor: 'pointer' }}>
-                  {uploading ? (
-                    <div className={styles.uploadOverlay}>Uploading...</div>
-                  ) : (
-                    <>
-                      <img
-                        className={styles.avatarImage}
-                        src={userDetails.photo || "/default-avatar.png"}
-                        alt="Profile"
-                      />
-                      <div className={styles.avatarOverlay}>
-                        <span>Change Photo</span>
-                      </div>
-                    </>
-                  )}
+                  {userDetails.photo ? (
+                    <img
+                      className={styles.avatarImage}
+                      src={userDetails.photo}
+                      alt="Profile"
+                      onError={(e) => {
+                        // Fallback to initials if image fails to load
+                        e.currentTarget.style.display = 'none';
+                        e.currentTarget.nextElementSibling?.classList.add(styles.showInitials);
+                      }}
+                    />
+                  ) : null}
+                  <div className={`${styles.defaultAvatar} ${!userDetails.photo ? styles.showInitials : ''}`}>
+                    {userDetails.name ? userDetails.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) : 'US'}
+                  </div>
+                  <div className={styles.avatarOverlay}>
+                    <span>Edit Photo</span>
+                  </div>
                 </div>
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  onChange={handleFileSelect}
-                  accept="image/*"
-                  style={{ display: 'none' }}
-                />
               </div>
               <div className={styles.profileRightSection}>
                 {isEditing ? (
@@ -352,6 +362,54 @@ function UserProfile() {
               </div>
             </div>
           </div>
+
+          {/* Photo Options Modal */}
+          {showPhotoModal && (
+            <div className={styles.modalOverlay} onClick={closePhotoModal}>
+              <div className={styles.photoModal} onClick={(e) => e.stopPropagation()}>
+                <div className={styles.modalHeader}>
+                  <h3>Edit Photo</h3>
+                  <button className={styles.closeButton} onClick={closePhotoModal}>
+                    <FaTimes />
+                  </button>
+                </div>
+                <div className={styles.modalContent}>
+                  <button className={styles.photoOption} onClick={handleUploadPhotoClick}>
+                    <FaCamera className={styles.optionIcon} />
+                    <span>Upload Photo</span>
+                  </button>
+                  {userDetails.photo && (
+                    <button className={styles.photoOption} onClick={handleEditPhotoClick}>
+                      <FaCrop className={styles.optionIcon} />
+                      <span>Edit Photo</span>
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Photo Upload/Crop Modal */}
+          {showPhotoUpload && (
+            <div className={styles.modalOverlay} onClick={closePhotoModal}>
+              <div className={styles.uploadModal} onClick={(e) => e.stopPropagation()}>
+                <div className={styles.modalHeader}>
+                  <h3>{isEditingExistingPhoto ? 'Edit Profile Photo' : 'Upload & Crop Photo'}</h3>
+                  <button className={styles.closeButton} onClick={closePhotoModal}>
+                    <FaTimes />
+                  </button>
+                </div>
+                <div className={styles.modalContent}>
+                  <PhotoUpload
+                    currentImageUrl={userDetails.photo}
+                    onImageChange={handlePhotoChange}
+                    type="profile"
+                    startWithCropping={isEditingExistingPhoto}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       ) : (
         <p>Loading...</p>
