@@ -10,19 +10,44 @@ import { format } from 'date-fns';
 import ActivityBox from '@/components/ActivitySection/ActivityBox/ActivityBox';
 
 // Activity type definition
+interface WeeklySchedule {
+  day: string;
+  is_open: boolean;
+  time_slots: Array<{
+    start_time: string;
+    end_time: string;
+    capacity: number;
+    available_capacity: number;
+  }>;
+}
+
 interface Activity {
   id: string;
-  activityName: string;
-  aboutActivity: string;
+  name: string;
+  location: string;
+  city?: string;
+  about_activity: string;
   activity_image: string;
-  activityDateTime: string;
-  activityLocation: string;
-  activityType: string;
-  hostingClub: string;
-  maxParticipants: number;
-  currentParticipants: number;
   organizationId: string;
+  hosting_organization: string;
+  activity_categories: string[];
+  activity_languages?: string;
+  activity_duration?: string;
+  activity_age_limit?: string;
+  price_per_slot: number;
+  weekly_schedule: WeeklySchedule[];
+  closed_dates?: string[];
   createdAt: any;
+  // Legacy field support
+  activityName?: string;
+  activityLocation?: string;
+  aboutActivity?: string;
+  activity_category?: string;
+  activityDateTime?: string;
+  activityType?: string;
+  hostingClub?: string;
+  maxParticipants?: number;
+  currentParticipants?: number;
   time_slots?: Array<{
     date: string;
     start_time: string;
@@ -80,7 +105,7 @@ export default function ActivitiesPage() {
     if (!city || city === 'All Cities') return activities;
     
     return activities.filter(activity => {
-      const location = activity.activityLocation || '';
+      const location = activity.location || activity.activityLocation || '';
       // Check if location contains the city name (case insensitive)
       return location.toLowerCase().includes(city.toLowerCase());
     });
@@ -92,16 +117,39 @@ export default function ActivitiesPage() {
     
     if (activeFilter !== 'all') {
       filtered = filtered.filter(activity => {
-        const activityType = activity.activityType.toLowerCase();
-        // Handle special cases for indoor/outdoor
-        if (activeFilter === 'indoor' && activityType.includes('indoor')) return true;
-        if (activeFilter === 'outdoor' && activityType.includes('outdoor')) return true;
-        // Handle special cases for participation type
-        if (activeFilter === 'solo' && activityType.includes('solo')) return true;
-        if (activeFilter === 'couple' && activityType.includes('couple')) return true;
-        if (activeFilter === 'group' && activityType.includes('group')) return true;
-        // Handle other categories
-        return activityType === activeFilter;
+        // Handle both new format (activity_categories array) and legacy format (activityType/activity_category)
+        const categories = activity.activity_categories || [];
+        const legacyType = activity.activityType || activity.activity_category || '';
+        const activityType = legacyType.toLowerCase();
+        
+        // Check categories array first (new format)
+        const categoryMatch = categories.some(cat => {
+          const catLower = cat.toLowerCase();
+          // Handle special cases for indoor/outdoor
+          if (activeFilter === 'indoor' && catLower.includes('indoor')) return true;
+          if (activeFilter === 'outdoor' && catLower.includes('outdoor')) return true;
+          // Handle special cases for participation type
+          if (activeFilter === 'solo' && catLower.includes('solo')) return true;
+          if (activeFilter === 'couple' && catLower.includes('couple')) return true;
+          if (activeFilter === 'group' && catLower.includes('group')) return true;
+          // Handle other categories
+          return catLower === activeFilter;
+        });
+        
+        // If no category match and we have legacy type, check legacy format
+        if (!categoryMatch && activityType) {
+          // Handle special cases for indoor/outdoor
+          if (activeFilter === 'indoor' && activityType.includes('indoor')) return true;
+          if (activeFilter === 'outdoor' && activityType.includes('outdoor')) return true;
+          // Handle special cases for participation type
+          if (activeFilter === 'solo' && activityType.includes('solo')) return true;
+          if (activeFilter === 'couple' && activityType.includes('couple')) return true;
+          if (activeFilter === 'group' && activityType.includes('group')) return true;
+          // Handle other categories
+          return activityType === activeFilter;
+        }
+        
+        return categoryMatch;
       });
     }
     
