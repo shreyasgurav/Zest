@@ -2,19 +2,6 @@
 
 Modern platform to discover, create, and book events and activities. Built with Next.js 14 App Router, Firebase, and Razorpay. Includes robust authentication, booking flows, ticketing with QR codes, and production-ready API routes.
 
-### Contents
-- **Features**
-- **Tech stack**
-- **Getting started**
-- **Environment variables**
-- **Firebase setup**
-- **Run and build**
-- **Payments (Razorpay)**
-- **API endpoints**
-- **Project structure**
-- **Deployment (Vercel)**
-- **Security checklist**
-- **Troubleshooting**
 
 ## Features
 - **Authentication**: Google sign-in and phone login with unified profile creation and account linking
@@ -190,8 +177,4 @@ Image domains are configured in `next.config.js` for Firebase Storage.
 - Activity capacity not updating
   - Ensure `bookingType='activity'` and `selectedDate`, `selectedTimeSlot`, `tickets` are present
 
-## Contributing
-Pull requests and issues are welcome. Please run `npm run lint` and ensure a clean build before submitting.
 
-## License
-Add your license here.
