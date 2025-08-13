@@ -1,0 +1,173 @@
+/* ===== BASE BADGE STYLES ===== */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.2s ease;
+}
+
+.badgeText {
+  line-height: 1;
+}
+
+/* ===== CLICKABLE BADGES ===== */
+.badge.clickable {
+  cursor: pointer;
+}
+
+.badge.clickable:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.badge.clickable:focus {
+  outline: 2px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 2px;
+}
+
+/* ===== TAG TYPE STYLES ===== */
+
+/* Collaboration Badge */
+.badge.collaboration {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: white;
+  border-color: rgba(245, 158, 11, 0.5);
+  animation: glow 2s infinite alternate;
+}
+
+@keyframes glow {
+  0% {
+    box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);
+  }
+  100% {
+    box-shadow: 0 4px 8px rgba(245, 158, 11, 0.6);
+  }
+}
+
+/* Featured Badge */
+.badge.featured {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  color: white;
+  border-color: rgba(139, 92, 246, 0.5);
+}
+
+/* Sold Out Badge */
+.badge.soldout {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  border-color: rgba(239, 68, 68, 0.5);
+}
+
+/* New Badge */
+.badge.new {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  border-color: rgba(16, 185, 129, 0.5);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Popular Badge */
+.badge.popular {
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  color: white;
+  border-color: rgba(249, 115, 22, 0.5);
+}
+
+/* ===== VARIANT ADJUSTMENTS ===== */
+
+/* Compact variant - smaller badges */
+.badge.compact {
+  padding: 3px 6px;
+  font-size: 9px;
+  border-radius: 10px;
+}
+
+/* Dashboard variant - subtle styling */
+.badge.dashboard {
+  backdrop-filter: none;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  animation: none; /* Remove animations in dashboard */
+}
+
+.badge.dashboard.collaboration {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.badge.dashboard.featured {
+  background: rgba(139, 92, 246, 0.2);
+  color: #a78bfa;
+  border-color: rgba(139, 92, 246, 0.3);
+}
+
+.badge.dashboard.soldout {
+  background: rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.badge.dashboard.new {
+  background: rgba(16, 185, 129, 0.2);
+  color: #6ee7b7;
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.badge.dashboard.popular {
+  background: rgba(249, 115, 22, 0.2);
+  color: #fdba74;
+  border-color: rgba(249, 115, 22, 0.3);
+}
+
+/* Wide variant - slightly larger */
+.badge.wide {
+  padding: 5px 10px;
+  font-size: 11px;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+  .badge {
+    padding: 3px 6px;
+    font-size: 9px;
+  }
+
+  .badge.wide {
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .badge {
+    padding: 2px 5px;
+    font-size: 8px;
+    border-radius: 8px;
+  }
+
+  .badge.wide {
+    padding: 3px 6px;
+    font-size: 9px;
+  }
+} 

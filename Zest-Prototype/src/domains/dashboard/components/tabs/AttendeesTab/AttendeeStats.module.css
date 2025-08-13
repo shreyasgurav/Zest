@@ -1,0 +1,505 @@
+/* ===== ATTENDEE STATS - PRODUCTION READY STYLES ===== */
+
+/* Main Container */
+.statsContainer {
+  margin-bottom: 2rem;
+}
+
+/* Stats Grid */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* Individual Stat Cards */
+.statCard {
+  background: linear-gradient(145deg, rgba(31, 41, 55, 0.8) 0%, rgba(17, 24, 39, 0.8) 100%);
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 1px solid rgba(75, 85, 99, 0.3);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(20px);
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.statCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.02) 0%, rgba(139, 92, 246, 0.02) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.statCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 
+    0 20px 25px -5px rgba(0, 0, 0, 0.15),
+    0 10px 10px -5px rgba(0, 0, 0, 0.1);
+}
+
+.statCard:hover::before {
+  opacity: 1;
+}
+
+/* Color Variants */
+.statCard.blue {
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.statCard.blue:hover {
+  border-color: rgba(59, 130, 246, 0.5);
+  box-shadow: 
+    0 20px 25px -5px rgba(59, 130, 246, 0.1),
+    0 10px 10px -5px rgba(59, 130, 246, 0.05);
+}
+
+.statCard.green {
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.statCard.green:hover {
+  border-color: rgba(16, 185, 129, 0.5);
+  box-shadow: 
+    0 20px 25px -5px rgba(16, 185, 129, 0.1),
+    0 10px 10px -5px rgba(16, 185, 129, 0.05);
+}
+
+.statCard.orange {
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.statCard.orange:hover {
+  border-color: rgba(245, 158, 11, 0.5);
+  box-shadow: 
+    0 20px 25px -5px rgba(245, 158, 11, 0.1),
+    0 10px 10px -5px rgba(245, 158, 11, 0.05);
+}
+
+.statCard.purple {
+  border-color: rgba(139, 92, 246, 0.3);
+}
+
+.statCard.purple:hover {
+  border-color: rgba(139, 92, 246, 0.5);
+  box-shadow: 
+    0 20px 25px -5px rgba(139, 92, 246, 0.1),
+    0 10px 10px -5px rgba(139, 92, 246, 0.05);
+}
+
+/* Stat Header */
+.statHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.statIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.blue .statIcon {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(37, 99, 235, 0.2) 100%);
+  color: #60a5fa;
+  box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.2);
+}
+
+.green .statIcon {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.2) 100%);
+  color: #34d399;
+  box-shadow: 0 4px 14px 0 rgba(16, 185, 129, 0.2);
+}
+
+.orange .statIcon {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(217, 119, 6, 0.2) 100%);
+  color: #fbbf24;
+  box-shadow: 0 4px 14px 0 rgba(245, 158, 11, 0.2);
+}
+
+.purple .statIcon {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(124, 58, 237, 0.2) 100%);
+  color: #a78bfa;
+  box-shadow: 0 4px 14px 0 rgba(139, 92, 246, 0.2);
+}
+
+.percentageBadge {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: white;
+  backdrop-filter: blur(10px);
+}
+
+.blue .percentageBadge {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
+.green .percentageBadge {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+.orange .percentageBadge {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+}
+
+/* Stat Content */
+.statContent {
+  margin-bottom: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.statValue {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #f9fafb;
+  margin-bottom: 0.5rem;
+  line-height: 1;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.statTitle {
+  font-size: 1rem;
+  color: #d1d5db;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.375rem;
+}
+
+.statDescription {
+  font-size: 0.875rem;
+  color: #9ca3af;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* Progress Bar */
+.progressBar {
+  width: 100%;
+  height: 6px;
+  background: rgba(55, 65, 81, 0.5);
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+  margin-top: 1rem;
+}
+
+.progressFill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.progressFill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Overall Progress Section */
+.overallProgress {
+  background: linear-gradient(145deg, rgba(31, 41, 55, 0.6) 0%, rgba(17, 24, 39, 0.6) 100%);
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 1px solid rgba(75, 85, 99, 0.3);
+  backdrop-filter: blur(20px);
+}
+
+.progressHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.progressTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #f3f4f6;
+}
+
+.progressValue {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #60a5fa;
+  background: rgba(59, 130, 246, 0.1);
+  padding: 0.375rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.overallProgressBar {
+  width: 100%;
+  height: 12px;
+  background: rgba(55, 65, 81, 0.5);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+  position: relative;
+}
+
+.overallProgressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6 0%, #1d4ed8 50%, #1e40af 100%);
+  border-radius: 6px;
+  transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
+}
+
+.overallProgressFill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+  animation: progressShimmer 3s infinite;
+}
+
+@keyframes progressShimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.progressLabels {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem;
+  color: #9ca3af;
+  font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .statsGrid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .statCard {
+    padding: 1.25rem;
+  }
+
+  .statValue {
+    font-size: 2.25rem;
+  }
+
+  .statIcon {
+    width: 44px;
+    height: 44px;
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 768px) {
+  .statsGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .statCard {
+    padding: 1rem;
+  }
+
+  .statValue {
+    font-size: 2rem;
+  }
+
+  .statTitle {
+    font-size: 0.9rem;
+  }
+
+  .statDescription {
+    font-size: 0.8rem;
+  }
+
+  .progressHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .progressValue {
+    align-self: flex-end;
+  }
+
+  .progressLabels {
+    flex-direction: column;
+    gap: 0.25rem;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .statCard {
+    padding: 0.875rem;
+  }
+
+  .statHeader {
+    margin-bottom: 0.75rem;
+  }
+
+  .statIcon {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+
+  .statValue {
+    font-size: 1.75rem;
+  }
+
+  .percentageBadge {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.7rem;
+  }
+
+  .overallProgress {
+    padding: 1rem;
+  }
+
+  .progressTitle {
+    font-size: 1rem;
+  }
+
+  .overallProgressBar {
+    height: 10px;
+  }
+}
+
+/* Animation Delays for Staggered Entry */
+.statCard:nth-child(1) {
+  animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.1s both;
+}
+
+.statCard:nth-child(2) {
+  animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both;
+}
+
+.statCard:nth-child(3) {
+  animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.3s both;
+}
+
+.statCard:nth-child(4) {
+  animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.4s both;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .statCard {
+    background: #000;
+    border: 2px solid #fff;
+  }
+
+  .statValue,
+  .statTitle {
+    color: #fff;
+    text-shadow: none;
+  }
+
+  .progressBar,
+  .overallProgressBar {
+    background: #333;
+    border: 1px solid #fff;
+  }
+
+  .progressFill,
+  .overallProgressFill {
+    background: #fff;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .statCard {
+    animation: none;
+    transition: none;
+  }
+
+  .progressFill,
+  .overallProgressFill {
+    transition: none;
+  }
+
+  .progressFill::after,
+  .overallProgressFill::after {
+    animation: none;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .statsContainer {
+    background: white;
+    color: black;
+  }
+
+  .statCard {
+    background: white;
+    border: 1px solid #ccc;
+    break-inside: avoid;
+  }
+
+  .statValue,
+  .statTitle {
+    color: black;
+  }
+
+  .progressFill::after,
+  .overallProgressFill::after {
+    display: none;
+  }
+} 

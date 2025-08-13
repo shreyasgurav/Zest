@@ -1,0 +1,836 @@
+/* ===========================
+   SKELETON LOADING STYLES
+   =========================== */
+
+/* Skeleton Animation */
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.animatePulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Banner Skeleton */
+.skeletonBannerImage {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+  background-size: 200% 100%;
+  border-radius: 0;
+}
+
+/* Profile Image Skeleton */
+.skeletonProfileImageContainer {
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.skeletonProfileImage {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #374151 0%, #4b5563 50%, #374151 100%);
+  animation: shimmer 2s infinite linear;
+  background-size: 1000px 100%;
+}
+
+/* Artist Name Skeleton */
+.skeletonArtistName {
+  height: 96px;
+  width: 400px;
+  background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+  background-size: 200% 100%;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+/* Username Skeleton */
+.skeletonUsername {
+  height: 20px;
+  width: 150px;
+  background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+  background-size: 200% 100%;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+/* Genre Skeleton */
+.skeletonGenre {
+  height: 18px;
+  width: 100px;
+  background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+  background-size: 200% 100%;
+  border-radius: 16px;
+}
+
+/* Bio Skeleton Lines */
+.skeletonBioLine {
+  height: 16px;
+  width: 100%;
+  background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+  background-size: 200% 100%;
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+
+.skeletonBioLine.w75 {
+  width: 75%;
+}
+
+.skeletonBioLine.w50 {
+  width: 50%;
+}
+
+/* Events Section Skeleton */
+.skeletonEventsHeading {
+  height: 32px;
+  width: 200px;
+  background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+  background-size: 200% 100%;
+  border-radius: 6px;
+  margin-bottom: 24px;
+}
+
+/* Event Card Skeleton */
+.skeletonEventCard {
+  height: 300px;
+  background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+  background-size: 200% 100%;
+  border-radius: 12px;
+  padding: 0;
+  border: none;
+}
+
+/* Responsive Skeleton Adjustments */
+@media (min-width: 2560px) {
+  .skeletonProfileImageContainer {
+    left: 120px;
+  }
+}
+
+@media (max-width: 2559px) and (min-width: 1921px) {
+  .skeletonProfileImageContainer {
+    left: 100px;
+  }
+}
+
+@media (max-width: 1920px) and (min-width: 1441px) {
+  .skeletonProfileImageContainer {
+    left: 80px;
+  }
+}
+
+@media (max-width: 1440px) and (min-width: 1024px) {
+  .skeletonArtistName {
+    height: 80px;
+    width: 350px;
+  }
+  
+  .skeletonProfileImageContainer {
+    left: 60px;
+    width: 120px;
+    height: 120px;
+  }
+}
+
+@media (max-width: 1023px) and (min-width: 768px) {
+  .skeletonArtistName {
+    height: 48px;
+    width: 300px;
+  }
+  
+  .skeletonUsername {
+    width: 120px;
+  }
+  
+  .skeletonGenre {
+    width: 80px;
+  }
+}
+
+@media (max-width: 767px) and (min-width: 480px) {
+  .skeletonArtistName {
+    height: 32px;
+    width: 250px;
+  }
+  
+  .skeletonUsername {
+    width: 100px;
+    height: 16px;
+  }
+  
+  .skeletonGenre {
+    width: 70px;
+    height: 14px;
+  }
+  
+  .skeletonEventsHeading {
+    width: 150px;
+    height: 28px;
+  }
+}
+
+@media (max-width: 479px) {
+  .skeletonArtistName {
+    height: 28px;
+    width: 200px;
+  }
+  
+  .skeletonUsername {
+    width: 80px;
+    height: 14px;
+  }
+  
+  .skeletonGenre {
+    width: 60px;
+    height: 12px;
+  }
+  
+  .skeletonEventsHeading {
+    width: 120px;
+    height: 24px;
+  }
+  
+  .skeletonEventCard {
+    height: 250px;
+  }
+}
+
+/* Error States */
+.errorContainer {
+  text-align: center;
+  padding: 60px 20px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.errorContainer h2 {
+  color: #333;
+  margin-bottom: 15px;
+  font-size: 28px;
+}
+
+.errorContainer p {
+  color: #666;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* Main Container */
+.artistProfileContainer {
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #1e293b, #000000);
+  color: white;
+  overflow-x: hidden;
+}
+
+/* Spotify-Style Banner */
+.artistBannerSection {
+  position: relative;
+  height: 320px;
+  overflow: hidden;
+}
+
+.artistBanner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.bannerImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.defaultBanner {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #9333ea 0%, #3b82f6 50%, #4f46e5 100%);
+}
+
+.bannerOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.artistProfileImageContainer {
+  position: relative;
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+  flex-shrink: 0;
+}
+
+.artistProfileImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.noPhoto {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 32px;
+  font-weight: 700;
+}
+
+/* Artist Info Section (In Banner) */
+.artistDetailsSection {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 32px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+}
+
+.artistHeader {
+  display: flex;
+  align-items: flex-end;
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.artistInfo {
+  flex: 1;
+  padding-bottom: 8px;
+}
+
+/* Large Artist Name (Spotify Style) */
+.artistName h1 {
+  font-size: 96px;
+  font-weight: 900;
+  line-height: 0.9;
+  margin: 0 0 16px 0;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.8) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Ultra-Wide Screens (2560px+) */
+@media (min-width: 2560px) {
+  .artistProfileImageContainer {
+    width: 140px;
+    height: 140px;
+  }
+}
+
+/* Large Desktop (1921px - 2559px) */
+@media (max-width: 2559px) and (min-width: 1921px) {
+  .artistProfileImageContainer {
+    width: 136px;
+    height: 136px;
+  }
+}
+
+/* Standard Desktop (1441px - 1920px) */
+@media (max-width: 1920px) and (min-width: 1441px) {
+  .artistProfileImageContainer {
+    width: 128px;
+    height: 128px;
+  }
+}
+
+/* Laptop/Medium Desktop Responsive Adjustments */
+@media (max-width: 1440px) and (min-width: 1024px) {
+  .artistProfileImageContainer {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .artistName h1 {
+    font-size: 80px;
+  }
+}
+
+.artistMeta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.artistUsername {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.artistGenre {
+  background: rgba(139, 92, 246, 0.2);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 16px;
+  padding: 4px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #a78bfa;
+}
+
+/* Content Section */
+.contentSection {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 32px;
+}
+
+/* Tabs */
+.tabsContainer {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 32px;
+}
+
+.tabButton {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 16px 0;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.tabButton:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.activeTab {
+  color: white;
+}
+
+.activeTab::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: white;
+}
+
+/* Events Grid */
+.eventsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.emptyMessage {
+  text-align: center;
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.6);
+  padding: 60px 20px;
+}
+
+/* Responsive Styles */
+@media (max-width: 1440px) {
+  .contentSection {
+    padding: 32px 24px;
+  }
+
+  .tabsContainer {
+    gap: 32px;
+  }
+}
+
+@media (max-width: 768px) {
+  .contentSection {
+    padding: 24px 16px;
+  }
+
+  .tabsContainer {
+    gap: 24px;
+  }
+
+  .tabButton {
+    font-size: 13px;
+  }
+
+  .eventsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 20px;
+  }
+
+  .emptyMessage {
+    font-size: 16px;
+    padding: 40px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .contentSection {
+    padding: 20px 12px;
+  }
+
+  .tabsContainer {
+    gap: 16px;
+  }
+
+  .tabButton {
+    font-size: 12px;
+  }
+
+  .eventsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+  }
+
+  .emptyMessage {
+    font-size: 15px;
+    padding: 32px 12px;
+  }
+}
+
+@media (max-width: 360px) {
+  .contentSection {
+    padding: 16px 8px;
+  }
+
+  .tabsContainer {
+    gap: 12px;
+  }
+
+  .tabButton {
+    font-size: 11px;
+    padding: 12px 0;
+  }
+}
+
+/* Skeleton Loading Styles */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.skeletonContainer {
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #1e293b, #000000);
+  color: white;
+  overflow-x: hidden;
+}
+
+.skeletonBanner {
+  position: relative;
+  height: 320px;
+  width: 100%;
+  background: linear-gradient(90deg, #374151 0%, #4b5563 50%, #374151 100%);
+  animation: shimmer 2s infinite linear;
+  background-size: 1000px 100%;
+}
+
+.skeletonProfileSection {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 32px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+  display: flex;
+  align-items: flex-end;
+  gap: 24px;
+}
+
+.skeletonProfileImage {
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #374151 0%, #4b5563 50%, #374151 100%);
+  animation: shimmer 2s infinite linear;
+  background-size: 1000px 100%;
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+  flex-shrink: 0;
+}
+
+.skeletonInfo {
+  flex: 1;
+  padding-bottom: 8px;
+}
+
+.skeletonName {
+  height: 96px;
+  width: 400px;
+  background: linear-gradient(90deg, #374151 0%, #4b5563 50%, #374151 100%);
+  animation: shimmer 2s infinite linear;
+  background-size: 1000px 100%;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.skeletonMeta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.skeletonUsername {
+  height: 20px;
+  width: 150px;
+  background: linear-gradient(90deg, #374151 0%, #4b5563 50%, #374151 100%);
+  animation: shimmer 2s infinite linear;
+  background-size: 1000px 100%;
+  border-radius: 4px;
+}
+
+.skeletonGenre {
+  height: 24px;
+  width: 100px;
+  background: linear-gradient(90deg, #374151 0%, #4b5563 50%, #374151 100%);
+  animation: shimmer 2s infinite linear;
+  background-size: 1000px 100%;
+  border-radius: 16px;
+}
+
+.skeletonContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 32px;
+}
+
+.skeletonBio {
+  margin-bottom: 32px;
+}
+
+.skeletonBioLine {
+  height: 16px;
+  background: linear-gradient(90deg, #374151 0%, #4b5563 50%, #374151 100%);
+  animation: shimmer 2s infinite linear;
+  background-size: 1000px 100%;
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+
+.skeletonBioLine:nth-child(1) { width: 100%; }
+.skeletonBioLine:nth-child(2) { width: 85%; }
+.skeletonBioLine:nth-child(3) { width: 70%; }
+
+.skeletonEvents {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 32px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.skeletonEventsHeading {
+  height: 32px;
+  width: 200px;
+  background: linear-gradient(90deg, #374151 0%, #4b5563 50%, #374151 100%);
+  animation: shimmer 2s infinite linear;
+  background-size: 1000px 100%;
+  border-radius: 6px;
+  margin-bottom: 24px;
+}
+
+.skeletonEventsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 280px);
+  gap: 24px;
+  justify-content: center;
+}
+
+.skeletonEventCard {
+  height: 300px;
+  background: linear-gradient(90deg, #374151 0%, #4b5563 50%, #374151 100%);
+  animation: shimmer 2s infinite linear;
+  background-size: 1000px 100%;
+  border-radius: 12px;
+}
+
+/* Responsive Styles */
+@media (max-width: 1440px) {
+  .skeletonName {
+    height: 80px;
+    width: 350px;
+  }
+  
+  .skeletonProfileImage {
+    width: 120px;
+    height: 120px;
+  }
+}
+
+@media (max-width: 768px) {
+  .skeletonBanner {
+    height: 280px;
+  }
+  
+  .skeletonProfileSection {
+    padding: 24px 16px;
+  }
+  
+  .skeletonProfileImage {
+    width: 96px;
+    height: 96px;
+  }
+  
+  .skeletonName {
+    height: 48px;
+    width: 300px;
+  }
+  
+  .skeletonUsername {
+    width: 120px;
+  }
+  
+  .skeletonGenre {
+    width: 80px;
+    height: 24px;
+  }
+  
+  .skeletonContent {
+    padding: 30px 16px;
+  }
+  
+  .skeletonEvents {
+    padding: 30px 16px;
+  }
+  
+  .skeletonEventsGrid {
+    grid-template-columns: repeat(auto-fit, 240px);
+    gap: 20px;
+  }
+  
+  .skeletonEventCard {
+    height: 280px;
+  }
+}
+
+@media (max-width: 480px) {
+  .skeletonBanner {
+    height: 240px;
+  }
+  
+  .skeletonProfileSection {
+    padding: 20px 12px;
+  }
+  
+  .skeletonProfileImage {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .skeletonName {
+    height: 36px;
+    width: 200px;
+  }
+  
+  .skeletonUsername {
+    width: 100px;
+    height: 16px;
+  }
+  
+  .skeletonGenre {
+    width: 70px;
+    height: 20px;
+  }
+  
+  .skeletonContent {
+    padding: 20px 12px;
+  }
+  
+  .skeletonBioLine {
+    height: 14px;
+    margin-bottom: 10px;
+  }
+  
+  .skeletonEvents {
+    padding: 20px 12px;
+  }
+  
+  .skeletonEventsHeading {
+    height: 28px;
+    width: 150px;
+    margin-bottom: 20px;
+  }
+  
+  .skeletonEventsGrid {
+    grid-template-columns: repeat(auto-fit, 200px);
+    gap: 16px;
+  }
+  
+  .skeletonEventCard {
+    height: 250px;
+  }
+}
+
+@media (max-width: 360px) {
+  .skeletonBanner {
+    height: 220px;
+  }
+  
+  .skeletonProfileImage {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .skeletonName {
+    height: 28px;
+    width: 180px;
+  }
+  
+  .skeletonUsername {
+    width: 80px;
+    height: 14px;
+  }
+  
+  .skeletonGenre {
+    width: 60px;
+    height: 18px;
+  }
+  
+  .skeletonContent,
+  .skeletonEvents {
+    padding: 16px 8px;
+  }
+  
+  .skeletonEventsGrid {
+    grid-template-columns: repeat(auto-fit, 180px);
+  }
+  
+  .skeletonEventCard {
+    height: 220px;
+  }
+} 

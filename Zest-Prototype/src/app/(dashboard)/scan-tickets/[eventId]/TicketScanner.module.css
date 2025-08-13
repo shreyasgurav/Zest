@@ -1,0 +1,574 @@
+.scannerPage {
+  min-height: 100vh;
+  background: #0f0f0f;
+  color: #ffffff;
+  padding: 1rem;
+}
+
+/* Header */
+.scannerHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.eventInfo h1 {
+  color: #ffffff;
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+}
+
+.eventInfo p {
+  color: #888888;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.historyButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #333333;
+  color: #ffffff;
+  border: 1px solid #444444;
+  padding: 0.8rem 1.2rem;
+  border-radius: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.historyButton:hover {
+  background: #444444;
+  border-color: #555555;
+}
+
+/* Content Layout */
+.scannerContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 2rem;
+}
+
+/* Scanner Section */
+.scannerSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.cameraContainer {
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 16px;
+  padding: 2rem;
+  text-align: center;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Camera Placeholder */
+.cameraPlaceholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.cameraIcon {
+  font-size: 4rem;
+  color: #666666;
+  margin-bottom: 1rem;
+}
+
+.cameraPlaceholder h3 {
+  color: #ffffff;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.cameraPlaceholder p {
+  color: #888888;
+  font-size: 1rem;
+  margin: 0 0 1.5rem;
+}
+
+.startCameraButton {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #ffffff;
+  color: #000000;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.startCameraButton:hover {
+  background: #f0f0f0;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
+}
+
+/* Camera View */
+.cameraView {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+}
+
+.videoElement {
+  width: 100%;
+  border-radius: 12px;
+  background: #000000;
+}
+
+.scanOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.scanFrame {
+  width: 200px;
+  height: 200px;
+  border: 3px solid #ffffff;
+  border-radius: 12px;
+  border-style: dashed;
+  animation: pulse 2s infinite;
+}
+
+.scanOverlay p {
+  color: #ffffff;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  margin-top: 1rem;
+  font-weight: 500;
+}
+
+.stopCameraButton {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(239, 68, 68, 0.9);
+  color: #ffffff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.stopCameraButton:hover {
+  background: rgba(239, 68, 68, 1);
+}
+
+/* Manual Entry */
+.manualEntry {
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 16px;
+  padding: 1.5rem;
+}
+
+.manualEntry h4 {
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0 0 1rem;
+}
+
+.manualInputGroup {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.manualInput {
+  flex: 1;
+  background: #333333;
+  border: 1px solid #444444;
+  border-radius: 8px;
+  padding: 0.8rem 1rem;
+  color: #ffffff;
+  font-size: 1rem;
+}
+
+.manualInput:focus {
+  outline: none;
+  border-color: #666666;
+  background: #3a3a3a;
+}
+
+.manualInput::placeholder {
+  color: #888888;
+}
+
+.manualSubmitButton {
+  background: #ffffff;
+  color: #000000;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.manualSubmitButton:hover:not(:disabled) {
+  background: #f0f0f0;
+  transform: translateY(-1px);
+}
+
+.manualSubmitButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Scan Results */
+.scanResult {
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 16px;
+  padding: 1.5rem;
+  animation: slideIn 0.3s ease;
+}
+
+.successResult {
+  border-color: #10B981;
+  background: rgba(16, 185, 129, 0.1);
+}
+
+.warningResult {
+  border-color: #F59E0B;
+  background: rgba(245, 158, 11, 0.1);
+}
+
+.errorResult {
+  border-color: #EF4444;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.resultHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.resultHeader h4 {
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.successIcon {
+  color: #10B981;
+  font-size: 1.2rem;
+}
+
+.warningIcon {
+  color: #F59E0B;
+  font-size: 1.2rem;
+}
+
+.errorIcon {
+  color: #EF4444;
+  font-size: 1.2rem;
+}
+
+.ticketDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ticketInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #cccccc;
+  font-size: 0.9rem;
+}
+
+.ticketInfo svg {
+  color: #666666;
+  font-size: 0.8rem;
+}
+
+.usedInfo {
+  color: #F59E0B;
+  font-size: 0.9rem;
+  margin: 0.5rem 0 0;
+  font-style: italic;
+}
+
+/* History Section */
+.historySection {
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 16px;
+  padding: 1.5rem;
+  height: fit-content;
+}
+
+.historyHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  color: #ffffff;
+}
+
+.historyHeader h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0;
+  flex: 1;
+}
+
+.entryCount {
+  background: #333333;
+  color: #cccccc;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.historyList {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.historyItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.historyItem:last-child {
+  border-bottom: none;
+}
+
+.entryInfo {
+  flex: 1;
+}
+
+.attendeeName {
+  color: #ffffff;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.ticketNumber {
+  color: #888888;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+}
+
+.entryTime {
+  color: #cccccc;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.noEntries {
+  text-align: center;
+  padding: 2rem;
+  color: #666666;
+}
+
+/* Loading State */
+.loadingState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  color: #ffffff;
+  text-align: center;
+}
+
+.loadingSpinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #333333;
+  border-left-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+.loadingState p {
+  font-size: 1.2rem;
+  color: #888888;
+}
+
+/* Unauthorized State */
+.unauthorizedState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: center;
+  color: #ffffff;
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 20px;
+  padding: 3rem;
+  margin: 2rem auto;
+  max-width: 500px;
+}
+
+.unauthorizedIcon {
+  font-size: 4rem;
+  color: #EF4444;
+  margin-bottom: 1.5rem;
+}
+
+.unauthorizedState h2 {
+  color: #ffffff;
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin: 0 0 1rem;
+}
+
+.unauthorizedState p {
+  color: #888888;
+  font-size: 1.1rem;
+  margin: 0 0 2rem;
+  line-height: 1.5;
+}
+
+.backButton {
+  background: #333333;
+  color: #ffffff;
+  border: 1px solid #444444;
+  padding: 0.8rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.backButton:hover {
+  background: #444444;
+  border-color: #555555;
+  transform: translateY(-2px);
+}
+
+/* Animations */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes slideIn {
+  from { 
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .scannerPage {
+    padding: 0.5rem;
+  }
+
+  .scannerHeader {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+    padding: 1rem;
+  }
+
+  .scannerHeader h1 {
+    font-size: 1.5rem;
+  }
+
+  .scannerContent {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .cameraContainer {
+    padding: 1.5rem;
+    min-height: 300px;
+  }
+
+  .scanFrame {
+    width: 150px;
+    height: 150px;
+  }
+
+  .manualInputGroup {
+    flex-direction: column;
+  }
+
+  .historySection {
+    order: -1; /* Show history above scanner on mobile */
+  }
+}
+
+@media (max-width: 480px) {
+  .scannerHeader {
+    padding: 0.75rem;
+  }
+
+  .scannerHeader h1 {
+    font-size: 1.3rem;
+  }
+
+  .cameraContainer {
+    padding: 1rem;
+  }
+
+  .cameraIcon {
+    font-size: 3rem;
+  }
+
+  .startCameraButton {
+    padding: 0.8rem 1.5rem;
+    font-size: 0.9rem;
+  }
+} 

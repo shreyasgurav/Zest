@@ -1,0 +1,282 @@
+/* 📭 EMPTY STATE STYLES */
+
+.emptyState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  padding: 40px 20px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+}
+
+.emptyStateContent {
+  text-align: center;
+  max-width: 400px;
+}
+
+.emptyStateIcon {
+  font-size: 48px;
+  color: rgba(255, 255, 255, 0.4);
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.emptyStateTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0 0 12px 0;
+}
+
+.emptyStateDescription {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.5;
+  margin: 0 0 24px 0;
+}
+
+.emptyStateAction {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.emptyStateAction.primary {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+}
+
+.emptyStateAction.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+}
+
+.emptyStateAction.secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.emptyStateAction.secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  transform: translateY(-1px);
+}
+
+/* Type-specific styling */
+.emptyState.attendees .emptyStateIcon {
+  color: #22c55e;
+}
+
+.emptyState.tickets .emptyStateIcon {
+  color: #f59e0b;
+}
+
+.emptyState.sessions .emptyStateIcon {
+  color: #8b5cf6;
+}
+
+.emptyState.search .emptyStateIcon {
+  color: #6b7280;
+}
+
+.emptyState.error .emptyStateIcon {
+  color: #ef4444;
+}
+
+.emptyState.loading .emptyStateIcon {
+  color: #3b82f6;
+}
+
+/* Spinner for loading state */
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(59, 130, 246, 0.3);
+  border-top: 3px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Table Skeleton Styles */
+.tableSkeleton {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.skeletonRow {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  align-items: center;
+}
+
+.skeletonRow:last-child {
+  margin-bottom: 0;
+}
+
+.skeletonCell {
+  height: 20px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 25%,
+    rgba(255, 255, 255, 0.1) 37%,
+    rgba(255, 255, 255, 0.05) 63%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+  border-radius: 4px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+/* Stats Skeleton Styles */
+.statsSkeleton {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.skeletonStat {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.skeletonStatIcon {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 25%,
+    rgba(255, 255, 255, 0.1) 37%,
+    rgba(255, 255, 255, 0.05) 63%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+  border-radius: 8px;
+}
+
+.skeletonStatContent {
+  flex: 1;
+}
+
+.skeletonStatValue {
+  height: 24px;
+  width: 60px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 25%,
+    rgba(255, 255, 255, 0.1) 37%,
+    rgba(255, 255, 255, 0.05) 63%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.skeletonStatLabel {
+  height: 16px;
+  width: 80px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 25%,
+    rgba(255, 255, 255, 0.1) 37%,
+    rgba(255, 255, 255, 0.05) 63%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+  border-radius: 4px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .emptyState {
+    min-height: 250px;
+    padding: 30px 15px;
+  }
+
+  .emptyStateIcon {
+    font-size: 36px;
+    margin-bottom: 20px;
+  }
+
+  .emptyStateTitle {
+    font-size: 1.25rem;
+  }
+
+  .emptyStateDescription {
+    font-size: 0.9rem;
+  }
+
+  .statsSkeleton {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .skeletonStat {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .statsSkeleton {
+    grid-template-columns: 1fr;
+  }
+
+  .emptyStateAction {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  .emptyState {
+    border: 2px solid white;
+  }
+
+  .emptyStateIcon {
+    color: white;
+  }
+
+  .emptyStateTitle {
+    color: white;
+  }
+
+  .emptyStateDescription {
+    color: #ccc;
+  }
+} 

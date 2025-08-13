@@ -1,0 +1,317 @@
+/* 📊 PAGINATION CONTROLS STYLES */
+
+.paginationControls {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  background: rgba(30, 30, 30, 0.6);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+/* Performance Warning */
+.performanceWarning {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 8px;
+  color: #fbbf24;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Page Size Section */
+.pageSizeSection {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.pageSizeSelect {
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.pageSizeSelect:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.pageSizeSelect:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.pageSizeSelect:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Main Pagination Navigation */
+.paginationNav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pageButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.pageButton:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: white;
+  transform: translateY(-1px);
+}
+
+.pageButton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.firstLastButton {
+  color: rgba(59, 130, 246, 0.8);
+}
+
+.firstLastButton:hover:not(:disabled) {
+  color: #3b82f6;
+  border-color: rgba(59, 130, 246, 0.5);
+}
+
+.prevNextButton {
+  color: rgba(16, 185, 129, 0.8);
+}
+
+.prevNextButton:hover:not(:disabled) {
+  color: #10b981;
+  border-color: rgba(16, 185, 129, 0.5);
+}
+
+/* Page Numbers */
+.pageNumbers {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pageNumber {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.pageNumber:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  transform: translateY(-1px);
+}
+
+.currentPage {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  border-color: #3b82f6;
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.currentPage:hover {
+  transform: none;
+}
+
+.pageDots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: bold;
+}
+
+/* Page Info */
+.pageInfo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.totalCount {
+  color: rgba(16, 185, 129, 0.8);
+  font-weight: 500;
+}
+
+/* Performance Metrics */
+.performanceMetrics {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.metric {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.metricWarning {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #fbbf24;
+  animation: pulse 2s infinite;
+}
+
+/* Loading Indicator */
+.loadingIndicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-top: 2px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .paginationControls {
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .paginationNav {
+    gap: 4px;
+  }
+
+  .pageButton,
+  .pageNumber {
+    width: 36px;
+    height: 36px;
+    font-size: 13px;
+  }
+
+  .performanceMetrics {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .pageInfo {
+    text-align: center;
+    flex-direction: column;
+    gap: 4px;
+  }
+}
+
+@media (max-width: 480px) {
+  .paginationNav {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .pageNumbers {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    margin-top: 8px;
+  }
+
+  .firstLastButton {
+    display: none; /* Hide first/last buttons on very small screens */
+  }
+}
+
+/* Animations */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* Focus States for Accessibility */
+.pageButton:focus,
+.pageNumber:focus,
+.pageSizeSelect:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  .paginationControls {
+    border: 2px solid white;
+  }
+
+  .pageButton,
+  .pageNumber {
+    border: 2px solid white;
+  }
+
+  .currentPage {
+    background: white;
+    color: black;
+  }
+} 

@@ -1,0 +1,52 @@
+{
+  "name": "zest-v3",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "security-test": "node scripts/test-security.js",
+    "security-audit": "npm run security-test --report-only"
+  },
+  "dependencies": {
+    "@radix-ui/react-slot": "^1.2.3",
+    "@vercel/analytics": "^1.5.0",
+    "autoprefixer": "^10.4.21",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
+    "embla-carousel-react": "^8.6.0",
+    "firebase": "^11.8.1",
+    "firebase-admin": "^13.4.0",
+    "lucide-react": "^0.515.0",
+    "next": "14.1.0",
+    "postcss": "^8.5.4",
+    "qrcode.react": "^4.2.0",
+    "razorpay": "^2.9.6",
+    "react": "18.2.0",
+    "react-calendar": "^6.0.0",
+    "react-dom": "18.2.0",
+    "react-error-boundary": "^6.0.0",
+    "react-helmet-async": "^2.0.5",
+    "react-hot-toast": "^2.5.2",
+    "react-icons": "^5.5.0",
+    "react-phone-number-input": "^3.4.12",
+    "react-places-autocomplete": "^7.3.0",
+    "react-toastify": "^11.0.5",
+    "swiper": "^11.2.8",
+    "tailwind-merge": "^3.3.1"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.3.3",
+    "tailwindcss": "^4.1.8",
+    "typescript": "^5"
+  }
+}

@@ -1,0 +1,564 @@
+/* ===== ATTENDEES LIST - PRODUCTION READY STYLES ===== */
+
+/* Main Container */
+.tableContainer {
+  background: rgba(31, 41, 55, 0.4);
+  border-radius: 16px;
+  border: 1px solid rgba(75, 85, 99, 0.3);
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.tableWrapper {
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(75, 85, 99, 0.5) transparent;
+}
+
+.tableWrapper::-webkit-scrollbar {
+  height: 8px;
+}
+
+.tableWrapper::-webkit-scrollbar-track {
+  background: rgba(31, 41, 55, 0.3);
+}
+
+.tableWrapper::-webkit-scrollbar-thumb {
+  background: rgba(75, 85, 99, 0.5);
+  border-radius: 4px;
+}
+
+.tableWrapper::-webkit-scrollbar-thumb:hover {
+  background: rgba(75, 85, 99, 0.7);
+}
+
+/* Table Styles */
+.attendeesTable {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px;
+}
+
+.tableHead {
+  background: linear-gradient(145deg, rgba(17, 24, 39, 0.8) 0%, rgba(31, 41, 55, 0.8) 100%);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  backdrop-filter: blur(10px);
+}
+
+.tableHeader,
+.sortableHeader {
+  padding: 1rem 0.75rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: #d1d5db;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid rgba(75, 85, 99, 0.3);
+  white-space: nowrap;
+}
+
+.sortableHeader {
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.sortableHeader:hover {
+  background: rgba(55, 65, 81, 0.3);
+  color: #f3f4f6;
+}
+
+.sortableHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.sortableHeader svg {
+  color: #9ca3af;
+  font-size: 0.75rem;
+  transition: color 0.2s ease;
+}
+
+.sortableHeader:hover svg {
+  color: #3b82f6;
+}
+
+/* Table Body */
+.tableBody {
+  background: transparent;
+}
+
+.tableRow {
+  transition: all 0.3s ease;
+  border-bottom: 1px solid rgba(75, 85, 99, 0.2);
+}
+
+.tableRow:hover {
+  background: rgba(55, 65, 81, 0.3);
+  transform: scale(1.001);
+}
+
+.tableRow:last-child {
+  border-bottom: none;
+}
+
+.checkedInRow {
+  background: rgba(16, 185, 129, 0.05);
+  border-left: 3px solid #10b981;
+}
+
+.checkedInRow:hover {
+  background: rgba(16, 185, 129, 0.1);
+}
+
+.pendingRow {
+  background: rgba(245, 158, 11, 0.03);
+  border-left: 3px solid #f59e0b;
+}
+
+.pendingRow:hover {
+  background: rgba(245, 158, 11, 0.08);
+}
+
+/* Table Cells */
+.nameCell,
+.emailCell,
+.phoneCell,
+.ticketTypeCell,
+.amountCell,
+.statusCell,
+.dateCell,
+.checkInTimeCell {
+  padding: 1rem 0.75rem;
+  font-size: 0.875rem;
+  color: #f3f4f6;
+  vertical-align: middle;
+}
+
+.nameContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.attendeeName {
+  color: #f9fafb;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.groupIndicator {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  font-weight: 500;
+  background: rgba(55, 65, 81, 0.5);
+  padding: 0.125rem 0.375rem;
+  border-radius: 4px;
+  align-self: flex-start;
+}
+
+.emailCell {
+  max-width: 200px;
+}
+
+.emailCell span {
+  color: #93c5fd;
+  text-decoration: none;
+}
+
+.emailCell span:hover {
+  text-decoration: underline;
+}
+
+.phoneCell {
+  font-family: 'Monaco', 'Consolas', monospace;
+  color: #d1d5db;
+}
+
+.ticketTypeTag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.375rem 0.75rem;
+  background: rgba(59, 130, 246, 0.1);
+  color: #93c5fd;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  white-space: nowrap;
+}
+
+.amount {
+  font-weight: 700;
+  color: #34d399;
+  font-size: 0.9rem;
+}
+
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.statusBadge.checkedIn {
+  background: rgba(16, 185, 129, 0.1);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.statusBadge.pending {
+  background: rgba(245, 158, 11, 0.1);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.statusBadge svg {
+  font-size: 0.75rem;
+}
+
+.date,
+.checkInTime {
+  color: #d1d5db;
+  font-size: 0.85rem;
+}
+
+.noCheckIn {
+  color: #6b7280;
+  font-style: italic;
+}
+
+/* Mobile View */
+.mobileView {
+  display: none;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.attendeeCard {
+  background: linear-gradient(145deg, rgba(31, 41, 55, 0.6) 0%, rgba(17, 24, 39, 0.6) 100%);
+  border-radius: 12px;
+  padding: 1rem;
+  border: 1px solid rgba(75, 85, 99, 0.3);
+  transition: all 0.3s ease;
+}
+
+.attendeeCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.checkedInCard {
+  border-left: 4px solid #10b981;
+  background: linear-gradient(145deg, rgba(16, 185, 129, 0.05) 0%, rgba(31, 41, 55, 0.6) 100%);
+}
+
+.pendingCard {
+  border-left: 4px solid #f59e0b;
+  background: linear-gradient(145deg, rgba(245, 158, 11, 0.05) 0%, rgba(31, 41, 55, 0.6) 100%);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.cardName {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.cardName strong {
+  color: #f9fafb;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.cardStatus {
+  flex-shrink: 0;
+}
+
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.cardRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.cardLabel {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+.cardValue {
+  color: #f3f4f6;
+  font-size: 0.875rem;
+  text-align: right;
+  word-break: break-word;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .tableWrapper {
+    display: none;
+  }
+  
+  .mobileView {
+    display: flex;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobileView {
+    display: none;
+  }
+  
+  .tableWrapper {
+    display: block;
+  }
+}
+
+/* Enhanced Mobile Responsive */
+@media (max-width: 480px) {
+  .tableContainer {
+    border-radius: 12px;
+  }
+  
+  .mobileView {
+    padding: 0.75rem;
+    gap: 0.75rem;
+  }
+  
+  .attendeeCard {
+    padding: 0.875rem;
+  }
+  
+  .cardHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  
+  .cardRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+  
+  .cardValue {
+    text-align: left;
+  }
+  
+  .statusBadge {
+    padding: 0.375rem 0.625rem;
+    font-size: 0.75rem;
+  }
+  
+  .ticketTypeTag {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+  }
+}
+
+/* Large Desktop Optimizations */
+@media (min-width: 1200px) {
+  .attendeesTable {
+    min-width: 1000px;
+  }
+  
+  .tableHeader,
+  .sortableHeader {
+    padding: 1.25rem 1rem;
+  }
+  
+  .nameCell,
+  .emailCell,
+  .phoneCell,
+  .ticketTypeCell,
+  .amountCell,
+  .statusCell,
+  .dateCell,
+  .checkInTimeCell {
+    padding: 1.25rem 1rem;
+  }
+  
+  .emailCell {
+    max-width: 250px;
+  }
+}
+
+/* Loading States */
+.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.skeleton {
+  background: linear-gradient(90deg, transparent 25%, rgba(255, 255, 255, 0.05) 50%, transparent 75%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Focus States for Accessibility */
+.sortableHeader:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.attendeeCard:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .tableContainer {
+    background: #000;
+    border: 2px solid #fff;
+  }
+  
+  .tableHead {
+    background: #111;
+  }
+  
+  .tableHeader,
+  .sortableHeader {
+    color: #fff;
+    border-bottom: 2px solid #fff;
+  }
+  
+  .tableRow {
+    border-bottom: 1px solid #fff;
+  }
+  
+  .attendeeName,
+  .cardValue {
+    color: #fff;
+  }
+  
+  .statusBadge {
+    border: 2px solid currentColor;
+  }
+  
+  .ticketTypeTag {
+    border: 2px solid currentColor;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .tableRow,
+  .attendeeCard,
+  .sortableHeader {
+    transition: none;
+  }
+  
+  .tableRow:hover,
+  .attendeeCard:hover {
+    transform: none;
+  }
+  
+  .skeleton {
+    animation: none;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .tableContainer {
+    background: white;
+    border: 1px solid #000;
+    box-shadow: none;
+  }
+  
+  .tableHead {
+    background: #f0f0f0;
+  }
+  
+  .tableHeader,
+  .sortableHeader {
+    color: #000;
+    border-bottom: 1px solid #000;
+  }
+  
+  .tableRow {
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .checkedInRow,
+  .pendingRow {
+    background: white;
+    border-left: none;
+  }
+  
+  .attendeeName,
+  .cardValue {
+    color: #000;
+  }
+  
+  .statusBadge {
+    background: white;
+    border: 1px solid #000;
+    color: #000;
+  }
+  
+  .mobileView {
+    display: none;
+  }
+  
+  .tableWrapper {
+    display: block !important;
+  }
+}
+
+/* Animation for Row Entry */
+.tableRow {
+  animation: fadeInUp 0.3s ease-out;
+}
+
+.attendeeCard {
+  animation: fadeInUp 0.3s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+} 

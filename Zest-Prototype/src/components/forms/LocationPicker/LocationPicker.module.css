@@ -1,0 +1,224 @@
+.locationPicker {
+  position: relative;
+  width: 100%;
+}
+
+.inputContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 0;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.inputContainer:focus-within {
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+}
+
+.iconContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px 16px;
+  border-radius: 16px 0 0 16px;
+}
+
+.locationIcon {
+  width: 20px;
+  height: 20px;
+  color: #9ca3af;
+  transition: color 0.3s ease;
+}
+
+.inputContainer:focus-within .locationIcon {
+  color: #7c3aed;
+}
+
+.locationInput {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 18px 16px 18px 0;
+  font-size: 16px;
+  color: white;
+  outline: none;
+  font-weight: 500;
+}
+
+.locationInput::placeholder {
+  color: rgba(156, 163, 175, 0.6);
+}
+
+.clearButton {
+  background: none;
+  border: none;
+  padding: 8px 16px;
+  color: #9ca3af;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.clearButton:hover {
+  color: #ef4444;
+}
+
+.loadingSpinner {
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(124, 58, 237, 0.3);
+  border-top: 2px solid #7c3aed;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Predictions Dropdown */
+.predictionsDropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: rgba(17, 24, 39, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  max-height: 280px;
+  overflow-y: auto;
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.predictionItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.predictionItem:last-child {
+  border-bottom: none;
+}
+
+.predictionItem:hover {
+  background: rgba(124, 58, 237, 0.1);
+}
+
+.predictionIcon {
+  width: 16px;
+  height: 16px;
+  color: #7c3aed;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.predictionText {
+  flex: 1;
+  min-width: 0;
+}
+
+.mainText {
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.secondaryText {
+  color: #9ca3af;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Scrollbar Styling */
+.predictionsDropdown::-webkit-scrollbar {
+  width: 6px;
+}
+
+.predictionsDropdown::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+}
+
+.predictionsDropdown::-webkit-scrollbar-thumb {
+  background: rgba(124, 58, 237, 0.5);
+  border-radius: 3px;
+}
+
+.predictionsDropdown::-webkit-scrollbar-thumb:hover {
+  background: rgba(124, 58, 237, 0.7);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .inputContainer {
+    padding: 0;
+  }
+  
+  .iconContainer {
+    padding: 16px 12px;
+  }
+  
+  .locationInput {
+    padding: 16px 12px 16px 0;
+    font-size: 15px;
+  }
+  
+  .clearButton {
+    padding: 8px 12px;
+  }
+  
+  .predictionItem {
+    padding: 14px;
+  }
+  
+  .mainText {
+    font-size: 13px;
+  }
+  
+  .secondaryText {
+    font-size: 11px;
+  }
+} 

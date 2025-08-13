@@ -1,0 +1,2 @@
+// tickets types
+export {};

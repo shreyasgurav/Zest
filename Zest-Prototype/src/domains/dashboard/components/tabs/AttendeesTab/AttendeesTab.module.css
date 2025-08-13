@@ -1,0 +1,363 @@
+/* ===== ATTENDEES TAB - PRODUCTION READY STYLES ===== */
+
+/* CSS Custom Properties */
+:root {
+  --color-blue: #3b82f6;
+  --color-green: #10b981;
+  --color-orange: #f59e0b;
+  --color-purple: #8b5cf6;
+  --color-red: #ef4444;
+  
+  --gradient-blue: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  --gradient-green: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  --gradient-orange: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  --gradient-purple: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  --gradient-red: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Main Container */
+.attendeesTab {
+  background: linear-gradient(145deg, #1f2937 0%, #111827 100%);
+  border-radius: 16px;
+  padding: 2rem;
+  border: 1px solid rgba(75, 85, 99, 0.3);
+  min-height: calc(100vh - 4rem);
+  color: #f9fafb;
+  position: relative;
+  overflow: hidden;
+}
+
+.attendeesTab::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.05) 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Header Section */
+.attendeesHeader {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(75, 85, 99, 0.3);
+}
+
+.headerTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  gap: 2rem;
+}
+
+.titleSection {
+  flex: 1;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.875rem;
+  font-weight: 800;
+  margin: 0 0 0.5rem 0;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.2;
+}
+
+.titleIcon {
+  color: #3b82f6;
+  font-size: 1.5rem;
+}
+
+.subtitle {
+  color: #9ca3af;
+  font-size: 1rem;
+  margin: 0;
+  font-weight: 500;
+}
+
+.headerActions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.exportButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--gradient-green);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-md);
+  min-width: 140px;
+  justify-content: center;
+}
+
+.exportButton:hover:not(:disabled) {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.exportButton:active {
+  transform: translateY(0);
+}
+
+.exportButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Content Area */
+.attendeesContent {
+  position: relative;
+  z-index: 1;
+}
+
+/* Empty State */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+  background: rgba(31, 41, 55, 0.4);
+  border-radius: 16px;
+  border: 1px solid rgba(75, 85, 99, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.emptyStateIcon {
+  font-size: 4rem;
+  color: #4b5563;
+  margin-bottom: 1.5rem;
+  opacity: 0.7;
+}
+
+.emptyState h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #f9fafb;
+  margin: 0 0 1rem 0;
+}
+
+.emptyStateMessage {
+  color: #9ca3af;
+  font-size: 1rem;
+  margin: 0 0 2rem 0;
+  max-width: 400px;
+  line-height: 1.5;
+}
+
+.clearFiltersButton,
+.viewOverviewButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--gradient-blue);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.clearFiltersButton:hover,
+.viewOverviewButton:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .attendeesTab {
+    padding: 1.5rem;
+  }
+
+  .headerTop {
+    gap: 1.5rem;
+  }
+
+  .title {
+    font-size: 1.625rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .attendeesTab {
+    padding: 1rem;
+    border-radius: 12px;
+  }
+
+  .headerTop {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .headerActions {
+    width: 100%;
+  }
+
+  .exportButton {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .titleIcon {
+    font-size: 1.25rem;
+  }
+
+  .subtitle {
+    font-size: 0.9rem;
+  }
+
+  .emptyState {
+    padding: 3rem 1.5rem;
+  }
+
+  .emptyStateIcon {
+    font-size: 3rem;
+  }
+
+  .emptyState h3 {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .attendeesTab {
+    padding: 0.75rem;
+  }
+
+  .attendeesHeader {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+  }
+
+  .title {
+    font-size: 1.375rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .emptyState {
+    padding: 2rem 1rem;
+  }
+
+  .clearFiltersButton,
+  .viewOverviewButton {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Animation and Transitions */
+.attendeesTab {
+  animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Focus States for Accessibility */
+.exportButton:focus,
+.clearFiltersButton:focus,
+.viewOverviewButton:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  .attendeesTab {
+    background: #000;
+    border: 2px solid #fff;
+  }
+
+  .title {
+    color: #fff;
+    -webkit-text-fill-color: #fff;
+  }
+
+  .exportButton,
+  .clearFiltersButton,
+  .viewOverviewButton {
+    border: 2px solid currentColor;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .attendeesTab {
+    animation: none;
+  }
+
+  .exportButton,
+  .clearFiltersButton,
+  .viewOverviewButton {
+    transition: none;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .attendeesTab {
+    background: white;
+    color: black;
+    box-shadow: none;
+    border: 1px solid #ccc;
+  }
+
+  .headerActions {
+    display: none;
+  }
+
+  .emptyState {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+  }
+} 

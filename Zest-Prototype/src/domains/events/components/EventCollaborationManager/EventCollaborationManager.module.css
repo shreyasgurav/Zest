@@ -1,0 +1,460 @@
+.collaborationManager {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e1e8ed;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  margin-bottom: 24px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid #f0f0f0;
+  background: #fafbfc;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.headerIcon {
+  color: #1d9bf0;
+  font-size: 20px;
+}
+
+.header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #0f1419;
+}
+
+.subtitle {
+  margin: 2px 0 0 0;
+  font-size: 14px;
+  color: #657786;
+}
+
+.inviteButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #1d9bf0;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.inviteButton:hover {
+  background: #1a8cd8;
+  transform: translateY(-1px);
+}
+
+.inviteButton:disabled {
+  background: #8ec5f4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Loading */
+.loading {
+  padding: 40px;
+  text-align: center;
+  color: #657786;
+}
+
+/* Invite Form */
+.inviteForm {
+  background: #f8f9fa;
+  border-bottom: 1px solid #e1e8ed;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    max-height: 0;
+    opacity: 0;
+  }
+  to {
+    max-height: 400px;
+    opacity: 1;
+  }
+}
+
+.formHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px 0;
+}
+
+.formHeader h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #0f1419;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: #657786;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.closeButton:hover {
+  background: #e1e8ed;
+  color: #0f1419;
+}
+
+.formContent {
+  padding: 20px 24px 24px;
+}
+
+.inputGroup {
+  margin-bottom: 16px;
+}
+
+.inputGroup label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #0f1419;
+  margin-bottom: 6px;
+}
+
+.usernameInput {
+  display: flex;
+  align-items: center;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  background: white;
+  transition: border-color 0.2s ease;
+}
+
+.usernameInput:focus-within {
+  border-color: #1d9bf0;
+}
+
+.atSymbol {
+  padding: 12px 0 12px 12px;
+  color: #657786;
+  font-weight: 500;
+}
+
+.usernameInput input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 12px 12px 12px 0;
+  font-size: 14px;
+  background: transparent;
+}
+
+.inputGroup textarea {
+  width: 100%;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 14px;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 80px;
+  transition: border-color 0.2s ease;
+}
+
+.inputGroup textarea:focus {
+  outline: none;
+  border-color: #1d9bf0;
+}
+
+.result {
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.result.success {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.result.error {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.formActions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.cancelButton, .sendButton {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.cancelButton {
+  background: #e1e8ed;
+  color: #657786;
+}
+
+.cancelButton:hover {
+  background: #d1d9e0;
+}
+
+.sendButton {
+  background: #1d9bf0;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sendButton:hover {
+  background: #1a8cd8;
+}
+
+.sendButton:disabled {
+  background: #8ec5f4;
+  cursor: not-allowed;
+}
+
+/* Collaborations List */
+.collaborationsList {
+  padding: 24px;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.emptyIcon {
+  font-size: 48px;
+  color: #d1d9e0;
+  margin-bottom: 16px;
+}
+
+.emptyState h4 {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+  color: #0f1419;
+}
+
+.emptyState p {
+  margin: 0 0 20px 0;
+  color: #657786;
+  font-size: 14px;
+}
+
+.emptyStateButton {
+  background: #1d9bf0;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 auto;
+  transition: all 0.2s ease;
+}
+
+.emptyStateButton:hover {
+  background: #1a8cd8;
+  transform: translateY(-1px);
+}
+
+.collaborationsHeader {
+  font-size: 14px;
+  font-weight: 500;
+  color: #657786;
+  margin-bottom: 16px;
+}
+
+.collaborationItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border: 1px solid #e1e8ed;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  background: white;
+  transition: all 0.2s ease;
+}
+
+.collaborationItem:hover {
+  border-color: #d1d9e0;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.collaboratorInfo {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+}
+
+.collaboratorDetails {
+  flex: 1;
+}
+
+.collaboratorName {
+  font-size: 16px;
+  font-weight: 600;
+  color: #0f1419;
+  margin-bottom: 4px;
+}
+
+.collaboratorMeta {
+  font-size: 14px;
+  color: #657786;
+  margin-bottom: 6px;
+}
+
+.collaborationMessage {
+  font-size: 14px;
+  color: #0f1419;
+  font-style: italic;
+  background: #f8f9fa;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border-left: 3px solid #1d9bf0;
+  margin-top: 8px;
+}
+
+.collaborationStatus {
+  text-align: right;
+}
+
+.statusBadge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #d4edda;
+  color: #155724;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 4px;
+  width: fit-content;
+  margin-left: auto;
+}
+
+.statusIcon {
+  font-size: 10px;
+}
+
+.acceptedDate {
+  font-size: 12px;
+  color: #657786;
+}
+
+.collaborationActions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.visibilityStatus {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #657786;
+}
+
+.visibilityIcon {
+  font-size: 12px;
+}
+
+.removeButton {
+  background: #fee;
+  color: #dc3545;
+  border: 1px solid #f8d7da;
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.removeButton:hover {
+  background: #f5c6cb;
+  border-color: #f1aeb5;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .formContent {
+    padding: 16px;
+  }
+
+  .collaborationsList {
+    padding: 16px;
+  }
+
+  .collaborationItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .collaboratorInfo {
+    width: 100%;
+  }
+
+  .collaborationActions {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .formActions {
+    flex-direction: column;
+  }
+
+  .cancelButton, .sendButton {
+    width: 100%;
+    justify-content: center;
+  }
+} 

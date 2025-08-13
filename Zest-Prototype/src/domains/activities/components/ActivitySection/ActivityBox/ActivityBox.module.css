@@ -1,0 +1,378 @@
+/* Container for Activity Boxes */
+.activityBoxWrapper {
+    max-width: 280px;
+    position: relative;
+    cursor: pointer;
+    padding: 12px;
+    transition: transform 0.1s ease;
+}
+
+/* Main Activity Card */
+.activityBoxCard {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    border-radius: 24px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    transition: all 0.3s ease;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.activityBoxWrapper:hover .activityBoxCard {
+    border-color: rgba(181, 181, 181, 0.5);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+}
+
+/* Delete Button */
+.deleteButton {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(255, 68, 68, 0.9);
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(5px);
+}
+
+.deleteButton:hover {
+    background: rgba(255, 68, 68, 1);
+    transform: scale(1.1);
+}
+
+.deleteIcon {
+    width: 16px;
+    height: 16px;
+    color: white;
+}
+
+/* Image Section */
+.imageSection {
+    position: relative;
+    height: 60%;
+    overflow: hidden;
+}
+
+.activityImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.3s ease;
+}
+
+.imageLoaded {
+    opacity: 1;
+}
+
+.imageLoading {
+    opacity: 0;
+}
+
+.imagePlaceholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(236, 72, 153, 0.2));
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.4;
+    }
+    50% {
+        opacity: 0.7;
+    }
+    100% {
+        opacity: 0.4;
+    }
+}
+
+.noImagePlaceholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.25), rgba(236, 72, 153, 0.25));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.placeholderIcon {
+    width: 56px;
+    height: 56px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* Activity Type Badge */
+.activityTypeBadge {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    backdrop-filter: blur(12px);
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.activityTypeIcon {
+    width: 16px;
+    height: 16px;
+}
+
+/* Activity Type Colors */
+.activityTypeBadge.fitness {
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.3), rgba(219, 39, 119, 0.3));
+}
+
+.activityTypeBadge.art {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.3), rgba(147, 51, 234, 0.3));
+}
+
+.activityTypeBadge.music {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.3), rgba(147, 51, 234, 0.3));
+}
+
+.activityTypeBadge.sports {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.3), rgba(22, 163, 74, 0.3));
+}
+
+.activityTypeBadge.dance {
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.3), rgba(245, 158, 11, 0.3));
+}
+
+.activityTypeBadge.cooking {
+    background: linear-gradient(135deg, rgba(234, 88, 12, 0.3), rgba(194, 65, 12, 0.3));
+}
+
+.activityTypeBadge.technology {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(79, 70, 229, 0.3));
+}
+
+.activityTypeBadge.education {
+    background: linear-gradient(135deg, rgba(14, 165, 233, 0.3), rgba(2, 132, 199, 0.3));
+}
+
+.activityTypeBadge.wellness {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(5, 150, 105, 0.3));
+}
+
+.activityTypeBadge.adventure {
+    background: linear-gradient(135deg, rgba(245, 101, 101, 0.3), rgba(220, 38, 38, 0.3));
+}
+
+.activityTypeBadge.crafts {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.3), rgba(147, 51, 234, 0.3));
+}
+
+.activityTypeBadge.photography {
+    background: linear-gradient(135deg, rgba(75, 85, 99, 0.3), rgba(55, 65, 81, 0.3));
+}
+
+.activityTypeBadge.default {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.3), rgba(22, 163, 74, 0.3));
+}
+
+.activityTypeBadge span {
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Price Badge */
+.priceBadge {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.3), rgba(22, 163, 74, 0.3));
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.95);
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 700;
+    z-index: 5;
+}
+
+.priceBadge span {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Content Section */
+.activityBoxInfo {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 24px;
+    background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.8) 0%,
+        rgba(0, 0, 0, 0.6) 50%,
+        rgba(0, 0, 0, 0.3) 80%,
+        transparent 100%
+    );
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Info Rows */
+.infoRow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Activity Title */
+.activityBoxInfo h3 {
+    color: rgba(255, 255, 255, 0.98);
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1.3;
+    margin: 0 0 10px 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Icons */
+.timeIcon {
+    width: 16px;
+    height: 16px;
+    color: rgba(96, 165, 250, 0.8);
+}
+
+.locationIcon {
+    width: 16px;
+    height: 16px;
+    color: rgba(52, 211, 153, 0.8);
+}
+
+.aboutIcon {
+    width: 16px;
+    height: 16px;
+    color: rgba(251, 191, 36, 0.8);
+}
+
+.categoryIcon {
+    width: 16px;
+    height: 16px;
+    color: rgba(168, 85, 247, 0.8);
+}
+
+/* Info Text */
+.infoRow span {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 13px;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.categoryText {
+    color: rgba(168, 85, 247, 0.9) !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .activityBoxWrapper {
+        max-width: 240px;
+        padding: 10px;
+    }
+
+    .activityBoxInfo {
+        padding: 20px;
+    }
+
+    .activityBoxInfo h3 {
+        font-size: 16px;
+    }
+
+    .infoRow span {
+        max-width: 150px;
+    }
+
+    .deleteButton {
+        width: 28px;
+        height: 28px;
+        top: 12px;
+        right: 12px;
+    }
+
+    .deleteIcon {
+        width: 14px;
+        height: 14px;
+    }
+
+    .activityTypeBadge {
+        top: 12px;
+        left: 12px;
+        padding: 6px 12px;
+    }
+
+    .activityTypeBadge span {
+        font-size: 11px;
+    }
+
+    .priceBadge {
+        top: 12px;
+        right: 12px;
+        padding: 4px 8px;
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 480px) {
+    .activityBoxWrapper {
+        max-width: 200px;
+        padding: 8px;
+    }
+
+    .imageSection {
+        height: 55%;
+    }
+
+    .activityBoxInfo {
+        padding: 16px;
+    }
+
+    .activityBoxInfo h3 {
+        font-size: 15px;
+    }
+
+    .infoRow span {
+        font-size: 11px;
+    }
+
+    .activityTypeBadge {
+        padding: 6px 12px;
+    }
+
+    .activityTypeBadge span {
+        font-size: 10px;
+    }
+
+    .priceBadge {
+        padding: 4px 8px;
+        font-size: 10px;
+    }
+} 

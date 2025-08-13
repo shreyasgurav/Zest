@@ -1,0 +1,296 @@
+/* Business Profile Selection Page Styles */
+.businessSelectionContainer {
+  min-height: 100vh;
+  background: none;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.businessSelectionCard {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  padding: 40px;
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+  position: relative;
+}
+
+.businessSelectionContent {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.title {
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 28px;
+  font-weight: 800;
+  margin: 0 0 12px 0;
+  background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.8) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.backToHome {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.8);
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.backToHome:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.95);
+  transform: translateY(-2px);
+}
+
+.businessOptions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.businessOption {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+  width: 100%;
+}
+
+.businessOption:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.businessOptionIcon {
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.2), rgba(139, 92, 246, 0.2));
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.businessOptionContent {
+  flex: 1;
+}
+
+.businessOptionTitle {
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+}
+
+.businessOptionDescription {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.businessOptionArrow {
+  font-size: 24px;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: bold;
+  transition: transform 0.3s ease;
+}
+
+.businessOption:hover .businessOptionArrow {
+  transform: translateX(4px);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.helpText {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.helpText p {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+  margin: 0;
+}
+
+.userLoginLink {
+  text-align: center;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.userLoginText {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0 0 8px 0;
+}
+
+.userLoginBtn {
+  color: #60a5fa;
+  background: rgba(96, 165, 250, 0.1);
+  border: 1px solid rgba(96, 165, 250, 0.3);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 8px;
+  display: inline-block;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.userLoginBtn:hover {
+  color: #93c5fd;
+  background: rgba(96, 165, 250, 0.2);
+  border-color: rgba(96, 165, 250, 0.5);
+}
+
+.loadingContainer {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loadingSpinner {
+  position: relative;
+  width: 50px;
+  height: 50px;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top: 3px solid rgba(96, 165, 250, 0.8);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .businessSelectionCard {
+    padding: 24px;
+    margin: 10px;
+  }
+  
+  .businessOption {
+    padding: 20px;
+    gap: 16px;
+  }
+  
+  .businessOptionIcon {
+    width: 56px;
+    height: 56px;
+  }
+  
+  .businessOptionTitle {
+    font-size: 18px;
+  }
+  
+  .businessOptionDescription {
+    font-size: 13px;
+  }
+
+  .title {
+    font-size: 24px;
+  }
+  
+  .subtitle {
+    font-size: 13px;
+  }
+  
+  .backToHome {
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .businessSelectionContainer {
+    padding: 16px;
+  }
+  
+  .businessSelectionCard {
+    padding: 20px;
+  }
+  
+  .businessOptions {
+    gap: 12px;
+  }
+  
+  .businessOption {
+    padding: 16px;
+    gap: 12px;
+  }
+  
+  .businessOptionIcon {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .businessOptionTitle {
+    font-size: 16px;
+  }
+  
+  .businessOptionDescription {
+    font-size: 12px;
+  }
+
+  .title {
+    font-size: 22px;
+  }
+  
+  .subtitle {
+    font-size: 12px;
+  }
+} 

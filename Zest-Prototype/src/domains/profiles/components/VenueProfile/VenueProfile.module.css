@@ -1,0 +1,664 @@
+.venueProfileContainer {
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #1e293b, #000000);
+  color: white;
+  overflow-x: hidden;
+}
+
+.venueBannerSection {
+  position: relative;
+  height: 240px;
+  overflow: visible;
+}
+
+.venueBanner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1;
+  cursor: pointer;
+}
+
+.bannerImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.defaultBanner {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.bannerOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, 
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.2) 50%,
+    rgba(0, 0, 0, 0.8) 100%
+  );
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: white;
+}
+
+.venueBanner:hover .bannerOverlay {
+  opacity: 1;
+}
+
+.venueProfileImageContainer {
+  position: absolute;
+  bottom: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+  z-index: 10;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: #1e293b;
+  cursor: pointer;
+}
+
+.venueProfileImageContainer:hover {
+  transform: translateX(-50%) scale(1.05);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+}
+
+.venueProfileImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.noPhoto {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.profileOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  color: white;
+  font-size: 14px;
+  gap: 8px;
+}
+
+.venueProfileImageContainer:hover .profileOverlay {
+  opacity: 1;
+}
+
+.cameraIcon {
+  font-size: 20px;
+}
+
+/* Venue Details */
+.venueDetailsSection {
+  padding: 70px 32px 40px;
+  text-align: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.venueHeader {
+  margin-bottom: 32px;
+}
+
+.venueName h1 {
+  font-size: 48px;
+  font-weight: 900;
+  line-height: 1.1;
+  margin: 0 0 16px 0;
+  background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.8) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.metaRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.venueUsername {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+}
+
+.venueType {
+  background: rgba(240, 147, 251, 0.2);
+  border: 1px solid rgba(240, 147, 251, 0.3);
+  border-radius: 20px;
+  padding: 6px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #f093fb;
+  display: inline-block;
+}
+
+.venueBio {
+  max-width: 600px;
+  margin: 24px auto;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* Profile Action Buttons */
+.profileButtonsContainer {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+.editProfileButton {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  border-radius: 12px;
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.editProfileButton:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.viewPublicButton {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 50%, #1d4ed8 100%);
+  border: none;
+  border-radius: 12px;
+  padding: 10px 24px;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.viewPublicButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+}
+
+.createButton {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  border: none;
+  border-radius: 12px;
+  padding: 10px 24px;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.createButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(240, 147, 251, 0.4);
+}
+
+.shareButton {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
+  border: none;
+  border-radius: 12px;
+  padding: 10px 24px;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.shareButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.6s ease;
+}
+
+.shareButton:hover::before {
+  left: 100%;
+}
+
+.shareButton:hover {
+  background: linear-gradient(135deg, #d97706 0%, #b45309 50%, #92400e 100%);
+  box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
+  transform: translateY(-2px);
+}
+
+.shareIcon {
+  font-size: 14px;
+}
+
+.viewerBadge {
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 12px;
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.viewerBadge span {
+  color: #60a5fa;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* Edit Form */
+.editProfileContainer {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 32px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.inputGroup {
+  margin-bottom: 24px;
+}
+
+.inputGroup label {
+  display: block;
+  margin-bottom: 8px;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+}
+
+.profileInput {
+  width: 100%;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: white;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.profileInput:focus {
+  outline: none;
+  border-color: rgba(240, 147, 251, 0.5);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.profileInput:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+.saveCancleButton {
+  flex: 1;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.saveCancleButton:first-child {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  border: none;
+  color: white;
+}
+
+.saveCancleButton:last-child {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.saveCancleButton:hover {
+  transform: translateY(-2px);
+}
+
+.saveCancleButton:first-child:hover {
+  box-shadow: 0 8px 25px rgba(240, 147, 251, 0.4);
+}
+
+.saveCancleButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Events Section */
+.ownedEventsSection {
+  margin: 40px auto 0;
+  padding: 40px 32px;
+  max-width: 1200px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.sectionHeader h3 {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.8) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.sectionHeader p {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 16px;
+  margin: 0;
+}
+
+/* Modal Styles */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.photoModal {
+  background: rgba(30, 30, 30, 0.95);
+  border-radius: 16px;
+  padding: 0;
+  min-width: 300px;
+  max-width: 400px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(20px);
+}
+
+.uploadModal {
+  background: rgba(30, 30, 30, 0.95);
+  border-radius: 16px;
+  padding: 0;
+  min-width: 400px;
+  max-width: 600px;
+  width: 90vw;
+  max-height: 80vh;
+  overflow-y: auto;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(20px);
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modalHeader h3 {
+  color: white;
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.closeButton:hover {
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.modalContent {
+  padding: 24px;
+}
+
+.photoOption {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: 16px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.photoOption:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.optionIcon {
+  font-size: 20px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Responsive Design */
+@media (max-width: 1440px) {
+  .venueBannerSection {
+    height: 220px;
+  }
+  
+  .venueName h1 {
+    font-size: 42px;
+  }
+  
+  .venueProfileImageContainer {
+    width: 120px;
+    height: 120px;
+    bottom: -60px;
+  }
+}
+
+@media (max-width: 768px) {
+  .venueBannerSection {
+    height: 200px;
+  }
+  
+  .venueDetailsSection {
+    padding: 60px 24px 30px;
+  }
+  
+  .venueProfileImageContainer {
+    width: 96px;
+    height: 96px;
+    bottom: -40px;
+  }
+  
+  .venueName h1 {
+    font-size: 36px;
+  }
+  
+  .venueUsername {
+    font-size: 16px;
+  }
+  
+  .venueType {
+    font-size: 13px;
+    padding: 5px 14px;
+  }
+  
+  .ownedEventsSection {
+    padding: 30px 24px;
+  }
+  
+  .sectionHeader h3 {
+    font-size: 24px;
+  }
+  
+  .uploadModal {
+    min-width: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .venueBannerSection {
+    height: 180px;
+  }
+  
+  .venueDetailsSection {
+    padding: 50px 16px 24px;
+  }
+  
+  .venueProfileImageContainer {
+    width: 80px;
+    height: 80px;
+    bottom: -35px;
+  }
+  
+  .venueName h1 {
+    font-size: 28px;
+  }
+  
+  .metaRow {
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  
+  .venueUsername {
+    font-size: 15px;
+  }
+  
+  .venueType {
+    font-size: 12px;
+    padding: 4px 12px;
+  }
+  
+  .profileButtonsContainer {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .editProfileButton,
+  .viewPublicButton,
+  .createButton {
+    flex: 1;
+    min-width: 120px;
+  }
+  
+  .shareButton,
+  .viewerBadge {
+    flex: 1;
+    min-width: 120px;
+    justify-content: center;
+  }
+  
+  .ownedEventsSection {
+    padding: 24px 16px;
+  }
+  
+  .sectionHeader h3 {
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 360px) {
+  .venueBannerSection {
+    height: 160px;
+  }
+  
+  .venueProfileImageContainer {
+    width: 70px;
+    height: 70px;
+    bottom: -30px;
+  }
+  
+  .venueName h1 {
+    font-size: 24px;
+  }
+  
+  .venueUsername {
+    font-size: 14px;
+  }
+  
+  .venueType {
+    font-size: 11px;
+    padding: 3px 10px;
+  }
+} 

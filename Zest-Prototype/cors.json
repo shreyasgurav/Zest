@@ -1,0 +1,17 @@
+[
+  {
+    "origin": ["http://localhost:3000", "https://zest-bookings.vercel.app"],
+    "method": ["GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"],
+    "responseHeader": [
+      "Content-Type",
+      "Authorization",
+      "Content-Length",
+      "User-Agent",
+      "x-goog-resumable",
+      "Access-Control-Allow-Origin",
+      "Access-Control-Allow-Methods",
+      "Access-Control-Allow-Headers"
+    ],
+    "maxAgeSeconds": 3600
+  }
+] 

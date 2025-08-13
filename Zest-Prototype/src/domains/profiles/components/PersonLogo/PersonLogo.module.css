@@ -1,0 +1,764 @@
+.person-logo-container {
+    position: relative;
+    display: inline-block;
+    margin-top: 4px;
+    margin-right: 15px;
+}
+
+.person-dropdown {
+    position: absolute;
+    top: calc(100% + 15px);
+    right: -10px;
+    background: rgba(18, 18, 18, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 12px;
+    min-width: 180px;
+    z-index: 1000;
+    
+    /* Initial state */
+    opacity: 0;
+    transform: scale(0.95) translateY(-20px);
+    transition: all 0.1s cubic-bezier(0.16, 1, 0.3, 1);
+    visibility: hidden;
+    pointer-events: none;
+    
+    /* Add a subtle shadow */
+    box-shadow: 
+        0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+/* Add a subtle arrow/triangle */
+.person-dropdown::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    right: 15px;
+    width: 10px;
+    height: 10px;
+    background: rgba(18, 18, 18, 0.95);
+    transform: rotate(45deg);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Active state */
+.person-dropdown.active {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    visibility: visible;
+    pointer-events: all;
+}
+
+.dropdown-item {
+    padding: 12px 16px;
+    margin: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 500;
+}
+
+.dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    transform: translateX(2px);
+}
+
+.dropdown-icon {
+    font-size: 16px;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+}
+
+.dropdown-item:hover .dropdown-icon {
+    opacity: 1;
+}
+
+/* Specific icon colors */
+.dropdown-item:first-child .dropdown-icon {
+    color: #60a5fa; /* Profile - blue */
+}
+
+.dropdown-item:nth-child(2) .dropdown-icon {
+    color: #c084fc; /* Tickets - purple */
+}
+
+.dropdown-item:last-child .dropdown-icon {
+    color: #f87171; /* Logout - red */
+}
+
+/* Remove the border between items and use spacing instead */
+.dropdown-item:not(:last-child) {
+    margin-bottom: 2px;
+}
+
+/* Add a subtle hover glow effect */
+.person-dropdown:hover {
+    box-shadow: 
+        0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06),
+        0 0 0 1px rgba(255, 255, 255, 0.1),
+        0 0 15px rgba(255, 255, 255, 0.05);
+}
+
+/* Fallback for browsers that don't support backdrop-filter */
+@supports not (backdrop-filter: blur(12px)) {
+    .person-dropdown {
+        background: rgba(18, 18, 18, 0.98);
+    }
+}
+
+/* Animation for items */
+.dropdown-item {
+    opacity: 0;
+    transform: translateY(-5px);
+    transition: all 0.3s ease;
+}
+
+.person-dropdown.active .dropdown-item {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Stagger the animation for each item */
+.person-dropdown.active .dropdown-item:nth-child(1) {
+    transition-delay: 0.1s;
+}
+
+.person-dropdown.active .dropdown-item:nth-child(2) {
+    transition-delay: 0.15s;
+}
+
+.person-dropdown.active .dropdown-item:nth-child(3) {
+    transition-delay: 0.2s;
+}
+
+
+
+/* Sign In Button */
+.signInButton {
+  background: rgba(255, 255, 255, 0.1);
+  border: 0px solid rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 7px 14px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(4px);
+}
+
+.signInButton:hover {
+  background: rgba(255, 255, 255, 0.8);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: black;
+}
+
+/* Profile Container */
+.personLogoContainer {
+  position: relative;
+  display: inline-block;
+}
+
+.profileButton {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.profileButton:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: scale(1.05);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+}
+
+.profileImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.profileInitials {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #c084fc, #f472b6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 50%;
+}
+
+.profileInitials.show {
+  display: flex;
+}
+
+/* Main Dropdown */
+.dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 320px;
+  max-width: 360px;
+  background: rgba(15, 15, 15, 0.98);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.03);
+  z-index: 1000;
+  padding: 0;
+  animation: dropdownSlideIn 0.2s ease-out forwards;
+  overflow: hidden;
+}
+
+@keyframes dropdownSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* User Info Header */
+.userInfo {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  gap: 14px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.userInfoImage {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.userInfoAvatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.userInfoInitials {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #c084fc, #f472b6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 20px;
+  font-weight: 600;
+  border-radius: 50%;
+}
+
+.userInfoText {
+  flex: 1;
+  min-width: 0;
+}
+
+.userName {
+  color: white;
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.userUsername {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Navigation Grid */
+.navigationGrid {
+  display: flex;
+  gap: 0;
+  padding: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 12px;
+  margin: 8px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.navItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 8px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  min-height: 50px;
+  justify-content: center;
+  flex: 1;
+  position: relative;
+}
+
+.navItem:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 15%;
+  height: 70%;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.navItem:hover {
+  background: rgba(255, 255, 255, 0.05);
+  transform: translateY(-1px);
+}
+
+.navIcon {
+  width: 18px;
+  height: 18px;
+  color: rgba(255, 255, 255, 0.7);
+  transition: all 0.2s ease;
+}
+
+.navItem:hover .navIcon {
+  color: white;
+  transform: scale(1.1);
+}
+
+.navLabel {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 12px;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.navItem:hover .navLabel {
+  color: white;
+}
+
+/* Specific nav item colors */
+.navItem:nth-child(1):hover {
+  background: rgba(96, 165, 250, 0.08);
+}
+
+.navItem:nth-child(1):hover .navIcon {
+  color: #60a5fa;
+}
+
+.navItem:nth-child(2):hover {
+  background: rgba(192, 132, 252, 0.08);
+}
+
+.navItem:nth-child(2):hover .navIcon {
+  color: #c084fc;
+}
+
+.navItem:nth-child(3):hover {
+  background: rgba(16, 185, 129, 0.08);
+}
+
+.navItem:nth-child(3):hover .navIcon {
+  color: #10b981;
+}
+
+/* Sections */
+.section {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: rgba(255, 255, 255, 0.01);
+}
+
+.sectionHeader:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sectionIcon {
+  width: 14px;
+  height: 14px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.chevronIcon {
+  width: 12px;
+  height: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  transition: all 0.2s ease;
+}
+
+.sectionHeader:hover .chevronIcon {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.sectionContent {
+  padding: 8px 0;
+  background: rgba(255, 255, 255, 0.01);
+  animation: sectionSlideIn 0.2s ease-out;
+}
+
+@keyframes sectionSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Page Items */
+.pageItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  position: relative;
+}
+
+.pageItem:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  padding-left: 24px;
+}
+
+.pageIcon {
+  width: 16px;
+  height: 16px;
+  color: rgba(255, 255, 255, 0.6);
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.pageItem:hover .pageIcon {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.pageType {
+  margin-left: auto;
+  padding: 2px 8px;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  border-radius: 6px;
+  letter-spacing: 0.3px;
+}
+
+/* Different colors for page types */
+.pageItem:has(.pageIcon:first-child) .pageIcon {
+  color: #f472b6; /* Artist - Pink */
+}
+
+.pageItem:has(.pageIcon:first-child):hover .pageIcon {
+  color: #fb7185;
+}
+
+/* Shared Items */
+.sharedItem {
+  border-left: 3px solid rgba(245, 158, 11, 0.3);
+  background: rgba(245, 158, 11, 0.02);
+  margin: 0 8px;
+  border-radius: 0 8px 8px 0;
+}
+
+.sharedItem:hover {
+  border-left-color: rgba(245, 158, 11, 0.6);
+  background: rgba(245, 158, 11, 0.08);
+}
+
+.roleTag {
+  padding: 3px 8px;
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  border-radius: 6px;
+  letter-spacing: 0.3px;
+  flex-shrink: 0;
+}
+
+/* Check-in Items */
+.checkinItem {
+  border-left: 3px solid rgba(34, 197, 94, 0.3);
+  background: rgba(34, 197, 94, 0.02);
+  margin: 0 8px;
+  border-radius: 0 8px 8px 0;
+}
+
+.checkinItem:hover {
+  border-left-color: rgba(34, 197, 94, 0.6);
+  background: rgba(34, 197, 94, 0.08);
+}
+
+.checkinItem .pageIcon {
+  color: #22c55e;
+}
+
+.checkinItem:hover .pageIcon {
+  color: #4ade80;
+}
+
+.accessTag {
+  padding: 3px 8px;
+  background: rgba(34, 197, 94, 0.2);
+  color: #4ade80;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  border-radius: 6px;
+  letter-spacing: 0.3px;
+  flex-shrink: 0;
+}
+
+/* Create Page Item */
+.createPageItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  margin: 8px 12px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.01);
+}
+
+.createPageItem:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.8);
+  transform: translateY(-1px);
+}
+
+.createPageItem .pageIcon {
+  color: rgba(255, 255, 255, 0.4);
+  width: 14px;
+  height: 14px;
+}
+
+.createPageItem:hover .pageIcon {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Sign Out Section */
+.signOutSection {
+  padding: 12px 0;
+}
+
+.dropdownItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+}
+
+.dropdownItem:hover {
+  background: rgba(248, 113, 113, 0.1);
+  color: #f87171;
+}
+
+.dropdownIcon {
+  width: 16px;
+  height: 16px;
+  color: rgba(255, 255, 255, 0.5);
+  transition: color 0.2s ease;
+}
+
+.dropdownItem:hover .dropdownIcon {
+  color: #f87171;
+}
+
+/* Dividers */
+.dropdownDivider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .signInButton {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+
+  .profileButton {
+    width: 30px;
+    height: 30px;
+  }
+
+  .dropdown {
+    min-width: 300px;
+    max-width: 340px;
+    right: -10px;
+  }
+
+  .userInfo {
+    padding: 16px;
+  }
+
+  .userInfoImage {
+    width: 44px;
+    height: 44px;
+  }
+
+  .navigationGrid {
+    padding: 10px;
+    margin: 6px 8px;
+  }
+
+  .navItem {
+    padding: 10px 6px;
+    min-height: 45px;
+    gap: 5px;
+  }
+
+  .navIcon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .navLabel {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dropdown {
+    min-width: 280px;
+    right: -20px;
+  }
+
+  .navigationGrid {
+    padding: 8px;
+    margin: 4px 6px;
+}
+
+  .navItem {
+    padding: 8px 4px;
+    min-height: 40px;
+    gap: 4px;
+}
+
+  .navIcon {
+    width: 14px;
+    height: 14px;
+}
+
+  .navLabel {
+  font-size: 10px;
+  }
+
+  .userInfo {
+    padding: 14px;
+  }
+
+  .pageItem {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+}
+
+/* Focus states for accessibility */
+.navItem:focus,
+.pageItem:focus,
+.sectionHeader:focus {
+  outline: 2px solid rgba(96, 165, 250, 0.5);
+  outline-offset: -2px;
+}
+
+/* Scrollbar styling for long lists */
+.sectionContent::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sectionContent::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.sectionContent::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+}
+
+.sectionContent::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+

@@ -1,0 +1,523 @@
+.ticketCard {
+  background: #1a1a1a;
+  border-radius: 16px;
+  padding: 16px;
+  width: 100%;
+  max-width: 600px;
+  color: white;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  margin: 0 auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.ticketCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+.ticketContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.ticketInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0; /* Allows text truncation to work */
+}
+
+.eventDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-right: 16px;
+}
+
+.eventName {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 0;
+  color: white;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  padding-right: 8px;
+}
+
+.dateTime {
+  font-size: 14px;
+  color: #888;
+  font-weight: 500;
+  padding-right: 8px;
+}
+
+.ticketCount {
+  font-size: 14px;
+  color: #888;
+  font-weight: 500;
+  padding-right: 8px;
+}
+
+.locationSection {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-right: 8px;
+}
+
+.locationLabel {
+  font-size: 14px;
+  color: #888;
+  font-weight: 400;
+}
+
+.locationRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.locationIcon {
+  color: #888;
+  flex-shrink: 0;
+}
+
+.locationName {
+  font-size: 16px;
+  font-weight: 500;
+  color: white;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 200px;
+  position: relative;
+  display: inline-block;
+  -webkit-mask-image: linear-gradient(to right, black 80%, transparent 98%);
+  mask-image: linear-gradient(to right, black 80%, transparent 98%);
+}
+
+.bottomSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: auto;
+}
+
+.statusBadge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  width: fit-content;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.statusIcon {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+}
+
+.eventImageContainer {
+  flex-shrink: 0;
+  width: 120px;
+  height: 160px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.eventImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.placeholderImage {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.25), rgba(236, 72, 153, 0.25));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.placeholderText {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.loadingSpinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.leftBottom {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.rightBottom {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 16px;
+}
+
+/* QR Code Overlay */
+.qrOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.qrContainer {
+  background: white;
+  padding: 32px;
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  color: black;
+  max-width: 90%;
+  width: 320px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.qrText {
+  color: #374151;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+  text-align: center;
+}
+
+.qrWarning {
+  color: #ef4444;
+  font-size: 12px;
+  font-weight: 600;
+  margin: 0;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.closeQR {
+  background: #1a1a1a;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s ease;
+}
+
+.closeQR:hover {
+  background: #333;
+}
+
+/* Quick Actions */
+.quickActions {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  gap: 8px;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+  z-index: 2;
+}
+
+.quickAction {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+  position: relative;
+}
+
+.quickAction:hover {
+  background: rgba(255, 255, 255, 0.25);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.copiedText {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(16, 185, 129, 0.9);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  white-space: nowrap;
+  animation: fadeInOut 2s ease;
+}
+
+/* Responsive Styles */
+@media (max-width: 640px) {
+  .ticketCard {
+    padding: 16px;
+    max-width: 500px;
+  }
+
+  .ticketContent {
+    gap: 16px;
+  }
+
+  .eventName {
+    font-size: 18px;
+  }
+
+  .dateTime,
+  .ticketCount,
+  .locationLabel {
+    font-size: 13px;
+  }
+
+  .locationName {
+    font-size: 14px;
+  }
+
+  .eventImageContainer {
+    width: 100px;
+    height: 140px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ticketCard {
+    padding: 14px;
+    max-width: 400px;
+  }
+
+  .ticketContent {
+    gap: 12px;
+  }
+
+  .eventName {
+    font-size: 16px;
+    padding-right: 4px;
+  }
+
+  .dateTime,
+  .ticketCount,
+  .locationLabel {
+    font-size: 12px;
+    padding-right: 4px;
+  }
+
+  .locationName {
+    font-size: 13px;
+    max-width: 150px;
+  }
+
+  .eventImageContainer {
+    width: 90px;
+    height: 120px;
+  }
+
+  .statusBadge {
+    padding: 4px 10px;
+    font-size: 11px;
+  }
+
+  .eventDetails {
+    padding-right: 8px;
+  }
+}
+
+@media (max-width: 400px) {
+  .ticketCard {
+    padding: 12px;
+    max-width: 340px;
+  }
+
+  .ticketContent {
+    gap: 10px;
+  }
+
+  .eventName {
+    font-size: 15px;
+    padding-right: 4px;
+    -webkit-line-clamp: 2;
+  }
+
+  .dateTime,
+  .ticketCount,
+  .locationLabel {
+    font-size: 11px;
+    padding-right: 4px;
+  }
+
+  .locationName {
+    font-size: 12px;
+    max-width: 120px;
+  }
+
+  .eventImageContainer {
+    width: 80px;
+    height: 110px;
+  }
+
+  .eventDetails {
+    padding-right: 6px;
+    gap: 6px;
+  }
+
+  .locationSection {
+    padding-right: 4px;
+    gap: 2px;
+  }
+
+  .bottomSection {
+    gap: 12px;
+  }
+
+  .leftBottom {
+    gap: 12px;
+  }
+
+  .statusBadge {
+    padding: 3px 8px;
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 360px) {
+  .ticketCard {
+    padding: 10px;
+    max-width: 300px;
+  }
+
+  .ticketContent {
+    gap: 8px;
+  }
+
+  .eventName {
+    font-size: 14px;
+    -webkit-line-clamp: 2;
+  }
+
+  .dateTime,
+  .ticketCount,
+  .locationLabel {
+    font-size: 10px;
+  }
+
+  .locationName {
+    font-size: 11px;
+    max-width: 100px;
+  }
+
+  .eventImageContainer {
+    width: 70px;
+    height: 100px;
+  }
+
+  .eventDetails {
+    padding-right: 4px;
+    gap: 4px;
+  }
+
+  .locationSection {
+    padding-right: 2px;
+  }
+
+  .statusBadge {
+    padding: 2px 6px;
+    font-size: 9px;
+  }
+}
+
+/* Animations */
+@keyframes fadeInOut {
+  0%, 100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-5px);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.groupBookingInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ticketNumber {
+  font-size: 14px;
+  color: #888;
+  font-weight: 500;
+}
+
+.groupBookingBadge {
+  display: inline-flex;
+  align-items: center;
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  width: fit-content;
+}
+
+ 

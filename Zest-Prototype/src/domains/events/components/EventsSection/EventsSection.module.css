@@ -1,0 +1,440 @@
+/* Events Section Styling */
+.eventsSection {
+    flex: 1;
+    margin-bottom: 50px;
+    position: relative;
+}
+
+.eventsSectionHeading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 60px;
+    margin-bottom: 30px;
+    position: relative;
+    gap: 20px;
+}
+
+.eventsSectionHeading::after {
+    content: '';
+    position: absolute;
+    left: calc(50% - 150px);
+    right: calc(50% - 200px);
+    top: 50%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, #9333ea 50%, transparent 100%);
+    z-index: 0;
+}
+
+.upcomingEventsHeading {
+    font-size: 24px;
+    color: white;
+    opacity: 0.7;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    margin: 0;
+    position: relative;
+    z-index: 1;
+}
+
+.seeAllLink {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    opacity: 0.7;
+    white-space: nowrap;
+    position: relative;
+    z-index: 1;
+}
+
+.seeAllLink:hover {
+    opacity: 1;
+    color: #9333ea;
+}
+
+.noEventsMessage {
+    text-align: center;
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 50px;
+    padding: 100px 20px;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Embla Carousel Container */
+.emblaContainer {
+    position: relative;
+    padding: 0 60px;
+}
+
+.embla {
+    overflow: hidden;
+    width: 100%;
+}
+
+.embla__viewport {
+    overflow: hidden;
+}
+
+.embla__container {
+    display: flex;
+    gap: 20px;
+    margin-left: -20px;
+}
+
+.embla__slide {
+    flex: 0 0 auto;
+    min-width: 0;
+    padding-left: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.emblaButton {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: white;
+    font-size: 24px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(8px);
+}
+
+.emblaButton:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.emblaButtonPrev {
+    left: 10px;
+}
+
+.emblaButtonNext {
+    right: 10px;
+}
+
+.emblaButtonDisabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Error States */
+.errorContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+    padding: 20px;
+}
+
+.errorMessage {
+    color: #ff4444;
+    font-size: 16px;
+    text-align: center;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .eventsSection { 
+        margin-top: 20px; /* Reduced margin as header spacing is handled by ClientLayout */
+    }
+    .eventsSectionHeading {
+        padding: 0 30px;
+        gap: 15px;
+    }
+
+    .eventsSectionHeading::after {
+        left: calc(50% - 70px);
+        right: calc(50% - 150px);
+    }
+
+    .upcomingEventsHeading {
+        font-size: 20px;
+    }
+
+    .emblaContainer {
+        padding: 0 30px;
+    }
+
+    .emblaButton {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+    }
+
+    .emblaButtonPrev {
+        left: 5px;
+    }
+
+    .emblaButtonNext {
+        right: 5px;
+    }
+
+    .embla__container {
+        gap: 15px;
+        margin-left: -15px;
+    }
+
+    .embla__slide {
+        padding-left: 15px;
+    }
+
+    .noEventsMessage {
+        padding: 50px 20px;
+        font-size: 16px;
+    }
+
+    .eventsSectionHeading::after {
+        height: 1px;
+    }
+}
+
+@media (max-width: 480px) {
+    .eventsSectionHeading {
+        padding: 0 20px;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .upcomingEventsHeading {
+        font-size: 18px;
+    }
+
+    .emblaContainer {
+        padding: 0 20px;
+    }
+
+    .emblaButton {
+        width: 35px;
+        height: 35px;
+        font-size: 18px;
+    }
+
+    .embla__container {
+        gap: 10px;
+        margin-left: -10px;
+    }
+
+    .embla__slide {
+        padding-left: 10px;
+    }
+
+    .eventsSectionHeading::after {
+        display: none;
+    }
+}
+
+/* Skeleton Loading - Simple Greyish */
+.skeletonHeadingTitle {
+    width: 200px;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    animation: pulse 2s infinite;
+}
+
+.skeletonSeeAllButton {
+    width: 80px;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    animation: pulse 2s infinite;
+}
+
+.skeletonNavButton {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    animation: pulse 2s infinite;
+}
+
+.skeletonNavButton:nth-of-type(1) {
+    left: 10px;
+}
+
+.skeletonNavButton:nth-of-type(3) {
+    right: 10px;
+}
+
+.skeletonNavIcon {
+    width: 24px;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.eventCardSkeleton {
+    width: 280px;
+    aspect-ratio: 3 / 4;
+    border-radius: 24px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    animation: pulse 2s infinite;
+}
+
+.skeletonImageSection {
+    height: 60%;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 24px 24px 0 0;
+}
+
+.skeletonContentSection {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.skeletonTitle {
+    height: 20px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+    width: 80%;
+}
+
+.skeletonMeta {
+    height: 14px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    width: 60%;
+}
+
+.skeletonMeta:last-child {
+    width: 70%;
+}
+
+/* Pulse Animation */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 0.8;
+    }
+}
+
+/* Responsive Skeleton */
+@media (max-width: 768px) {
+    .skeletonHeadingTitle {
+        width: 150px;
+        height: 20px;
+    }
+    
+    .skeletonSeeAllButton {
+        width: 60px;
+        height: 20px;
+    }
+
+    .skeletonNavButton {
+        width: 40px;
+        height: 40px;
+    }
+
+    .skeletonNavButton:nth-of-type(1) {
+        left: 5px;
+    }
+
+    .skeletonNavButton:nth-of-type(3) {
+        right: 5px;
+    }
+
+    .skeletonNavIcon {
+        width: 20px;
+        height: 20px;
+    }
+
+    .eventCardSkeleton {
+        width: 240px;
+    }
+
+    .skeletonContentSection {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .skeletonHeadingTitle {
+        width: 120px;
+        height: 18px;
+    }
+    
+    .skeletonSeeAllButton {
+        width: 50px;
+        height: 18px;
+    }
+
+    .skeletonNavButton {
+        width: 35px;
+        height: 35px;
+    }
+
+    .skeletonNavIcon {
+        width: 18px;
+        height: 18px;
+    }
+
+    .eventCardSkeleton {
+        width: 200px;
+    }
+
+    .skeletonContentSection {
+        padding: 16px;
+    }
+
+    .skeletonTitle {
+        height: 18px;
+    }
+
+    .skeletonMeta {
+        height: 12px;
+    }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+    .emblaContainer {
+        padding: 0 50px;
+    }
+}

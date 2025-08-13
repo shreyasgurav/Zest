@@ -1,0 +1,575 @@
+/* Loading States */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.loadingContainer {
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #1e293b, #000000);
+  color: white;
+  overflow-x: hidden;
+}
+
+.skeletonBanner {
+  position: relative;
+  height: 320px;
+  width: 100%;
+  background: linear-gradient(90deg, #374151 0%, #4b5563 50%, #374151 100%);
+  animation: shimmer 2s infinite linear;
+  background-size: 1000px 100%;
+}
+
+.skeletonProfileImage {
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #374151 0%, #4b5563 50%, #374151 100%);
+  animation: shimmer 2s infinite linear;
+  background-size: 1000px 100%;
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+  margin: -64px auto 24px;
+}
+
+.skeletonContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 32px;
+}
+
+.skeletonName {
+  height: 36px;
+  width: 250px;
+  background: linear-gradient(90deg, #374151 0%, #4b5563 50%, #374151 100%);
+  animation: shimmer 2s infinite linear;
+  background-size: 1000px 100%;
+  border-radius: 6px;
+  margin: 0 auto 12px;
+}
+
+.skeletonUsername {
+  height: 20px;
+  width: 150px;
+  background: linear-gradient(90deg, #374151 0%, #4b5563 50%, #374151 100%);
+  animation: shimmer 2s infinite linear;
+  background-size: 1000px 100%;
+  border-radius: 4px;
+  margin: 0 auto 20px;
+}
+
+.skeletonBio {
+  height: 60px;
+  width: 80%;
+  background: linear-gradient(90deg, #374151 0%, #4b5563 50%, #374151 100%);
+  animation: shimmer 2s infinite linear;
+  background-size: 1000px 100%;
+  border-radius: 6px;
+  margin: 0 auto;
+}
+
+/* Error States */
+.errorContainer {
+  text-align: center;
+  padding: 60px 20px;
+  max-width: 600px;
+  margin: 0 auto;
+  color: white;
+}
+
+.errorContainer h2 {
+  margin-bottom: 15px;
+  font-size: 28px;
+  color: white;
+}
+
+.errorContainer p {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* Main Container */
+.venueProfileContainer {
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #1e293b, #000000);
+  color: white;
+  overflow-x: hidden;
+}
+
+/* Banner Section */
+.venueBannerSection {
+  position: relative;
+  height: 240px;
+  overflow: visible;
+}
+
+.venueBanner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.bannerImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.defaultBanner {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.bannerOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, 
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.2) 50%,
+    rgba(0, 0, 0, 0.8) 100%
+  );
+  z-index: 2;
+}
+
+.venueProfileImageContainer {
+  position: absolute;
+  bottom: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+  z-index: 10;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: #1e293b;
+}
+
+.venueProfileImageContainer:hover {
+  transform: translateX(-50%) scale(1.05);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+}
+
+.venueProfileImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.noPhoto {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 32px;
+  font-weight: 700;
+}
+
+/* Venue Details */
+.venueDetailsSection {
+  padding: 70px 32px 40px;
+  text-align: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.venueHeader {
+  margin-bottom: 32px;
+}
+
+.venueName h1 {
+  font-size: 48px;
+  font-weight: 900;
+  line-height: 1.1;
+  margin: 0 0 16px 0;
+  background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.8) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.metaRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.venueUsername {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+}
+
+.venueType {
+  background: rgba(240, 147, 251, 0.2);
+  border: 1px solid rgba(240, 147, 251, 0.3);
+  border-radius: 20px;
+  padding: 6px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #f093fb;
+  display: inline-block;
+}
+
+.venueMetadata {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.venueCapacity,
+.venueLocation {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.venueBio {
+  max-width: 600px;
+  margin: 0 auto;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* Content Container */
+.contentContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+/* Tabs */
+.tabsContainer {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 32px;
+}
+
+.tabButton {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 16px 0;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.tabButton:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.activeTab {
+  color: white;
+}
+
+.activeTab::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: white;
+}
+
+/* Content Section */
+.contentSection {
+  min-height: 400px;
+}
+
+/* Events Grid */
+.eventsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+/* Gallery Grid */
+.galleryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 24px;
+}
+
+.galleryItem {
+  position: relative;
+  padding-top: 100%; /* Square aspect ratio */
+  overflow: hidden;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  transition: transform 0.3s ease;
+}
+
+.galleryItem:hover {
+  transform: translateY(-4px);
+}
+
+.galleryImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.galleryItem:hover .galleryImage {
+  transform: scale(1.05);
+}
+
+.emptyMessage {
+  text-align: center;
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.6);
+  padding: 60px 20px;
+}
+
+/* Responsive Styles */
+@media (max-width: 1440px) {
+  .venueBannerSection {
+    height: 220px;
+  }
+  
+  .venueName h1 {
+    font-size: 42px;
+  }
+  
+  .venueProfileImageContainer {
+    width: 120px;
+    height: 120px;
+    bottom: -60px;
+  }
+
+  .contentContainer {
+    padding: 0 24px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .contentSections {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .venueBannerSection {
+    height: 200px;
+  }
+  
+  .venueDetailsSection {
+    padding: 60px 24px 30px;
+  }
+  
+  .venueProfileImageContainer {
+    width: 96px;
+    height: 96px;
+    bottom: -40px;
+  }
+  
+  .venueName h1 {
+    font-size: 36px;
+  }
+  
+  .venueUsername {
+    font-size: 16px;
+  }
+  
+  .venueType {
+    font-size: 13px;
+    padding: 5px 14px;
+  }
+  
+  .venueCapacity,
+  .venueLocation {
+    font-size: 14px;
+  }
+  
+  .sectionHeading {
+    font-size: 24px;
+    margin-bottom: 24px;
+  }
+  
+  .contentContainer {
+    padding: 0 16px;
+  }
+
+  .tabsContainer {
+    gap: 24px;
+  }
+
+  .tabButton {
+    font-size: 13px;
+  }
+
+  .eventsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 20px;
+  }
+
+  .galleryGrid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 16px;
+  }
+
+  .emptyMessage {
+    font-size: 16px;
+    padding: 40px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .venueBannerSection {
+    height: 180px;
+  }
+  
+  .venueDetailsSection {
+    padding: 50px 16px 24px;
+  }
+  
+  .venueProfileImageContainer {
+    width: 80px;
+    height: 80px;
+    bottom: -35px;
+  }
+  
+  .venueName h1 {
+    font-size: 28px;
+  }
+  
+  .metaRow {
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  
+  .venueUsername {
+    font-size: 15px;
+  }
+  
+  .venueType {
+    font-size: 12px;
+    padding: 4px 12px;
+  }
+  
+  .venueCapacity,
+  .venueLocation {
+    font-size: 13px;
+  }
+  
+  .venueBio {
+    font-size: 14px;
+  }
+  
+  .sectionHeading {
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+  
+  .contentContainer {
+    padding: 0 12px;
+  }
+
+  .tabsContainer {
+    gap: 16px;
+  }
+
+  .tabButton {
+    font-size: 12px;
+  }
+
+  .eventsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+  }
+
+  .galleryGrid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+  }
+
+  .emptyMessage {
+    font-size: 15px;
+    padding: 32px 12px;
+  }
+}
+
+@media (max-width: 360px) {
+  .venueBannerSection {
+    height: 160px;
+  }
+  
+  .venueProfileImageContainer {
+    width: 70px;
+    height: 70px;
+    bottom: -30px;
+  }
+  
+  .venueName h1 {
+    font-size: 24px;
+  }
+  
+  .metaRow {
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  
+  .venueUsername {
+    font-size: 14px;
+  }
+  
+  .venueType {
+    font-size: 11px;
+    padding: 3px 10px;
+  }
+  
+  .sectionHeading {
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+  
+  .contentContainer {
+    padding: 0 8px;
+  }
+
+  .tabsContainer {
+    gap: 12px;
+  }
+
+  .tabButton {
+    font-size: 11px;
+    padding: 12px 0;
+  }
+} 

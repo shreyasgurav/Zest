@@ -1,0 +1,852 @@
+/* Container */
+.container {
+  min-height: 100vh;
+  background-color: none;
+  color: white;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Remove underlines from all links */
+.container a {
+  text-decoration: none !important;
+}
+
+.container a:hover {
+  text-decoration: none !important;
+}
+
+/* Background - Clean style like About/Contact */
+.background {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+
+.mouseFollow {
+  position: absolute;
+  width: 24rem;
+  height: 24rem;
+  background-color: rgba(168, 85, 247, 0.1);
+  border-radius: 9999px;
+  filter: blur(24px);
+  transition: all 1000ms ease-out;
+}
+
+.backgroundBlob1 {
+  position: absolute;
+  top: 25%;
+  left: 25%;
+  width: 16rem;
+  height: 16rem;
+  background-color: rgba(59, 130, 246, 0.05);
+  border-radius: 9999px;
+  filter: blur(16px);
+  animation: pulse 4s ease-in-out infinite;
+}
+
+.backgroundBlob2 {
+  position: absolute;
+  bottom: 25%;
+  right: 25%;
+  width: 20rem;
+  height: 20rem;
+  background-color: rgba(236, 72, 153, 0.05);
+  border-radius: 9999px;
+  filter: blur(24px);
+  animation: pulse 4s ease-in-out infinite 1s;
+}
+
+/* Hero Section */
+.heroSection {
+  position: relative;
+  z-index: 10;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.heroContainer {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  text-align: center;
+}
+
+.heroTitle {
+  font-size: 6rem;
+  line-height: 1;
+  font-weight: 900;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .heroTitle {
+    font-size: 8rem;
+  }
+}
+
+.titleGradient1 {
+  display: block;
+  background: linear-gradient(to right, white, #e5e7eb, #9ca3af);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.titleGradient2 {
+  display: block;
+  background: linear-gradient(to right, #c084fc, #cd72f4, #60a5fa);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.heroDescription {
+  font-size: 1.25rem;
+  line-height: 1.75;
+  color: #9ca3af;
+  margin-bottom: 3rem;
+  max-width: 32rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (min-width: 1024px) {
+  .heroDescription {
+    font-size: 1.5rem;
+  }
+}
+
+.descriptionHighlight {
+  color: white;
+}
+
+.heroButtons {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 4rem;
+}
+
+.heroButtons a {
+  text-decoration: none !important;
+  color: inherit;
+}
+
+/* Primary Button - Like About Us List Events button */
+.primaryButton {
+  background-color: white;
+  color: black;
+  padding: 1rem 2rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  border-radius: 100px;
+  border: none;
+  cursor: pointer;
+  transition: all 300ms;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+}
+
+.primaryButton:hover {
+  background-color: #f3f4f6;
+  transform: scale(1.05);
+  box-shadow: 0 25px 50px -12px rgba(255, 255, 255, 0.2);
+}
+
+.buttonIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  transition: transform 300ms;
+}
+
+.primaryButton:hover .buttonIcon {
+  transform: translateX(0.25rem);
+}
+
+/* Event Types */
+.eventTypes {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  max-width: 48rem;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .eventTypes {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+.eventTypeCard {
+  background-color: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 1rem;
+  transition: all 500ms;
+  cursor: pointer;
+}
+
+.eventTypeCard:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05) translateY(-0.25rem);
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.eventTypeBadge {
+  display: block;
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-align: center;
+  transition: all 300ms;
+}
+
+.eventTypeCard:hover .eventTypeBadge {
+  background: linear-gradient(to right, #c084fc, #f472b6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Sections */
+.featuresSection {
+  position: relative;
+  z-index: 10;
+  padding: 8rem 0;
+}
+
+.benefitsSection {
+  position: relative;
+  z-index: 10;
+  padding: 8rem 0;
+  background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.02), transparent);
+}
+
+.stepsSection {
+  position: relative;
+  z-index: 10;
+  padding: 8rem 0;
+  background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.05), transparent);
+}
+
+.sectionContainer {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.sectionTitle {
+  font-size: 3rem;
+  line-height: 1;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: white;
+}
+
+@media (min-width: 1024px) {
+  .sectionTitle {
+    font-size: 3.75rem;
+  }
+}
+
+.sectionTitleGradient {
+  display: block;
+  background: linear-gradient(to right, #60a5fa, #c084fc);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.benefitsTitleGradient {
+  background: linear-gradient(to right, #4ade80, #60a5fa);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.stepsTitleGradient {
+  background: linear-gradient(to right, #f472b6, #c084fc);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.sectionDescription {
+  font-size: 1.25rem;
+  color: #9ca3af;
+  max-width: 32rem;
+  margin: 0 auto;
+}
+
+/* Badges */
+.benefitsBadge,
+.stepsBadge {
+  display: inline-flex;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  padding: 0.5rem 1rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #d1d5db;
+  transition: all 300ms;
+}
+
+.benefitsBadge {
+  color: #86efac;
+}
+
+.stepsBadge {
+  color: #f9a8d4;
+}
+
+/* Features Grid */
+.featuresGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .featuresGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .featuresGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.featureCard {
+  background-color: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 2rem;
+  transition: all 500ms;
+  cursor: pointer;
+}
+
+.featureCard:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05) translateY(-0.5rem);
+}
+
+.featureIconContainer {
+  width: 4rem;
+  height: 4rem;
+  background: linear-gradient(to right, rgba(147, 51, 234, 0.2), rgba(59, 130, 246, 0.2));
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  transition: transform 300ms;
+}
+
+.featureCard:hover .featureIconContainer {
+  transform: rotate(12deg);
+}
+
+.featureIcon {
+  width: 2rem;
+  height: 2rem;
+  color: #c084fc;
+}
+
+.featureTitle {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 0.75rem;
+}
+
+.featureDescription {
+  color: #9ca3af;
+  line-height: 1.5;
+  font-size: 0.875rem;
+}
+
+/* Benefits Grid */
+.benefitsGrid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 3rem;
+}
+
+@media (min-width: 1024px) {
+  .benefitsGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.benefitItem {
+  text-align: center;
+}
+
+.benefitIconContainer {
+  position: relative;
+  width: 5rem;
+  height: 5rem;
+  background: linear-gradient(135deg, rgba(147, 51, 234, 0.2), rgba(59, 130, 246, 0.2));
+  border-radius: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 2rem;
+  transition: all 500ms;
+}
+
+.benefitItem:hover .benefitIconContainer {
+  transform: scale(1.1) rotate(6deg);
+}
+
+.benefitIconGlow {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(147, 51, 234, 0.3), rgba(59, 130, 246, 0.3));
+  border-radius: 1.5rem;
+  filter: blur(16px);
+  opacity: 0;
+  transition: opacity 300ms;
+}
+
+.benefitItem:hover .benefitIconGlow {
+  opacity: 0.7;
+}
+
+.benefitIcon {
+  width: 2.5rem;
+  height: 2.5rem;
+  color: #c084fc;
+}
+
+.benefitTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 1rem;
+}
+
+.benefitDescription {
+  color: #d1d5db;
+  line-height: 1.5;
+}
+
+/* Steps Timeline - Sexy Vertical Layout */
+.stepsTimeline {
+  position: relative;
+  max-width: 800px;
+  margin: 0 auto;
+  padding-left: 80px;
+  animation: float 8s ease-in-out infinite;
+}
+
+.timelineConnector {
+  position: absolute;
+  left: 40px;
+  top: 100px;
+  bottom: 210px;
+  width: 4px;
+  z-index: 1;
+}
+
+.timelineLine {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  border-radius: 2px;
+}
+
+.timelineProgress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 0%;
+  background: linear-gradient(to bottom, #c084fc, #f472b6, #60a5fa);
+  border-radius: 2px;
+  transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 20px rgba(192, 132, 252, 0.5), 0 0 40px rgba(244, 114, 182, 0.3);
+}
+
+.stepItem {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 8rem;
+  opacity: 0;
+  transform: translateX(50px);
+  animation: slideInStep 0.8s ease-out forwards;
+}
+
+.stepItem1 {
+  animation-delay: 0.2s;
+}
+
+.stepItem2 {
+  animation-delay: 0.6s;
+}
+
+.stepItem3 {
+  animation-delay: 1s;
+}
+
+.stepNumber {
+  position: absolute;
+  left: -80px;
+  top: 0;
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, rgba(192, 132, 252, 0.3), rgba(244, 114, 182, 0.3));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 1.5rem;
+  font-weight: 900;
+  z-index: 2;
+  box-shadow: 0 5px 15px rgba(192, 132, 252, 0.2);
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Active Step Glow */
+.stepItem.active .stepNumber {
+  background: linear-gradient(135deg, #c084fc, #f472b6);
+  color: white;
+  transform: scale(1.2);
+  box-shadow: 
+    0 0 30px rgba(192, 132, 252, 0.8),
+    0 0 60px rgba(244, 114, 182, 0.6),
+    0 0 90px rgba(96, 165, 250, 0.4);
+  border: 4px solid rgba(255, 255, 255, 0.8);
+  animation: activeGlow 2s ease-in-out infinite;
+}
+
+.stepItem:hover .stepNumber {
+  transform: scale(1.1);
+  box-shadow: 0 10px 25px rgba(192, 132, 252, 0.4);
+  background: linear-gradient(135deg, rgba(192, 132, 252, 0.5), rgba(244, 114, 182, 0.5));
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.stepContent {
+  flex: 1;
+  padding-left: 2rem;
+}
+
+.stepIconContainer {
+  position: relative;
+  width: 4rem;
+  height: 4rem;
+  background: linear-gradient(135deg, rgba(147, 51, 234, 0.1), rgba(236, 72, 153, 0.1));
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  transition: all 500ms;
+}
+
+.stepItem.active .stepIconContainer {
+  background: linear-gradient(135deg, rgba(147, 51, 234, 0.3), rgba(236, 72, 153, 0.3));
+  transform: scale(1.1);
+  border: 1px solid rgba(192, 132, 252, 0.3);
+}
+
+.stepItem:hover .stepIconContainer {
+  transform: scale(1.1) rotate(-6deg);
+  background: linear-gradient(135deg, rgba(147, 51, 234, 0.3), rgba(236, 72, 153, 0.3));
+}
+
+.stepIconGlow {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(147, 51, 234, 0.4), rgba(236, 72, 153, 0.4));
+  border-radius: 1rem;
+  filter: blur(16px);
+  opacity: 0;
+  transition: opacity 300ms;
+}
+
+.stepItem:hover .stepIconGlow {
+  opacity: 0.8;
+}
+
+.stepIcon {
+  width: 2rem;
+  height: 2rem;
+  color: rgba(192, 132, 252, 0.6);
+  transition: all 0.5s ease;
+}
+
+.stepItem.active .stepIcon {
+  color: #c084fc;
+}
+
+.stepTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.6), rgba(209, 213, 219, 0.6));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  transition: all 0.5s ease;
+}
+
+.stepItem.active .stepTitle {
+  background: linear-gradient(135deg, #ffffff, #f3f4f6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  transform: translateX(10px);
+}
+
+.stepItem:hover .stepTitle {
+  background: linear-gradient(135deg, #c084fc, #f472b6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.stepDescription {
+  color: rgba(209, 213, 219, 0.7);
+  line-height: 1.6;
+  font-size: 1.1rem;
+  transition: all 0.5s ease;
+}
+
+.stepItem.active .stepDescription {
+  color: #d1d5db;
+  transform: translateX(10px);
+}
+
+/* Mobile Timeline */
+@media (max-width: 768px) {
+  .stepsTimeline {
+    padding-left: 60px;
+  }
+  
+  .timelineConnector {
+    left: 30px;
+  }
+  
+  .stepNumber {
+    left: -60px;
+    width: 60px;
+    height: 60px;
+    font-size: 1.2rem;
+  }
+  
+  .stepContent {
+    padding-left: 1rem;
+  }
+  
+  .stepTitle {
+    font-size: 1.5rem;
+  }
+  
+  .stepDescription {
+    font-size: 1rem;
+  }
+  
+  .stepItem {
+    margin-bottom: 6rem;
+  }
+}
+
+/* Animations */
+@keyframes slideInStep {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 10px 30px rgba(192, 132, 252, 0.3);
+  }
+  50% {
+    box-shadow: 0 15px 40px rgba(192, 132, 252, 0.5);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes activeGlow {
+  0%, 100% {
+    box-shadow: 
+      0 0 30px rgba(192, 132, 252, 0.8),
+      0 0 60px rgba(244, 114, 182, 0.6),
+      0 0 90px rgba(96, 165, 250, 0.4);
+  }
+  50% {
+    box-shadow: 
+      0 0 40px rgba(192, 132, 252, 1),
+      0 0 80px rgba(244, 114, 182, 0.8),
+      0 0 120px rgba(96, 165, 250, 0.6);
+  }
+}
+
+/* CTA Section */
+.ctaSection {
+  position: relative;
+  z-index: 10;
+  padding-bottom: 10rem;
+  padding-top: 0rem;
+  background: none;
+}
+
+.ctaContainer {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  text-align: center;
+}
+
+.ctaTitle {
+  font-size: 3rem;
+  line-height: 1;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: white;
+}
+
+@media (min-width: 1024px) {
+  .ctaTitle {
+    font-size: 4rem;
+  }
+}
+
+.ctaTitleGradient {
+  display: block;
+  background: linear-gradient(to right, #c084fc, #f472b6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.ctaDescription {
+  font-size: 1.25rem;
+  color: #d1d5db;
+  margin-bottom: 3rem;
+  max-width: 32rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.ctaButtons {
+  display: flex;
+  justify-content: center;
+}
+
+.ctaButtons a {
+  text-decoration: none !important;
+  color: inherit;
+}
+
+.ctaPrimaryButton {
+  background: linear-gradient(to right, #a855f7, #ec4899);
+  color: white;
+  padding: 1rem 2rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  transition: all 300ms;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+}
+
+.ctaPrimaryButton:hover {
+  background: linear-gradient(to right, #9333ea, #db2777);
+  transform: scale(1.1);
+  box-shadow: 0 25px 50px -12px rgba(168, 85, 247, 0.25);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 767px) {
+  .sectionContainer {
+    padding: 0 1rem;
+  }
+  
+  .featureCard {
+    padding: 1.5rem;
+  }
+  
+  .featureTitle {
+    font-size: 1rem;
+  }
+  
+  .featureDescription {
+    font-size: 0.8rem;
+  }
+  
+  .heroTitle {
+    font-size: 4rem;
+  }
+  
+  .heroDescription {
+    font-size: 1rem;
+  }
+  
+  .sectionTitle {
+    font-size: 2.25rem;
+  }
+  
+  .ctaTitle {
+    font-size: 2.25rem;
+  }
+}
+
+/* Animations */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.05);
+  }
+} 

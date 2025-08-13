@@ -1,0 +1,230 @@
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto 32px auto;
+  padding: 20px 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 30px;
+  letter-spacing: 0.5px;
+  text-align: center;
+  background: linear-gradient(135deg, #ffffff, #e5e5e5);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.calendarContainer {
+  position: relative;
+  overflow-x: auto;
+  padding: 10px 0;
+  border-radius: 20px;
+}
+
+.datesList {
+  display: flex;
+  gap: 12px;
+  min-width: fit-content;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.dateItem {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.monthLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: #6366f1;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  letter-spacing: 1px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: rgba(99, 102, 241, 0.1);
+  border-radius: 8px;
+  padding: 0 6px;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.dateCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+  backdrop-filter: blur(15px);
+  position: relative;
+  overflow: hidden;
+}
+
+.dateCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+  transition: left 0.5s ease;
+}
+
+.dateCard:hover:not(.disabled)::before {
+  left: 100%;
+}
+
+.dateCard:hover:not(.disabled) {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(139, 92, 246, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.dateCard.selected {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(168, 139, 250, 0.15));
+  border-color: rgba(139, 92, 246, 0.4);
+  color: #c4b5fd;
+  box-shadow: 
+    0 8px 25px rgba(139, 92, 246, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.dateCard.disabled {
+  background: rgba(25, 25, 25, 0.6);
+  color: rgba(255, 255, 255, 0.3);
+  cursor: not-allowed;
+  opacity: 0.5;
+  border-color: rgba(255, 255, 255, 0.03);
+}
+
+.dateCard.disabled:hover {
+  transform: none;
+  background: rgba(25, 25, 25, 0.6);
+  border-color: rgba(255, 255, 255, 0.03);
+  box-shadow: none;
+}
+
+.dateNumber {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 4px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.dayName {
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: capitalize;
+  opacity: 0.7;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.selected .dayName {
+  opacity: 1;
+  color: #c4b5fd;
+}
+
+.selected .dateNumber {
+  color: #ffffff;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .container {
+    padding: 15px 0;
+  }
+
+  .title {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+
+  .dateCard {
+    width: 70px;
+    height: 70px;
+  }
+
+  .dateNumber {
+    font-size: 20px;
+  }
+
+  .dayName {
+    font-size: 11px;
+  }
+
+  .datesList {
+    gap: 8px;
+    padding: 0 10px;
+  }
+
+  .monthLabel {
+    height: 70px;
+    font-size: 12px;
+    padding: 0 4px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dateCard {
+    width: 60px;
+    height: 60px;
+  }
+
+  .dateNumber {
+    font-size: 18px;
+  }
+
+  .dayName {
+    font-size: 10px;
+  }
+
+  .datesList {
+    gap: 6px;
+    padding: 0 8px;
+  }
+
+  .monthLabel {
+    height: 60px;
+    font-size: 11px;
+    padding: 0 3px;
+  }
+}
+
+/* Scrollbar styling */
+.calendarContainer::-webkit-scrollbar {
+  height: 6px;
+}
+
+.calendarContainer::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+}
+
+.calendarContainer::-webkit-scrollbar-thumb {
+  background: rgba(139, 92, 246, 0.3);
+  border-radius: 3px;
+}
+
+.calendarContainer::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 92, 246, 0.5);
+} 

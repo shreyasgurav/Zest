@@ -1,0 +1,2 @@
+// activities types
+export {};
