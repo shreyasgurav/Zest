@@ -1,0 +1,1 @@
+self.__NEXT_FONT_MANIFEST="{\"pages\":{},\"app\":{\"/Users/shreyasgurav/Documents/Projects/Zest/Zest Deployed/src/app/layout\":[\"static/media/878382e16337abd7-s.p.woff2\",\"static/media/793968fa3513f5d6-s.p.woff2\",\"static/media/82cc54d25ae33c1a-s.p.woff2\",\"static/media/55c4d69ce8a7b1d7-s.p.woff2\"]},\"appUsingSizeAdjust\":true,\"pagesUsingSizeAdjust\":false}"

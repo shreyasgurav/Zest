@@ -38,6 +38,7 @@ const lexendPeta = Lexend_Peta({
 const fontVariables = `${lexend.variable} ${barrio.variable} ${schoolbell.variable} ${lexendPeta.variable}`;
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
   title: 'Zest',
   description: 'Your guide to everything',
   icons: {

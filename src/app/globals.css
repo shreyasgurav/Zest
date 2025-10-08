@@ -6,6 +6,12 @@
   --foreground-rgb: 255, 255, 255;
   --background-start-rgb: 6, 9, 63;
   --background-end-rgb: 0, 0, 0;
+  
+  /* Header height variables for consistent usage */
+  --header-height: 44px;
+  --secondary-nav-height: 56px;
+  --total-header-height-mobile: 100px; /* header + secondary nav */
+  --total-header-height-desktop: 44px; /* just header */
 }
 
 /* Animated Background */
@@ -129,31 +135,74 @@ body {
 
 /* PhoneInput global styles for react-phone-number-input */
 .PhoneInput {
-  background-color: black;
+  background: transparent;
   margin-bottom: 15px;
+  display: flex;
+  align-items: stretch;
 }
+
 .PhoneInput input {
-  background-color: black;
+  background: rgba(31, 41, 55, 0.6);
   color: white;
-  border: 1px solid #333;
-  padding: 8px;
-  border-radius: 4px;
-  width: 200px;
+  border: 1px solid rgba(75, 85, 99, 0.5);
+  padding: 18px 20px;
+  border-radius: 0 16px 16px 0;
+  border-left: none;
+  flex: 1;
+  font-size: 16px;
+  transition: all 0.3s ease;
 }
+
+.PhoneInput input:focus {
+  outline: none;
+  border-color: #7c3aed;
+  background: rgba(31, 41, 55, 0.8);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+}
+
+.PhoneInput input::placeholder {
+  color: rgba(156, 163, 175, 0.6);
+}
+
 .PhoneInputCountry {
-  background-color: black;
-  padding: 8px;
+  background: rgba(31, 41, 55, 0.6);
+  border: 1px solid rgba(75, 85, 99, 0.5);
+  border-radius: 16px 0 0 16px;
+  border-right: none;
+  padding: 18px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
-.PhoneInputCountrySelect option {
-  background-color: black;
+
+.PhoneInputCountrySelect {
+  background: transparent;
+  border: none;
   color: white;
+  cursor: pointer;
 }
+
+.PhoneInputCountrySelect:focus {
+  outline: none;
+}
+
+.PhoneInputCountrySelectArrow {
+  color: rgba(156, 163, 175, 0.8);
+  margin-left: 4px;
+}
+
 .PhoneInputCountryIcon {
-  opacity: 0.8;
+  opacity: 1;
+  background: transparent;
 }
+
+.PhoneInputCountryIconImg {
+  background: transparent;
+}
+
 .PhoneInput input:hover,
 .PhoneInput input:focus {
-  border-color: #666;
+  border-color: #7c3aed;
   outline: none;
 } 
 
@@ -164,5 +213,47 @@ html {
 
 body {
   overflow-x: hidden;
+}
+
+/* Fixed Header Utility Classes */
+.page-content {
+  padding-top: var(--header-height);
+  min-height: 100vh;
+}
+
+.page-content-with-secondary {
+  padding-top: var(--total-header-height-mobile);
+  min-height: 100vh;
+}
+
+@media (min-width: 769px) {
+  .page-content-with-secondary {
+    padding-top: var(--total-header-height-desktop);
+  }
+}
+
+/* Dashboard specific utilities */
+.dashboard-content {
+  padding-top: 0; /* No additional padding needed as ClientLayout handles it */
+  min-height: 100vh;
+}
+
+/* Sticky element positioning for fixed header */
+.sticky-below-header {
+  position: sticky;
+  top: var(--header-height);
+  z-index: 10;
+}
+
+.sticky-below-full-header {
+  position: sticky;
+  top: var(--total-header-height-mobile);
+  z-index: 10;
+}
+
+@media (min-width: 769px) {
+  .sticky-below-full-header {
+    top: var(--total-header-height-desktop);
+  }
 } 
 

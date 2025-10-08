@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "security-test": "node scripts/test-security.js",
+    "security-audit": "npm run security-test --report-only"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.3",
@@ -26,6 +28,7 @@
     "react": "18.2.0",
     "react-calendar": "^6.0.0",
     "react-dom": "18.2.0",
+    "react-error-boundary": "^6.0.0",
     "react-helmet-async": "^2.0.5",
     "react-hot-toast": "^2.5.2",
     "react-icons": "^5.5.0",
