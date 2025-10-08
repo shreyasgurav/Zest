@@ -1,4 +1,4 @@
-// File: /Users/shreyasgurav/Desktop/GitHub/src/app/guides/page.tsx
+// File: /Users/shreyasgurav/Documents/Projects/Zest Deployed/src/app/guides/page.tsx
 import * as entry from '../../../../src/app/guides/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
