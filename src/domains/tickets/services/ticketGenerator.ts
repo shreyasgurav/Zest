@@ -86,7 +86,7 @@ export function generateQRCodeData(ticketId: string, ticketNumber: string): stri
  */
 export async function isTicketNumberUnique(ticketNumber: string): Promise<boolean> {
   try {
-    const existingTicket = await adminDb
+    const existingTicket = await adminDb!
       .collection('tickets')
       .where('ticketNumber', '==', ticketNumber)
       .limit(1)
@@ -144,7 +144,7 @@ export async function createTicketsForBooking(
     let venue = '';
     
     if (bookingType === 'event') {
-      const eventDoc = await adminDb.collection('events').doc(bookingData.eventId).get();
+      const eventDoc = await adminDb!.collection('events').doc(bookingData.eventId).get();
       if (eventDoc.exists) {
         const eventData = eventDoc.data();
         title = eventData?.title || eventData?.eventTitle || 'Event';
@@ -213,7 +213,7 @@ export async function createTicketsForBooking(
         }
       }
     } else if (bookingType === 'activity') {
-      const activityDoc = await adminDb.collection('activities').doc(bookingData.activityId).get();
+      const activityDoc = await adminDb!.collection('activities').doc(bookingData.activityId).get();
       if (activityDoc.exists) {
         const activityData = activityDoc.data();
         title = activityData?.name || 'Activity';
@@ -268,10 +268,10 @@ export async function createTicketsForBooking(
     }
     
     // Save all tickets to Firebase
-    const batch = adminDb.batch();
+    const batch = adminDb!.batch();
     
     for (const ticket of tickets) {
-      const ticketRef = adminDb.collection('tickets').doc(ticket.id);
+      const ticketRef = adminDb!.collection('tickets').doc(ticket.id);
       batch.set(ticketRef, ticket);
       ticketIds.push(ticket.id);
     }
@@ -291,7 +291,7 @@ export async function createTicketsForBooking(
  */
 export async function getUserTickets(userId: string): Promise<TicketData[]> {
   try {
-    const ticketsSnapshot = await adminDb
+    const ticketsSnapshot = await adminDb!
       .collection('tickets')
       .where('userId', '==', userId)
       .orderBy('createdAt', 'desc')
@@ -309,7 +309,7 @@ export async function getUserTickets(userId: string): Promise<TicketData[]> {
  */
 export async function validateTicket(ticketId: string, location?: string): Promise<boolean> {
   try {
-    const ticketRef = adminDb.collection('tickets').doc(ticketId);
+    const ticketRef = adminDb!.collection('tickets').doc(ticketId);
     const ticketDoc = await ticketRef.get();
     
     if (!ticketDoc.exists) {
@@ -356,10 +356,10 @@ export async function transferTicket(
   transferredBy: string
 ): Promise<boolean> {
   try {
-    const ticketRef = adminDb.collection('tickets').doc(ticketId);
-    const attendeeRef = adminDb.collection('eventAttendees').doc(ticketId.replace('ticket_', ''));
+    const ticketRef = adminDb!.collection('tickets').doc(ticketId);
+    const attendeeRef = adminDb!.collection('eventAttendees').doc(ticketId.replace('ticket_', ''));
     
-    return adminDb.runTransaction(async (transaction) => {
+    return adminDb!.runTransaction(async (transaction) => {
       const ticketDoc = await transaction.get(ticketRef);
       const attendeeDoc = await transaction.get(attendeeRef);
       
@@ -433,13 +433,13 @@ export async function cancelIndividualTickets(
       refundProcessed: false
     };
     
-    return adminDb.runTransaction(async (transaction) => {
+    return adminDb!.runTransaction(async (transaction) => {
       const ticketDocs = await Promise.all(
-        ticketIds.map(id => transaction.get(adminDb.collection('tickets').doc(id)))
+        ticketIds.map(id => transaction.get(adminDb!.collection('tickets').doc(id)))
       );
       
       const attendeeDocs = await Promise.all(
-        ticketIds.map(id => transaction.get(adminDb.collection('eventAttendees').doc(id.replace('ticket_', ''))))
+        ticketIds.map(id => transaction.get(adminDb!.collection('eventAttendees').doc(id.replace('ticket_', ''))))
       );
       
       // Validate all tickets can be cancelled
@@ -473,8 +473,8 @@ export async function cancelIndividualTickets(
       
       // Cancel all tickets
       for (let i = 0; i < ticketDocs.length; i++) {
-        const ticketRef = adminDb.collection('tickets').doc(ticketIds[i]);
-        const attendeeRef = adminDb.collection('eventAttendees').doc(ticketIds[i].replace('ticket_', ''));
+        const ticketRef = adminDb!.collection('tickets').doc(ticketIds[i]);
+        const attendeeRef = adminDb!.collection('eventAttendees').doc(ticketIds[i].replace('ticket_', ''));
         
         const ticketData = ticketDocs[i].data() as TicketData;
         

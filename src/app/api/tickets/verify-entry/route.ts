@@ -9,6 +9,14 @@ const db = getFirestore(app());
 
 export async function POST(request: NextRequest) {
   try {
+    // Check if Firebase Admin is available
+    if (!adminDb) {
+      return NextResponse.json(
+        { error: 'Database service not available' },
+        { status: 503 }
+      );
+    }
+
     const { ticketNumber, scannerId, scannerType, eventId, scannerLocation } = await request.json();
 
     if (!ticketNumber || !scannerId || !scannerType || !eventId) {

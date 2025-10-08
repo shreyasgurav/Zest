@@ -13,6 +13,14 @@ interface SimpleManualAttendeeRequest {
 
 export async function POST(request: NextRequest) {
   try {
+    // Check if Firebase Admin is available
+    if (!adminDb) {
+      return NextResponse.json(
+        { error: 'Database service not available' },
+        { status: 503 }
+      );
+    }
+
     console.log('Simple manual attendee API called');
     
     const body: SimpleManualAttendeeRequest = await request.json();
@@ -28,7 +36,7 @@ export async function POST(request: NextRequest) {
 
     // Check if event exists
     console.log('Checking if event exists...');
-    const eventDoc = await adminDb.collection('events').doc(eventId).get();
+    const eventDoc = await adminDb!.collection('events').doc(eventId).get();
     if (!eventDoc.exists) {
       console.log('Event not found');
       return NextResponse.json({ error: 'Event not found' }, { status: 404 });
@@ -66,7 +74,7 @@ export async function POST(request: NextRequest) {
     };
 
     console.log('Saving attendee to database...');
-    await adminDb.collection('eventAttendees').doc(attendeeId).set(attendeeData);
+    await adminDb!.collection('eventAttendees').doc(attendeeId).set(attendeeData);
     
     console.log('Attendee created successfully');
     

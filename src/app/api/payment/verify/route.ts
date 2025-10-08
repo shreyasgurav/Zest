@@ -17,12 +17,12 @@ async function checkPaymentDuplicate(paymentId: string): Promise<boolean> {
   try {
     // Check in both event and activity bookings
     const [eventBookings, activityBookings] = await Promise.all([
-      adminDb
+      adminDb!
         .collection('eventAttendees')
         .where('paymentId', '==', paymentId)
         .limit(1)
         .get(),
-      adminDb
+      adminDb!
         .collection('activity_bookings')
         .where('paymentId', '==', paymentId)
         .limit(1)
@@ -44,8 +44,8 @@ async function createEventBookingAtomic(
   finalBookingData: any,
   bookingData: any
 ): Promise<string> {
-  return adminDb.runTransaction(async (transaction) => {
-    const eventRef = adminDb.collection('events').doc(bookingData.eventId);
+  return adminDb!.runTransaction(async (transaction) => {
+    const eventRef = adminDb!.collection('events').doc(bookingData.eventId);
     const eventDoc = await transaction.get(eventRef);
     
     if (!eventDoc.exists) {
@@ -156,7 +156,7 @@ async function createEventBookingAtomic(
         
         remainingAmount -= individualAmount;
         
-        const attendeeRef = adminDb.collection('eventAttendees').doc();
+        const attendeeRef = adminDb!.collection('eventAttendees').doc();
         const individualAttendeeData = {
           ...finalBookingData,
           // Individual ticket info - each attendee gets 1 ticket of their type
@@ -249,8 +249,8 @@ async function createActivityBookingAtomic(
   finalBookingData: any,
   bookingData: any
 ): Promise<string> {
-  return adminDb.runTransaction(async (transaction) => {
-    const activityRef = adminDb.collection('activities').doc(bookingData.activityId);
+  return adminDb!.runTransaction(async (transaction) => {
+    const activityRef = adminDb!.collection('activities').doc(bookingData.activityId);
     const activityDoc = await transaction.get(activityRef);
     
     if (!activityDoc.exists) {
@@ -295,7 +295,7 @@ async function createActivityBookingAtomic(
     const individualAmount = bookingData.totalAmount / requestedTickets;
     
     for (let i = 0; i < requestedTickets; i++) {
-      const attendeeRef = adminDb.collection('activityAttendees').doc();
+      const attendeeRef = adminDb!.collection('activityAttendees').doc();
       const individualAttendeeData = {
         ...finalBookingData,
         // Individual ticket info - each attendee gets 1 ticket
@@ -336,6 +336,14 @@ async function createActivityBookingAtomic(
 
 export async function POST(request: NextRequest) {
   try {
+    // Check if Firebase Admin is available
+    if (!adminDb) {
+      return NextResponse.json(
+        { error: 'Database service not available' },
+        { status: 503 }
+      );
+    }
+
     const body = await request.json();
     const {
       razorpay_order_id,

@@ -2,13 +2,26 @@ import { NextRequest, NextResponse } from 'next/server';
 import Razorpay from 'razorpay';
 import { randomBytes } from 'crypto';
 
-const razorpay = new Razorpay({
-  key_id: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID!,
-  key_secret: process.env.RAZORPAY_KEY_SECRET!,
-});
+// Initialize Razorpay only when environment variables are available
+const getRazorpayInstance = () => {
+  const keyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
+  const keySecret = process.env.RAZORPAY_KEY_SECRET;
+  
+  if (!keyId || !keySecret) {
+    throw new Error('Razorpay credentials not configured');
+  }
+  
+  return new Razorpay({
+    key_id: keyId,
+    key_secret: keySecret,
+  });
+};
 
 export async function POST(request: NextRequest) {
   try {
+    // Check if Razorpay is properly configured
+    const razorpay = getRazorpayInstance();
+    
     const body = await request.json();
     const { amount, currency = 'INR', receipt, notes } = body;
 
@@ -72,6 +85,15 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('Error creating Razorpay order:', error);
+    
+    // Handle specific Razorpay configuration errors
+    if (error instanceof Error && error.message.includes('Razorpay credentials not configured')) {
+      return NextResponse.json(
+        { error: 'Payment service not configured' },
+        { status: 503 }
+      );
+    }
+    
     return NextResponse.json(
       { error: 'Failed to create payment order' },
       { status: 500 }

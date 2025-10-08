@@ -7,6 +7,7 @@ import { db } from '@/infrastructure/firebase';
 import { doc, getDoc, collection, query, where, orderBy, onSnapshot } from 'firebase/firestore';
 import { DashboardSecurity } from '@/shared/utils/security/dashboardSecurity';
 import { useDashboard } from '../contexts/DashboardContext';
+import { EventData, Attendee, Ticket } from '../types/dashboard.types';
 
 export const useDashboardData = () => {
   const { state, dispatch } = useDashboard();
@@ -67,7 +68,32 @@ export const useDashboardData = () => {
       const eventDoc = await getDoc(doc(db(), "events", eventId));
       if (eventDoc.exists()) {
         const data = eventDoc.data();
-        dispatch({ type: 'SET_EVENT_DATA', payload: { ...data, id: eventDoc.id } });
+        
+        // Transform the data to match EventData interface
+        const eventData: EventData = {
+          id: eventDoc.id,
+          title: data.title || '',
+          event_image: data.event_image || undefined,
+          organizationId: data.organizationId || '',
+          event_type: data.event_type || 'event',
+          architecture: data.architecture || 'legacy',
+          sessions: data.sessions || [],
+          venue_type: data.venue_type || 'global',
+          total_sessions: data.total_sessions || 0,
+          total_capacity: data.total_capacity || 0,
+          time_slots: data.time_slots || [],
+          tickets: data.tickets || [],
+          event_venue: data.event_venue || '',
+          about_event: data.about_event || '',
+          hosting_club: data.hosting_club || '',
+          organization_username: data.organization_username || '',
+          event_category: data.event_categories?.[0] || '',
+          event_languages: data.event_languages || '',
+          event_duration: data.event_duration || '',
+          event_age_limit: data.event_age_limit || ''
+        };
+        
+        dispatch({ type: 'SET_EVENT_DATA', payload: eventData });
       } else {
         dispatch({ type: 'SET_ERROR', payload: "Event not found" });
       }
@@ -102,10 +128,37 @@ export const useDashboardData = () => {
     return onSnapshot(
       attendeesQuery,
       (snapshot) => {
-        const attendeesList = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }));
+        const attendeesList: Attendee[] = snapshot.docs.map(doc => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            name: data.name || '',
+            email: data.email || '',
+            phone: data.phone || '',
+            tickets: data.tickets || 0,
+            selectedDate: data.selectedDate || '',
+            selectedTimeSlot: data.selectedTimeSlot || { start_time: '', end_time: '' },
+            selectedSession: data.selectedSession || undefined,
+            sessionId: data.sessionId || undefined,
+            createdAt: data.createdAt || '',
+            status: data.status || 'confirmed',
+            paymentStatus: data.paymentStatus || 'paid',
+            checkedIn: data.checkedIn || false,
+            checkInTime: data.checkInTime || undefined,
+            ticketIds: data.ticketIds || undefined,
+            userId: data.userId || undefined,
+            eventId: data.eventId || undefined,
+            ticketType: data.ticketType || undefined,
+            ticketIndex: data.ticketIndex || undefined,
+            totalTicketsInBooking: data.totalTicketsInBooking || undefined,
+            individualAmount: data.individualAmount || undefined,
+            originalBookingData: data.originalBookingData || undefined,
+            attendeeId: data.attendeeId || undefined,
+            canCheckInIndependently: data.canCheckInIndependently || undefined,
+            checkInMethod: data.checkInMethod || undefined,
+            checkedInBy: data.checkedInBy || undefined
+          };
+        });
         
         if (state.selectedSession && state.eventData?.architecture === 'session-centric') {
           dispatch({ type: 'SET_SESSION_ATTENDEES', payload: attendeesList });
@@ -144,10 +197,30 @@ export const useDashboardData = () => {
     return onSnapshot(
       ticketsQuery,
       (snapshot) => {
-        const ticketsList = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }));
+        const ticketsList: Ticket[] = snapshot.docs.map(doc => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            ticketNumber: data.ticketNumber || '',
+            userName: data.userName || '',
+            userEmail: data.userEmail || '',
+            ticketType: data.ticketType || undefined,
+            eventId: data.eventId || undefined,
+            sessionId: data.sessionId || undefined,
+            userId: data.userId || '',
+            status: data.status || 'active',
+            createdAt: data.createdAt || '',
+            usedAt: data.usedAt || undefined,
+            qrCode: data.qrCode || undefined,
+            type: data.type || 'event',
+            title: data.title || '',
+            venue: data.venue || '',
+            selectedDate: data.selectedDate || '',
+            selectedTimeSlot: data.selectedTimeSlot || { start_time: '', end_time: '' },
+            amount: data.amount || 0,
+            bookingId: data.bookingId || ''
+          };
+        });
         
         dispatch({ type: 'SET_TICKETS', payload: ticketsList });
       },

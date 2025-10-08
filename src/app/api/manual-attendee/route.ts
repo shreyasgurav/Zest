@@ -16,6 +16,14 @@ interface ManualAttendeeRequest {
 
 export async function POST(request: NextRequest) {
   try {
+    // Check if Firebase Admin is available
+    if (!adminDb) {
+      return NextResponse.json(
+        { error: 'Database service not available' },
+        { status: 503 }
+      );
+    }
+
     const body: ManualAttendeeRequest = await request.json();
     const { eventId, name, email, phone, ticketType, quantity = 1, hostUserId } = body;
 
@@ -54,7 +62,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get event details first for debugging
-    const eventDoc = await adminDb.collection('events').doc(eventId).get();
+    const eventDoc = await adminDb!.collection('events').doc(eventId).get();
     if (!eventDoc.exists) {
       return NextResponse.json(
         { error: 'Event not found' },
@@ -287,22 +295,22 @@ export async function POST(request: NextRequest) {
     }
 
     // Use transaction to ensure data consistency for all records
-    await adminDb.runTransaction(async (transaction) => {
+    await adminDb!.runTransaction(async (transaction) => {
       // Create all attendee records
       for (const attendeeData of attendeeDataArray) {
-        const attendeeRef = adminDb.collection('eventAttendees').doc(attendeeData.id);
+        const attendeeRef = adminDb!.collection('eventAttendees').doc(attendeeData.id);
         transaction.set(attendeeRef, attendeeData);
       }
 
       // Create all ticket records
       for (const ticketData of ticketDataArray) {
-        const ticketRef = adminDb.collection('tickets').doc(ticketData.id);
+        const ticketRef = adminDb!.collection('tickets').doc(ticketData.id);
         transaction.set(ticketRef, ticketData);
       }
 
       // If user has account, add all tickets to their profile's linked tickets
       if (attendeeUserId) {
-        const userRef = adminDb.collection('Users').doc(attendeeUserId);
+        const userRef = adminDb!.collection('Users').doc(attendeeUserId);
         
         // Get current user data to update linked tickets
         const userDoc = await transaction.get(userRef);

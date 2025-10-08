@@ -1,0 +1,1348 @@
+/*!*******************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[11].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[11].oneOf[7].use[3]!./src/app/(public)/event-profile/[id]/EventProfile.module.css ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************************************************/
+/* Event Profile Page Styles */
+
+.EventProfile_eventProfileContainer__XmFfT {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 50px;
+    width: 100%;
+}
+
+/* Event Card Styles */
+.EventProfile_eventCard__FohAb {
+    background: transparent;
+    padding: 1rem 1rem 1rem 0;
+    box-shadow: none;
+    cursor: pointer;
+    width: 100%;
+    max-width: 20rem;
+    transition: transform 0.3s ease-out;
+    margin: 20px 0;
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 1.5rem;
+}
+
+.EventProfile_eventCard__FohAb:hover {
+    transform: scale(1.02);
+}
+
+.EventProfile_topSection__jFTMr {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.EventProfile_dateBox__3heuK {
+    background: rgba(255, 255, 255, 0.1);
+    -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    width: 3rem;
+    height: 3rem;
+    flex-shrink: 0;
+}
+
+.EventProfile_monthSection__Aj3jR {
+    background: rgba(93, 93, 93, 0.3);
+    -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(8px);
+    padding: 0.25rem 0.5rem;
+    text-align: center;
+}
+
+.EventProfile_monthText__rx5cR {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+.EventProfile_dateSection__3EfuJ {
+    padding: 0.25rem 0.5rem 0.375rem;
+    text-align: center;
+}
+
+.EventProfile_dateText__32Fj6 {
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.EventProfile_dateTimeInfo__tAog9 {
+    flex: 1 1;
+}
+
+.EventProfile_dayText__HZvum {
+    color: white;
+    font-weight: 700;
+    font-size: 1.125rem;
+    margin-bottom: 0.25rem;
+}
+
+.EventProfile_timeText__7f_vO {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.875rem;
+}
+
+.EventProfile_locationSection__IvhHg {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+}
+
+.EventProfile_locationIconBox__zylu7 {
+    background: rgba(255, 255, 255, 0.1);
+    -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px);
+    border-radius: 0.75rem;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.EventProfile_locationIcon__vZ0Z1 {
+    width: 1rem;
+    height: 1rem;
+    color: white;
+}
+
+.EventProfile_locationInfo__prG0H {
+    flex: 1 1;
+}
+
+.EventProfile_venueText__YfprX {
+    color: white;
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+}
+
+.EventProfile_locationText__2zbGu {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.875rem;
+}
+
+.EventProfile_eventContent__HmWZT {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0;
+}
+
+.EventProfile_eventProfileImage__bTy_5 {
+    flex: 1 1;
+    margin-right: 20px;
+    max-width: 400px;
+    min-width: 300px;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.EventProfile_eventProfileImage__bTy_5 img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.EventProfile_noImage__qquGh {
+    width: 100%;
+    height: 100%;
+    background-color: #2d2d2d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    border-radius: 12px;
+}
+
+.EventProfile_eventInfoBox__Tw7n5 {
+    background: transparent;
+    border-radius: 15px;
+    box-shadow: none;
+    overflow: hidden;
+    max-width: 500px;
+    flex: 1 1;
+    text-align: left;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.EventProfile_eventInfo__5vm6L {
+    padding: 20px;
+}
+
+.EventProfile_eventInfo__5vm6L h2 {
+    color: rgb(170, 170, 170);
+    margin: 0 0 15px;
+    font-size: 32px;
+    border-bottom: none;
+    padding-bottom: 0;
+    font-weight: 700;
+}
+
+.EventProfile_hostingClub__u9Or3 {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 8px;
+    font-style: normal;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+.EventProfile_creatorInfo__HS6BG {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.EventProfile_creatorAvatars__7nvzz {
+    display: flex;
+    align-items: center;
+    margin-left: 4px;
+    margin-right: 4px;
+}
+
+.EventProfile_creatorAvatar__tWEjy {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    flex-shrink: 0;
+    margin-left: -8px;
+    position: relative;
+    background-color: rgba(60, 60, 60, 0.8);
+}
+
+.EventProfile_creatorAvatar__tWEjy:first-child {
+    margin-left: 0;
+}
+
+.EventProfile_creatorProfileImage__HERqV {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.EventProfile_defaultAvatar__5iIkl {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.EventProfile_moreCount__4H34g {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(40, 40, 40, 0.9);
+    color: #ccc;
+    font-size: 8px;
+    font-weight: bold;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.EventProfile_organizationLink__KyB_3 {
+    color: #666;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.EventProfile_organizationLink__KyB_3:hover {
+    color: #888;
+    text-decoration: underline;
+}
+
+.EventProfile_clickableText__TJWgD {
+    color: #6366f1;
+    font-weight: 500;
+}
+
+.EventProfile_clickableText__TJWgD:hover {
+    color: #5855eb;
+    text-decoration: none;
+}
+
+.EventProfile_eventDetail__wvyGY {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    color: #838383;
+}
+
+.EventProfile_eventDetail__wvyGY svg {
+    margin-right: 8px;
+}
+
+.EventProfile_ticketInfo__naIJL {
+    margin: 20px 0;
+    padding: 16px;
+    background-color: rgba(60, 60, 60, 0.3);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.EventProfile_priceDisplay__LFMp_ {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    color: #10b981;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.EventProfile_startingPrice__wukyh {
+    color: #10b981;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.EventProfile_ticketTypes__hyQjk {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.EventProfile_ticketPreview__y7cBu {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background-color: rgba(40, 40, 40, 0.5);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.EventProfile_ticketName__3Fx_c {
+    color: #ccc;
+    font-weight: 500;
+    flex: 1 1;
+}
+
+.EventProfile_ticketPrice__JRnfx {
+    color: #fff;
+    font-weight: bold;
+    margin: 0 12px;
+}
+
+.EventProfile_availabilityBadge__5X_Dz {
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.EventProfile_moreTickets__2f9uc {
+    text-align: center;
+    color: #888;
+    font-size: 14px;
+    font-style: italic;
+    padding: 8px;
+}
+
+.EventProfile_eventPrice__esY2f {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+.EventProfile_bookNowButton__GppAS {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.25);
+}
+
+.EventProfile_bookNowButton__GppAS:hover {
+    background: linear-gradient(135deg, #5855eb, #7c3aed);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.35);
+}
+
+.EventProfile_aboutEvent__4ilpT {
+    text-align: left;
+    background: transparent;
+    margin-top: 40px;
+    box-shadow: none;
+    max-width: 900px;
+    width: 100%;
+    padding: 0 20px !important;
+    box-sizing: border-box;
+}
+
+.EventProfile_aboutEvent__4ilpT h3 {
+    margin-bottom: 20px;
+    font-size: 18px !important;
+    color: #ffffff;
+    font-weight: 600;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 12px;
+    width: 100%;
+}
+
+.EventProfile_aboutEvent__4ilpT p {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.6;
+    text-align: left;
+    margin-top: 20px;
+}
+
+.EventProfile_eventGuide__S6DGB {
+    text-align: left;
+    background: transparent;
+    margin-top: 40px;
+    padding: 0 20px !important;
+    border-radius: 0;
+    box-shadow: none;
+    max-width: 900px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.EventProfile_eventGuide__S6DGB h3 {
+    margin-bottom: 20px;
+    font-size: 18px !important;
+    color: #ffffff;
+    font-weight: 600;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 12px;
+    width: 100%;
+}
+
+.EventProfile_guideDetails__5pzXI {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 30px;
+    padding: 10px 20px;
+}
+
+.EventProfile_guideItem__J1kIh {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    min-width: 200px;
+    flex: 1 1;
+}
+
+.EventProfile_guideIcon__HvsqU {
+    color: #888;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+}
+
+.EventProfile_guideInfo__Oxk15 {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+}
+
+.EventProfile_guideLabel__YNkFm {
+    color: #888;
+    font-size: 0.9em;
+    margin-bottom: 5px;
+}
+
+.EventProfile_guideValue__ZDL6X {
+    color: #6a6969;
+    font-size: 1.1em;
+}
+
+.EventProfile_errorMessage__p8oan {
+    color: #ff4444;
+    font-size: 18px;
+    text-align: center;
+    margin-top: 100px;
+}
+
+/* Skeleton Loading Styles */
+.EventProfile_skeletonContainer__Rn9GH {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 20px;
+    margin-top: 90px;
+}
+
+.EventProfile_skeletonContent__AwvVu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.EventProfile_skeletonMain__6UD5o {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 20px;
+}
+
+.EventProfile_skeletonImage__33C9z {
+    width: 400px;
+    height: 400px;
+    background-color: #2a2a2a;
+    border-radius: 12px;
+}
+
+.EventProfile_skeletonInfoBox__AbwGt {
+    background-color: rgba(40, 40, 40, 0.5);
+    border-radius: 15px;
+    padding: 20px;
+    width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.EventProfile_skeletonTitle__Kp5Bz {
+    height: 32px;
+    background-color: #2a2a2a;
+    border-radius: 6px;
+    width: 80%;
+}
+
+.EventProfile_skeletonHostingClub__BDBxQ {
+    height: 20px;
+    background-color: #2a2a2a;
+    border-radius: 4px;
+    width: 60%;
+}
+
+.EventProfile_skeletonDetail__0_H0x {
+    height: 24px;
+    background-color: #2a2a2a;
+    border-radius: 4px;
+    width: 70%;
+}
+
+.EventProfile_skeletonButton__3IGhB {
+    height: 40px;
+    background-color: #2a2a2a;
+    border-radius: 12px;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.EventProfile_skeletonAbout__2RU__ {
+    background-color: rgba(40, 40, 40, 0.5);
+    margin-top: 40px;
+    padding: 20px;
+    border-radius: 15px;
+    width: 100%;
+    max-width: 900px;
+}
+
+.EventProfile_skeletonAboutTitle__HYmYh {
+    height: 28px;
+    background-color: #2a2a2a;
+    border-radius: 6px;
+    width: 200px;
+    margin: 0 auto 20px;
+}
+
+.EventProfile_skeletonAboutContent__fVHi_ {
+    height: 80px;
+    background-color: #2a2a2a;
+    border-radius: 6px;
+    width: 100%;
+}
+
+.EventProfile_skeletonGuide__Lo5gd {
+    background-color: rgba(40, 40, 40, 0.5);
+    margin-top: 40px;
+    padding: 20px;
+    border-radius: 15px;
+    width: 100%;
+    max-width: 900px;
+}
+
+.EventProfile_skeletonGuideTitle__gUO2k {
+    height: 28px;
+    background-color: #2a2a2a;
+    border-radius: 6px;
+    width: 200px;
+    margin: 0 auto 20px;
+}
+
+.EventProfile_skeletonGuideDetails__B_fJE {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 30px;
+    padding: 10px 20px;
+}
+
+.EventProfile_skeletonGuideItem__zNios {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    min-width: 200px;
+    flex: 1 1;
+}
+
+.EventProfile_skeletonGuideIcon__NE4aY {
+    width: 24px;
+    height: 24px;
+    background-color: #2a2a2a;
+    border-radius: 50%;
+}
+
+.EventProfile_skeletonGuideInfo__WIl_z {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1 1;
+}
+
+.EventProfile_skeletonGuideLabel__Vx1l_ {
+    height: 16px;
+    background-color: #2a2a2a;
+    border-radius: 4px;
+    width: 60%;
+}
+
+.EventProfile_skeletonGuideValue__HzUDX {
+    height: 20px;
+    background-color: #2a2a2a;
+    border-radius: 4px;
+    width: 80%;
+}
+
+/* Pulse Animation */
+.EventProfile_pulse__cO0p4 {
+    animation: EventProfile_pulse__cO0p4 1.5s ease-in-out infinite;
+}
+
+@keyframes EventProfile_pulse__cO0p4 {
+    0% {
+        opacity: 0.6;
+    }
+    50% {
+        opacity: 0.4;
+    }
+    100% {
+        opacity: 0.6;
+    }
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .EventProfile_eventProfileContainer__XmFfT {
+        margin: 20px 0;
+    }
+
+    .EventProfile_eventCard__FohAb {
+        max-width: 100%;
+        margin: 16px 0;
+    }
+
+    .EventProfile_topSection__jFTMr {
+        gap: 0.5rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .EventProfile_dateBox__3heuK {
+        width: 3rem;
+        height: 3rem;
+    }
+
+    .EventProfile_monthText__rx5cR {
+        font-size: 0.6rem;
+    }
+
+    .EventProfile_dateText__32Fj6 {
+        font-size: 1rem;
+    }
+
+    .EventProfile_dayText__HZvum {
+        font-size: 1rem;
+    }
+
+    .EventProfile_timeText__7f_vO {
+        font-size: 0.8rem;
+    }
+
+    .EventProfile_locationIconBox__zylu7 {
+        width: 3rem;
+        height: 3rem;
+    }
+
+    .EventProfile_locationIcon__vZ0Z1 {
+        width: 0.75rem;
+        height: 0.75rem;
+    }
+
+    .EventProfile_venueText__YfprX {
+        font-size: 0.9rem;
+    }
+
+    .EventProfile_locationText__2zbGu {
+        font-size: 0.8rem;
+    }
+
+    .EventProfile_eventContent__HmWZT {
+        flex-direction: column;
+        align-items: center;
+        margin: 0;
+        padding: 0;
+    }
+
+    .EventProfile_eventInfoBox__Tw7n5 {
+        margin-left: 0;
+        margin-top: 20px;
+        max-width: 100%;
+        width: 90%;
+    }
+
+    .EventProfile_eventProfileImage__bTy_5 {
+        margin-right: 0;
+        max-width: 100%;
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        margin-bottom: 20px;
+        line-height: 0;
+        font-size: 0;
+        margin-left: 0;
+        border-radius: 0;
+    }
+
+    .EventProfile_eventProfileImage__bTy_5 img {
+        border-radius: 0;
+        vertical-align: top;
+    }
+
+    .EventProfile_eventInfo__5vm6L h2 {
+        font-size: 28px;
+        font-weight: 700;
+    }
+
+    .EventProfile_eventDetail__wvyGY {
+        font-size: 14px;
+    }
+
+    .EventProfile_creatorInfo__HS6BG {
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 6px;
+    }
+
+    .EventProfile_creatorAvatars__7nvzz {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .EventProfile_creatorAvatar__tWEjy {
+        width: 28px;
+        height: 28px;
+        margin-left: -10px;
+    }
+
+    .EventProfile_creatorAvatar__tWEjy:first-child {
+        margin-left: 0;
+    }
+
+    .EventProfile_defaultAvatar__5iIkl {
+        font-size: 12px;
+    }
+
+    .EventProfile_moreCount__4H34g {
+        font-size: 9px;
+    }
+
+    .EventProfile_bookNowButton__GppAS {
+        width: 100%;
+        padding: 12px;
+    }
+
+    .EventProfile_aboutEvent__4ilpT {
+        width: 100%;
+        text-align: left;
+        padding: 0 20px !important;
+        margin: 20px auto;
+        box-sizing: border-box;
+    }
+
+    .EventProfile_aboutEvent__4ilpT h3 {
+        font-size: 16px !important;
+        margin-bottom: 16px;
+        padding-bottom: 10px;
+    }
+
+    .EventProfile_aboutEvent__4ilpT p {
+        font-size: 15px;
+        margin-top: 16px;
+    }
+
+    .EventProfile_eventGuide__S6DGB {
+        width: 100%;
+        margin: 20px auto;
+        padding: 0 20px !important;
+        box-sizing: border-box;
+    }
+
+    .EventProfile_eventGuide__S6DGB h3 {
+        font-size: 16px !important;
+        margin-bottom: 16px;
+        padding-bottom: 10px;
+    }
+
+    .EventProfile_guideDetails__5pzXI {
+        flex-direction: column;
+        gap: 20px;
+        padding: 10px;
+    }
+
+    .EventProfile_guideItem__J1kIh {
+        justify-content: flex-start;
+        width: 100%;
+        padding: 0 20px;
+    }
+
+    .EventProfile_guideIcon__HvsqU {
+        font-size: 20px;
+    }
+
+    .EventProfile_guideInfo__Oxk15 {
+        align-items: flex-start;
+    }
+
+    .EventProfile_guideLabel__YNkFm {
+        font-size: 0.85em;
+    }
+
+    .EventProfile_guideValue__ZDL6X {
+        font-size: 1em;
+    }
+
+    .EventProfile_ticketInfo__naIJL {
+        margin: 15px 0;
+        padding: 12px;
+    }
+
+    .EventProfile_priceDisplay__LFMp_ {
+        font-size: 16px;
+        justify-content: center;
+        margin-bottom: 10px;
+    }
+
+    .EventProfile_ticketPreview__y7cBu {
+        padding: 6px 10px;
+    }
+
+    .EventProfile_ticketName__3Fx_c {
+        font-size: 14px;
+    }
+
+    .EventProfile_ticketPrice__JRnfx {
+        font-size: 14px;
+        margin: 0 8px;
+    }
+
+    .EventProfile_availabilityBadge__5X_Dz {
+        font-size: 10px;
+    }
+
+    /* Skeleton Responsive */
+    .EventProfile_skeletonMain__6UD5o {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .EventProfile_skeletonImage__33C9z {
+        width: 90%;
+        height: 90vw;
+        max-width: 400px;
+        max-height: 400px;
+    }
+
+    .EventProfile_skeletonInfoBox__AbwGt {
+        width: 90%;
+        margin-top: 20px;
+    }
+
+    .EventProfile_skeletonAbout__2RU__,
+    .EventProfile_skeletonGuide__Lo5gd {
+        width: 90%;
+        margin-top: 20px;
+    }
+
+    .EventProfile_skeletonGuideDetails__B_fJE {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .EventProfile_skeletonGuideItem__zNios {
+        width: 100%;
+    }
+
+    /* Popup responsive styles */
+    .EventProfile_popupContent__zqpRb {
+        width: 95%;
+        max-height: 90vh;
+    }
+
+    .EventProfile_popupHeader__0wBVM {
+        padding: 16px 20px;
+    }
+
+    .EventProfile_popupHeader__0wBVM h3 {
+        font-size: 16px;
+    }
+
+    .EventProfile_collaboratorsList__yQmJL {
+        padding: 8px;
+    }
+
+    .EventProfile_collaboratorItem__T8LGV {
+        padding: 12px;
+        gap: 12px;
+    }
+
+    .EventProfile_collaboratorAvatar__dXqYy {
+        width: 40px;
+        height: 40px;
+    }
+
+    .EventProfile_collaboratorDefaultAvatar__N7rAA {
+        font-size: 16px;
+    }
+
+    .EventProfile_collaboratorName__xmgls {
+        font-size: 15px;
+    }
+
+    .EventProfile_collaboratorType__ZUJbm {
+        font-size: 13px;
+    }
+}
+
+.EventProfile_locationDetail__fvguS {
+    color: #6a6969;
+    transition: color 0.3s ease;
+}
+
+.EventProfile_locationDetail__fvguS:hover {
+    color: #22d3ee;
+}
+
+.EventProfile_moreGuidesButton__L6lx_ {
+    margin-top: 20px;
+    padding: 8px 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: #aeadad;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.EventProfile_moreGuidesButton__L6lx_:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+}
+
+/* Organization Message Styles */
+.EventProfile_orgMessage__LnSq8 {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: rgba(255, 193, 7, 0.1);
+    border: 1px solid rgba(255, 193, 7, 0.3);
+    border-radius: 8px;
+    text-align: center;
+}
+
+.EventProfile_orgMessage__LnSq8 p {
+    color: #ffc107;
+    font-size: 14px;
+    margin: 0;
+    font-weight: 500;
+}
+
+/* NEW: Session-centric styles */
+.EventProfile_sessionVenue__TsnlB {
+    color: #6b7280;
+    font-size: 0.85em;
+    font-style: italic;
+}
+
+.EventProfile_multiDayInfo__efAcG {
+    font-size: 0.85em;
+    color: #22d3ee;
+    font-weight: 500;
+    margin-left: 8px;
+    background: rgba(34, 211, 238, 0.1);
+    padding: 2px 8px;
+    border-radius: 12px;
+    border: 1px solid rgba(34, 211, 238, 0.3);
+    display: inline-block;
+}
+
+.EventProfile_venueNote__TwsqX {
+    color: #6b7280;
+    font-size: 0.75em;
+    font-style: italic;
+    margin-left: 8px;
+}
+
+.EventProfile_sessionCount__jcNWE {
+    color: #6b7280;
+    font-size: 0.85em;
+    margin-left: 8px;
+}
+
+.EventProfile_eventDetail__wvyGY .EventProfile_sessionVenue__TsnlB {
+    display: inline;
+    margin-left: 8px;
+}
+
+/* Mobile responsive updates for session-centric */
+@media (max-width: 768px) {
+    .EventProfile_sessionVenue__TsnlB {
+        font-size: 0.8em;
+    }
+    
+    .EventProfile_multiDayInfo__efAcG {
+        font-size: 0.8em;
+        margin-left: 4px;
+        padding: 1px 6px;
+        display: block;
+        margin-top: 4px;
+        width: -moz-fit-content;
+        width: fit-content;
+    }
+    
+    .EventProfile_venueNote__TwsqX {
+        font-size: 0.7em;
+        margin-left: 4px;
+        display: block;
+        margin-top: 2px;
+    }
+    
+    .EventProfile_sessionCount__jcNWE {
+        font-size: 0.8em;
+        margin-left: 4px;
+        display: block;
+        margin-top: 2px;
+    }
+}
+
+@media (max-width: 480px) {
+    .EventProfile_eventProfileContainer__XmFfT {
+        margin: 10px 0;
+    }
+
+    .EventProfile_eventCard__FohAb {
+        padding: 0.75rem 0.75rem 0.75rem 0;
+        border-radius: 0.75rem;
+    }
+
+    .EventProfile_topSection__jFTMr {
+        gap: 0.375rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .EventProfile_dateBox__3heuK {
+        width: 3rem;
+        height: 3rem;
+    }
+
+    .EventProfile_monthText__rx5cR {
+        font-size: 0.65rem;
+    }
+
+    .EventProfile_dateText__32Fj6 {
+        font-size: 1.125rem;
+    }
+
+    .EventProfile_dayText__HZvum {
+        font-size: 0.875rem;
+    }
+
+    .EventProfile_timeText__7f_vO {
+        font-size: 0.75rem;
+    }
+
+    .EventProfile_locationIconBox__zylu7 {
+        width: 3rem;
+        height: 3rem;
+    }
+
+    .EventProfile_locationIcon__vZ0Z1 {
+        width: 0.875rem;
+        height: 0.875rem;
+    }
+
+    .EventProfile_venueText__YfprX {
+        font-size: 0.875rem;
+    }
+
+    .EventProfile_locationText__2zbGu {
+        font-size: 0.75rem;
+    }
+
+    .EventProfile_sessionVenue__TsnlB {
+        font-size: 0.75em;
+    }
+    
+    .EventProfile_multiDayInfo__efAcG {
+        font-size: 0.75em;
+        padding: 1px 4px;
+        margin-top: 2px;
+    }
+    
+    .EventProfile_venueNote__TwsqX,
+    .EventProfile_sessionCount__jcNWE {
+        font-size: 0.65em;
+    }
+
+    .EventProfile_aboutEvent__4ilpT {
+        margin-top: 24px;
+        padding: 0 20px !important;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .EventProfile_aboutEvent__4ilpT h3 {
+        font-size: 15px !important;
+        margin-bottom: 12px;
+        padding-bottom: 8px;
+    }
+
+    .EventProfile_aboutEvent__4ilpT p {
+        font-size: 14px;
+        margin-top: 12px;
+    }
+
+    .EventProfile_eventGuide__S6DGB {
+        padding: 0 20px !important;
+        margin-top: 24px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .EventProfile_eventGuide__S6DGB h3 {
+        font-size: 15px !important;
+        margin-bottom: 12px;
+        padding-bottom: 8px;
+    }
+}
+
+/* Collaborators Popup Styles */
+.EventProfile_popupOverlay__HJDkT {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: EventProfile_fadeIn__5Dm5g 0.2s ease-out;
+}
+
+.EventProfile_popupContent__zqpRb {
+    background: rgba(40, 40, 40, 0.95);
+    border-radius: 16px;
+    padding: 0;
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    animation: EventProfile_slideUp__OXvTK 0.3s ease-out;
+}
+
+.EventProfile_popupHeader__0wBVM {
+    padding: 20px 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(50, 50, 50, 0.5);
+}
+
+.EventProfile_popupHeader__0wBVM h3 {
+    margin: 0;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.EventProfile_popupCloseButton__r2paf {
+    background: none;
+    border: none;
+    color: #ccc;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.EventProfile_popupCloseButton__r2paf:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.EventProfile_collaboratorsList__yQmJL {
+    padding: 12px;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.EventProfile_collaboratorItem__T8LGV {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    gap: 16px;
+    margin-bottom: 8px;
+}
+
+.EventProfile_collaboratorItem__T8LGV:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateX(4px);
+}
+
+.EventProfile_collaboratorItem__T8LGV:last-child {
+    margin-bottom: 0;
+}
+
+.EventProfile_collaboratorAvatar__dXqYy {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    flex-shrink: 0;
+    background-color: rgba(60, 60, 60, 0.8);
+}
+
+.EventProfile_collaboratorProfileImage__qzVi5 {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.EventProfile_collaboratorDefaultAvatar__N7rAA {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.EventProfile_collaboratorInfo__tQYG1 {
+    flex: 1 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.EventProfile_collaboratorName__xmgls {
+    color: #fff;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.EventProfile_collaboratorType__ZUJbm {
+    color: #888;
+    font-size: 14px;
+}
+
+.EventProfile_collaboratorArrow__U2UM3 {
+    color: #666;
+    font-size: 18px;
+    transition: all 0.2s ease;
+}
+
+.EventProfile_collaboratorItem__T8LGV:hover .EventProfile_collaboratorArrow__U2UM3 {
+    color: #6366f1;
+    transform: translateX(4px);
+}
+
+/* Popup Animations */
+@keyframes EventProfile_fadeIn__5Dm5g {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes EventProfile_slideUp__OXvTK {
+    from {
+        opacity: 0;
+        transform: translateY(40px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+} 

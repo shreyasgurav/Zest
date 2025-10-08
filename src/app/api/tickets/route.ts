@@ -40,6 +40,14 @@ export async function GET(request: NextRequest) {
   const startTime = Date.now();
   
   try {
+    // Check if Firebase Admin is available
+    if (!adminDb) {
+      return NextResponse.json(
+        { error: 'Database service not available' },
+        { status: 503 }
+      );
+    }
+
     // Rate limiting
     const clientIP = request.headers.get('x-forwarded-for') || 
                     request.headers.get('x-real-ip') || 
@@ -94,7 +102,7 @@ export async function GET(request: NextRequest) {
     // Test Firebase connection with timeout
     try {
       await withTimeout(
-        adminDb.collection('tickets').limit(1).get(),
+        adminDb!.collection('tickets').limit(1).get(),
         5000 // 5 second timeout
       );
       console.log('Firebase connection test successful');

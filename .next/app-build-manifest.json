@@ -11,6 +11,24 @@
       "static/chunks/main-app.js",
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
+    ],
+    "/(public)/event-profile/[id]/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/(public)/event-profile/[id]/page.css",
+      "static/chunks/app/(public)/event-profile/[id]/page.js"
+    ],
+    "/(auth)/login/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/(auth)/login/page.css",
+      "static/chunks/app/(auth)/login/page.js"
+    ],
+    "/(dashboard)/events/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/(dashboard)/events/page.css",
+      "static/chunks/app/(dashboard)/events/page.js"
     ]
   }
 }

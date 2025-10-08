@@ -109,7 +109,7 @@ export function validateBookingDataStructure(
  * Calculate server-side amount for event booking
  */
 export async function calculateEventAmount(bookingData: BookingValidationData): Promise<{ amount: number; breakdown: any[] }> {
-  const eventDoc = await adminDb.collection('events').doc(bookingData.eventId!).get();
+  const eventDoc = await adminDb!.collection('events').doc(bookingData.eventId!).get();
   
   if (!eventDoc.exists) {
     throw new Error('Event not found');
@@ -181,7 +181,7 @@ export async function calculateEventAmount(bookingData: BookingValidationData): 
  * Calculate server-side amount for activity booking
  */
 export async function calculateActivityAmount(bookingData: BookingValidationData): Promise<{ amount: number; breakdown: any[] }> {
-  const activityDoc = await adminDb.collection('activities').doc(bookingData.activityId!).get();
+  const activityDoc = await adminDb!.collection('activities').doc(bookingData.activityId!).get();
   
   if (!activityDoc.exists) {
     throw new Error('Activity not found');
@@ -212,7 +212,7 @@ export async function verifyBookingEligibility(
 ): Promise<ValidationResult> {
   try {
     if (bookingType === 'event') {
-      const eventDoc = await adminDb.collection('events').doc(bookingData.eventId!).get();
+      const eventDoc = await adminDb!.collection('events').doc(bookingData.eventId!).get();
       
       if (!eventDoc.exists) {
         return {
@@ -251,7 +251,7 @@ export async function verifyBookingEligibility(
       }
 
     } else if (bookingType === 'activity') {
-      const activityDoc = await adminDb.collection('activities').doc(bookingData.activityId!).get();
+      const activityDoc = await adminDb!.collection('activities').doc(bookingData.activityId!).get();
       
       if (!activityDoc.exists) {
         return {
@@ -309,7 +309,7 @@ export async function checkRateLimit(userId: string, bookingType: 'event' | 'act
     const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
     const collection = bookingType === 'event' ? 'eventAttendees' : 'activity_bookings';
     
-    const recentBookings = await adminDb
+    const recentBookings = await adminDb!
       .collection(collection)
       .where('userId', '==', userId)
       .where('createdAt', '>', oneHourAgo)
