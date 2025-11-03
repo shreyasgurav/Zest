@@ -3,7 +3,7 @@
 import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import { db, storage } from "@/infrastructure/firebase";
 import { collection, addDoc, doc, getDoc, serverTimestamp } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+// Using local storage instead of Firebase Storage for demo
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getUserOwnedPages } from "@/domains/authentication/services/auth.service";
@@ -472,47 +472,26 @@ const CreateActivity = () => {
         throw new Error("File must be an image");
       }
 
-      const fileExtension = file.name.split('.').pop();
-      const fileName = `activities/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExtension}`;
-      const storageRef = ref(storage(), fileName);
+      // Create form data
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('folder', 'activities');
 
-      const metadata = {
-        contentType: file.type,
-        customMetadata: {
-          uploadedBy: auth.currentUser?.uid || 'unknown',
-          uploadTime: new Date().toISOString()
-        }
-      };
+      // Upload to local storage API
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+      });
 
-      const blob = new Blob([await file.arrayBuffer()], { type: file.type });
-
-      let retryCount = 0;
-      const maxRetries = 3;
-      
-      while (retryCount < maxRetries) {
-        try {
-          console.log(`Attempt ${retryCount + 1} to upload image...`);
-          
-          const uploadResult = await uploadBytes(storageRef, blob, metadata);
-          console.log('Upload successful:', uploadResult);
-
-          const downloadURL = await getDownloadURL(uploadResult.ref);
-          console.log('Download URL obtained:', downloadURL);
-          
-          return downloadURL;
-        } catch (error: any) {
-          console.error(`Upload attempt ${retryCount + 1} failed:`, error);
-          
-          if (retryCount === maxRetries - 1) {
-            throw new Error(`Image upload failed after ${maxRetries} attempts: ${error.message}`);
-          }
-          
-          await new Promise(resolve => setTimeout(resolve, Math.pow(2, retryCount) * 1000));
-          retryCount++;
-        }
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Upload failed');
       }
 
-      throw new Error('Upload failed after all retry attempts');
+      const data = await response.json();
+      console.log('Image uploaded successfully:', data.url);
+      
+      return data.url;
     } catch (error: any) {
       console.error('Error in uploadImage:', error);
       throw new Error(`Image upload failed: ${error.message}`);

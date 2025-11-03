@@ -2,10 +2,6 @@
 
 import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import Script from 'next/script';
-import { FaMapMarkerAlt } from 'react-icons/fa';
-// @ts-ignore
-import PlacesAutocomplete, { Suggestion } from 'react-places-autocomplete';
 
 // New structured imports
 import { 
@@ -21,7 +17,7 @@ import {
   authService,
   auth as firebaseAuth,
   db,
-  storage
+  // storage - removed for local storage demo
 } from '@/infrastructure';
 
 import {
@@ -32,11 +28,7 @@ import {
   getDoc
 } from 'firebase/firestore';
 
-import {
-  ref,
-  uploadBytes,
-  getDownloadURL
-} from 'firebase/storage';
+// Using local storage instead of Firebase Storage for demo
 
 import {
   getAuth,
@@ -104,54 +96,10 @@ const CreateEvent = () => {
     }
   ]);
   
-  const [address, setAddress] = useState('');
-  const [isMapsScriptLoaded, setIsMapsScriptLoaded] = useState(false);
-  const [isLocationFocused, setIsLocationFocused] = useState(false);
-  const [mapsScriptError, setMapsScriptError] = useState(false);
   const [guides, setGuides] = useState<{ [key: string]: string }>({});
   const [selectedCity, setSelectedCity] = useState('Mumbai');
-  const [venueCoordinates, setVenueCoordinates] = useState<{
-    lat: number;
-    lng: number;
-    formatted_address: string;
-    place_id?: string;
-    city?: string;
-    country?: string;
-  } | null>(null);
   
   const auth = getAuth();
-
-  // Google Maps script loading
-  useEffect(() => {
-    // Check if Google Maps is already loaded globally
-    if (typeof window !== 'undefined' && window.google && window.google.maps && window.google.maps.places) {
-      console.log('Google Maps already loaded globally');
-      setIsMapsScriptLoaded(true);
-      return;
-    }
-
-    // Check if script was previously loaded but failed
-    const existingScript = document.querySelector('script[src*="maps.googleapis.com"]');
-    if (existingScript) {
-      console.log('Google Maps script already exists in DOM');
-      // Wait a bit and check again
-      const checkInterval = setInterval(() => {
-        if (window.google && window.google.maps && window.google.maps.places) {
-          setIsMapsScriptLoaded(true);
-          clearInterval(checkInterval);
-        }
-      }, 100);
-
-      // Clear interval after 10 seconds to prevent infinite checking
-      setTimeout(() => {
-        clearInterval(checkInterval);
-        if (!isMapsScriptLoaded) {
-          console.error('Google Maps failed to load after timeout');
-          setMapsScriptError(true);
-        }
-      }, 10000);
-    }
-  }, []);
 
   // Authorization check
   useEffect(() => {
@@ -461,93 +409,6 @@ const CreateEvent = () => {
     });
   };
 
-  const handleSelectAddress = async (address: string, placeId?: string) => {
-    setAddress(address);
-    setEventVenue(address);
-    setIsLocationFocused(false);
-    
-    // Get coordinates and additional details from Google Places API
-    if (placeId && window.google && window.google.maps) {
-      try {
-        const service = new window.google.maps.places.PlacesService(document.createElement('div'));
-        
-        service.getDetails({
-          placeId: placeId,
-          fields: ['geometry', 'formatted_address', 'address_components', 'place_id']
-        }, (place: any, status: any) => {
-          if (status === window.google.maps.places.PlacesServiceStatus.OK && place) {
-            const coordinates = {
-              lat: place.geometry.location.lat(),
-              lng: place.geometry.location.lng(),
-              formatted_address: place.formatted_address || address,
-              place_id: placeId,
-              city: extractCityFromAddressComponents(place.address_components),
-              country: extractCountryFromAddressComponents(place.address_components)
-            };
-            
-            setVenueCoordinates(coordinates);
-            console.log('Venue coordinates captured:', coordinates);
-          } else {
-            console.warn('Failed to get place details:', status);
-            // Fallback to geocoding if place details fail
-            geocodeAddress(address);
-          }
-        });
-      } catch (error) {
-        console.error('Error getting place details:', error);
-        geocodeAddress(address);
-      }
-    } else {
-      // Fallback to geocoding if no placeId
-      geocodeAddress(address);
-    }
-  };
-  
-  // Helper function to extract city from Google Places address components
-  const extractCityFromAddressComponents = (components: any[]): string | undefined => {
-    for (const component of components) {
-      if (component.types.includes('locality') || 
-          component.types.includes('administrative_area_level_1') ||
-          component.types.includes('sublocality_level_1')) {
-        return component.long_name;
-      }
-    }
-    return undefined;
-  };
-  
-  // Helper function to extract country from address components
-  const extractCountryFromAddressComponents = (components: any[]): string | undefined => {
-    for (const component of components) {
-      if (component.types.includes('country')) {
-        return component.long_name;
-      }
-    }
-    return undefined;
-  };
-  
-  // Fallback geocoding function
-  const geocodeAddress = (address: string) => {
-    if (!window.google || !window.google.maps) return;
-    
-    const geocoder = new window.google.maps.Geocoder();
-    geocoder.geocode({ address }, (results: any[], status: any) => {
-      if (status === 'OK' && results[0]) {
-        const result = results[0];
-        const coordinates = {
-          lat: result.geometry.location.lat(),
-          lng: result.geometry.location.lng(),
-          formatted_address: result.formatted_address || address,
-          city: extractCityFromAddressComponents(result.address_components),
-          country: extractCountryFromAddressComponents(result.address_components)
-        };
-        
-        setVenueCoordinates(coordinates);
-        console.log('Venue coordinates from geocoding:', coordinates);
-      } else {
-        console.warn('Geocoding failed:', status);
-      }
-    });
-  };
 
   const handleGuideToggle = (id: string) => {
     setGuides(prev =>
@@ -559,7 +420,7 @@ const CreateEvent = () => {
     setGuides(prev => ({ ...prev, [id]: value }));
   };
 
-  // Image upload function
+  // Image upload function - using local storage
   const uploadImage = async (file: File): Promise<string | null> => {
     if (!file) return null;
     
@@ -574,54 +435,26 @@ const CreateEvent = () => {
         throw new Error("File must be an image");
       }
 
-      // Create a unique filename
-      const fileExtension = file.name.split('.').pop();
-      const fileName = `events/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExtension}`;
-      const storageRef = ref(storage(), fileName);
+      // Create form data
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('folder', 'events');
 
-      // Set metadata with CORS-friendly content type
-      const metadata = {
-        contentType: file.type,
-        customMetadata: {
-          uploadedBy: auth.currentUser?.uid || 'unknown',
-          uploadTime: new Date().toISOString()
-        }
-      };
+      // Upload to local storage API
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+      });
 
-      // Convert file to blob for better upload handling
-      const blob = new Blob([await file.arrayBuffer()], { type: file.type });
-
-      // Upload with retry logic
-      let retryCount = 0;
-      const maxRetries = 3;
-      
-      while (retryCount < maxRetries) {
-        try {
-          console.log(`Attempt ${retryCount + 1} to upload image...`);
-          
-          // Upload the blob
-          const uploadResult = await uploadBytes(storageRef, blob, metadata);
-          console.log('Upload successful:', uploadResult);
-
-          // Get download URL
-          const downloadURL = await getDownloadURL(uploadResult.ref);
-          console.log('Download URL obtained:', downloadURL);
-          
-          return downloadURL;
-        } catch (error: any) {
-          console.error(`Upload attempt ${retryCount + 1} failed:`, error);
-          
-          if (retryCount === maxRetries - 1) {
-            throw new Error(`Image upload failed after ${maxRetries} attempts: ${error.message}`);
-          }
-          
-          // Wait before retrying (exponential backoff)
-          await new Promise(resolve => setTimeout(resolve, Math.pow(2, retryCount) * 1000));
-          retryCount++;
-        }
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Upload failed');
       }
 
-      throw new Error('Upload failed after all retry attempts');
+      const data = await response.json();
+      console.log('Image uploaded successfully:', data.url);
+      
+      return data.url;
     } catch (error: any) {
       console.error('Error in uploadImage:', error);
       throw new Error(`Image upload failed: ${error.message}`);
@@ -637,9 +470,21 @@ const CreateEvent = () => {
       return;
     }
 
-    // Validate required fields
-    if (!eventTitle.trim() || !eventVenue.trim() || selectedCategories.length === 0 || !aboutEvent.trim()) {
-      setMessage("Please fill in all required fields and select at least one category");
+    // Validate required fields with specific error messages
+    if (!eventTitle.trim()) {
+      setMessage("Please enter an event title");
+      return;
+    }
+    if (!eventVenue.trim()) {
+      setMessage("Please enter the event venue/location");
+      return;
+    }
+    if (selectedCategories.length === 0) {
+      setMessage("Please select at least one category");
+      return;
+    }
+    if (!aboutEvent.trim()) {
+      setMessage("Please enter a description for your event");
       return;
     }
 
@@ -709,7 +554,6 @@ const CreateEvent = () => {
         })) : [],
         event_venue: eventVenue.trim(),
         venue_type: 'global',
-        venue_coordinates: venueCoordinates,
         about_event: aboutEvent.trim(),
         event_image: imageUrl,
         organizationId: auth.currentUser.uid,
@@ -905,96 +749,14 @@ const CreateEvent = () => {
             <h2>Location</h2>
             <div className={styles.formGroup}>
               <label>Event Venue</label>
-              {!isMapsScriptLoaded && !mapsScriptError && (
-                <Script
-                  src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`}
-                  strategy="afterInteractive"
-                  onLoad={() => {
-                    console.log('Google Maps script loaded successfully');
-                    setIsMapsScriptLoaded(true);
-                    setMapsScriptError(false);
-                  }}
-                  onError={(e) => {
-                    console.error('Google Maps script failed to load:', e);
-                    setMapsScriptError(true);
-                    setIsMapsScriptLoaded(false);
-                  }}
-                />
-              )}
-              {isMapsScriptLoaded ? (
-                <PlacesAutocomplete
-                  value={address}
-                  onChange={setAddress}
-                  onSelect={(address: string, placeId: string) => handleSelectAddress(address, placeId)}
-                >
-                  {(props: {
-                    getInputProps: (options: any) => any;
-                    suggestions: Suggestion[];
-                    getSuggestionItemProps: (suggestion: Suggestion, options?: any) => any;
-                    loading: boolean;
-                  }) => {
-                    const { getInputProps, suggestions, getSuggestionItemProps, loading } = props;
-                    return (
-                      <div style={{ position: 'relative' }}>
-                        <input
-                          {...getInputProps({
-                            placeholder: 'Where will your event take place?',
-                            className: styles.locationInput,
-                            required: true,
-                            onFocus: () => setIsLocationFocused(true),
-                            onBlur: () => setTimeout(() => setIsLocationFocused(false), 150),
-                          })}
-                        />
-                        {isLocationFocused && suggestions.length > 0 && (
-                          <div className={styles.autocompleteDropdown}>
-                            {loading && <div className={styles.suggestionItem}>Loading...</div>}
-                            {suggestions.map((suggestion: Suggestion) => {
-                              const className = suggestion.active
-                                ? styles.suggestionItemActive
-                                : styles.suggestionItem;
-                              const main = suggestion.structured_formatting?.main_text || suggestion.description;
-                              const secondary = suggestion.structured_formatting?.secondary_text;
-                              return (
-                                <div
-                                  {...getSuggestionItemProps(suggestion, { className })}
-                                  key={suggestion.placeId}
-                                >
-                                  <span className={styles.locationIcon}><FaMapMarkerAlt /></span>
-                                  <span>
-                                    <span className={styles.suggestionMain}>{main}</span>
-                                    {secondary && (
-                                      <div className={styles.suggestionSecondary}>{secondary}</div>
-                                    )}
-                                  </span>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        )}
-                      </div>
-                    );
-                  }}
-                </PlacesAutocomplete>
-              ) : mapsScriptError ? (
-                <input
-                  type="text"
-                  value={address}
-                  onChange={(e) => {
-                    setAddress(e.target.value);
-                    setEventVenue(e.target.value);
-                  }}
-                  placeholder="Where will your event take place?"
-                  className={styles.locationInput}
-                  required
-                />
-              ) : (
-                <input
-                  type="text"
-                  placeholder="Loading Google Maps..."
-                  disabled
-                  className={styles.locationInput}
-                />
-              )}
+              <input
+                type="text"
+                value={eventVenue}
+                onChange={(e) => setEventVenue(e.target.value)}
+                placeholder="Enter the event venue address"
+                className={styles.locationInput}
+                required
+              />
             </div>
           </div>
 

@@ -13,7 +13,8 @@ import {
   where,
   getDocs
 } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
+// Using local storage instead of Firebase Storage for demo
+// import { deleteObject } from "firebase/storage"; // Not needed for local storage
 import { getAuth } from "firebase/auth";
 import styles from "./EditActivity.module.css";
 
@@ -192,35 +193,37 @@ const EditActivity = () => {
     if (!file) return null;
     
     try {
-      // Delete old image if exists
-      if (currentImageUrl) {
-        try {
-          const oldImageRef = ref(storage(), currentImageUrl);
-          await deleteObject(oldImageRef);
-        } catch (err) {
-          console.error("Error deleting old image:", err);
-        }
+      // Note: For local storage, we don't need to delete old images
+      // They're stored in the public folder and can be cleaned up manually if needed
+
+      if (file.size > 5 * 1024 * 1024) {
+        throw new Error("Image size should be less than 5MB");
       }
 
-      // Create a unique filename
-      const fileExtension = file.name.split('.').pop();
-      const fileName = `activities/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExtension}`;
-      const storageRef = ref(storage(), fileName);
+      if (!file.type.startsWith('image/')) {
+        throw new Error("File must be an image");
+      }
 
-      // Set metadata
-      const metadata = {
-        contentType: file.type,
-        customMetadata: {
-          uploadedBy: auth.currentUser?.uid || 'unknown',
-          uploadTime: new Date().toISOString()
-        }
-      };
+      // Create form data
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('folder', 'activities');
 
-      // Upload new image
-      const uploadResult = await uploadBytes(storageRef, file, metadata);
-      const downloadURL = await getDownloadURL(uploadResult.ref);
+      // Upload to local storage API
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Upload failed');
+      }
+
+      const data = await response.json();
+      console.log('Image uploaded successfully:', data.url);
       
-      return downloadURL;
+      return data.url;
     } catch (error: any) {
       console.error('Error in uploadImage:', error);
       throw new Error(`Image upload failed: ${error.message}`);

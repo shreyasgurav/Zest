@@ -3,7 +3,7 @@
 import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import { db, storage } from "@/infrastructure/firebase";
 import { doc, getDoc, updateDoc, serverTimestamp } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+// Using local storage instead of Firebase Storage for demo
 import { getAuth } from "firebase/auth";
 import { useRouter, useParams } from "next/navigation";
 import styles from "./EditEvent.module.css";
@@ -161,7 +161,7 @@ const EditEvent = () => {
     }
   };
 
-  // Image upload function
+  // Image upload function - using local storage
   const uploadImage = async (file: File): Promise<string | null> => {
     if (!file) return null;
     
@@ -174,21 +174,26 @@ const EditEvent = () => {
         throw new Error("File must be an image");
       }
 
-      const fileExtension = file.name.split('.').pop();
-      const fileName = `events/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExtension}`;
-      const storageRef = ref(storage(), fileName);
+      // Create form data
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('folder', 'events');
 
-      const metadata = {
-        contentType: file.type,
-        customMetadata: {
-          uploadedBy: auth.currentUser?.uid || 'unknown',
-          uploadTime: new Date().toISOString()
-        }
-      };
+      // Upload to local storage API
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+      });
 
-      const blob = new Blob([await file.arrayBuffer()], { type: file.type });
-      const uploadResult = await uploadBytes(storageRef, blob, metadata);
-      return await getDownloadURL(uploadResult.ref);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Upload failed');
+      }
+
+      const data = await response.json();
+      console.log('Image uploaded successfully:', data.url);
+      
+      return data.url;
     } catch (error: any) {
       console.error('Error in uploadImage:', error);
       throw new Error(`Image upload failed: ${error.message}`);

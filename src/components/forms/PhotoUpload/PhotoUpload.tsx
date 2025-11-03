@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import { storage } from '@/infrastructure/firebase';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+// Using local storage instead of Firebase Storage for demo
 import { getAuth } from 'firebase/auth';
 import { FaCamera, FaTrash } from 'react-icons/fa';
 import styles from './PhotoUpload.module.css';
@@ -57,22 +56,33 @@ const PhotoUpload: React.FC<PhotoUploadProps> = ({
         throw new Error('User not authenticated. Please login again.');
       }
 
-      const fileName = `${type}/${user.uid}/${Date.now()}.jpg`;
-      const storageRef = ref(storage(), fileName);
-      
-      const metadata = {
-        contentType: file.type,
-        customMetadata: {
-          uploadedBy: user.uid,
-          uploadTime: new Date().toISOString(),
-          imageType: type
-        }
-      };
+      if (file.size > 5 * 1024 * 1024) {
+        throw new Error('Image size should be less than 5MB');
+      }
 
-      const uploadResult = await uploadBytes(storageRef, file, metadata);
-      const downloadURL = await getDownloadURL(uploadResult.ref);
+      if (!file.type.startsWith('image/')) {
+        throw new Error('File must be an image');
+      }
+
+      // Create form data
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('folder', type || 'profiles');
+
+      // Upload to local storage API
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Upload failed');
+      }
+
+      const data = await response.json();
       
-      onImageChange(downloadURL);
+      onImageChange(data.url);
       
       // Clean up preview URL
       if (previewUrl) {

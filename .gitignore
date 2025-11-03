@@ -10,6 +10,7 @@
 
 # production
 /build
+/.next
 
 # misc
 .DS_Store
@@ -21,3 +22,7 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Local uploaded images (for demo)
+/public/uploads/**/*
+!/public/uploads/.gitkeep

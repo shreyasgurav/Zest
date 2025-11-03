@@ -1,10 +1,10 @@
 "use client";
 // UserProfile.jsx
 import React, { useEffect, useState, useRef } from "react";
-import { auth, db, storage } from "@/infrastructure/firebase";
+import { auth, db } from "@/infrastructure/firebase";
 import { doc, getDoc, updateDoc, collection, query, where, getDocs } from "firebase/firestore";
 import { updateProfile, User, onAuthStateChanged } from "firebase/auth";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+// Using local storage instead of Firebase Storage for demo - PhotoUpload handles uploads
 import { toast } from "react-toastify";
 import PhotoUpload from "@/components/forms/PhotoUpload/PhotoUpload";
 import { FaCamera, FaCrop, FaTimes } from 'react-icons/fa';
