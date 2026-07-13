@@ -2,19 +2,9 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { db } from '@/infrastructure/firebase';
-import { 
-  doc, 
-  getDoc,
-  collection,
-  query,
-  where,
-  getDocs
-} from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { FaCalendarAlt, FaClock, FaMapMarkerAlt, FaTicketAlt, FaUser, FaChevronRight, FaCreditCard, FaExclamationTriangle, FaSync } from 'react-icons/fa';
 import styles from './BookingFlow.module.css';
-import { initiateRazorpayPayment, BookingData } from '@/domains/payments/services/razorpay';
 import { DateSelector } from '@/components/ui';
 
 interface TimeSlot {
@@ -26,10 +16,11 @@ interface TimeSlot {
 }
 
 interface TicketType {
+  id?: string;
   name: string;
   price: number;
   capacity: number;
-  available_capacity: number; // This will be calculated dynamically
+  available_capacity: number;
 }
 
 // NEW: Session interface for session-centric events
@@ -43,6 +34,7 @@ interface EventSession {
   venue?: string;
   description?: string;
   tickets: Array<{
+    id?: string;
     name: string;
     capacity: number;
     price: number;
@@ -128,84 +120,6 @@ function BookingFlow() {
   const [isPaymentProcessing, setIsPaymentProcessing] = useState(false);
   const refreshIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Calculate real-time availability like the dashboard does - UPDATED for session-centric
-  const calculateRealTimeAvailability = (eventData: EventData, attendeesList: Attendee[]): TicketType[] => {
-    // Handle session-centric events
-    if (eventData.architecture === 'session-centric' && selectedSession) {
-      return selectedSession.tickets.map(ticket => {
-        // Count actual sold tickets from attendees for this specific session
-        const soldCount = attendeesList.reduce((count, attendee) => {
-          // Handle new individual attendee records
-          if (attendee.canCheckInIndependently && 
-              attendee.ticketType === ticket.name && 
-              attendee.sessionId === selectedSession.id) {
-            return count + 1;
-          }
-          // Handle old group booking records for this session
-          if (typeof attendee.tickets === 'object' && 
-              attendee.selectedSession?.id === selectedSession.id) {
-            return count + (attendee.tickets[ticket.name] || 0);
-          }
-          return count;
-        }, 0);
-        
-        return {
-          name: ticket.name,
-          price: ticket.price,
-          capacity: ticket.capacity,
-          available_capacity: Math.max(0, ticket.capacity - soldCount)
-        };
-      });
-    }
-    // Handle legacy events
-    else {
-      return eventData.tickets.map(ticket => {
-        // Count actual sold tickets from attendees - now supports individual attendee records
-        const soldCount = attendeesList.reduce((count, attendee) => {
-          // Handle new individual attendee records
-          if (attendee.canCheckInIndependently && attendee.ticketType === ticket.name) {
-            return count + 1;
-          }
-          // Handle old group booking records
-          if (typeof attendee.tickets === 'object') {
-            return count + (attendee.tickets[ticket.name] || 0);
-          }
-          return count;
-        }, 0);
-        
-        return {
-          ...ticket,
-          available_capacity: Math.max(0, ticket.capacity - soldCount)
-        };
-      });
-    }
-  };
-
-  // Fetch attendees for real-time availability calculation
-  const fetchAttendees = async () => {
-    if (!params?.id) return [];
-
-    try {
-      const attendeesRef = collection(db(), 'eventAttendees');
-      const attendeesQuery = query(
-        attendeesRef,
-        where('eventId', '==', params.id)
-      );
-
-      const snapshot = await getDocs(attendeesQuery);
-      const attendeesList = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as Attendee[];
-      
-      return attendeesList;
-    } catch (err) {
-      console.error("Error fetching attendees:", err);
-      return [];
-    }
-  };
-
-  // Fetch event details with real-time updates - UPDATED for session-centric
   const fetchEvent = async (showRefreshIndicator = false) => {
     if (!params?.id) return;
 
@@ -216,118 +130,27 @@ function BookingFlow() {
         setLoading(true);
       }
       
-      // Fetch event data and attendees in parallel
-      const [eventDoc, attendeesList] = await Promise.all([
-        getDoc(doc(db(), 'events', params.id)),
-        fetchAttendees()
-      ]);
+      const res = await fetch(`/api/events/${params.id}`);
+      if (!res.ok) throw new Error('Event not found');
       
-      if (eventDoc.exists()) {
-        const data = eventDoc.data();
-        const baseEventData: EventData = {
-          id: eventDoc.id,
-          title: data.title || data.eventTitle || '',
-          event_image: data.event_image || data.eventImage || '',
-          event_venue: data.event_venue || data.eventVenue || '',
-          architecture: data.architecture || 'legacy',
-          
-          // Legacy fields
-          time_slots: data.time_slots || [],
-          tickets: data.tickets || [],
-          
-          // Session-centric fields
-          sessions: data.sessions || [],
-          venue_type: data.venue_type || 'global',
-          total_sessions: data.total_sessions || 0,
-          total_capacity: data.total_capacity || 0,
-        };
-
-        setEvent(baseEventData);
-        setAttendees(attendeesList);
-        setLastRefresh(new Date());
+      const { event: eventData } = await res.json();
+      
+      setEvent(eventData);
+      setLastRefresh(new Date());
+      
+      if (eventData.architecture === 'session-centric' && eventData.sessions) {
+        setAvailableSessions(eventData.sessions);
+        const uniqueDates = Array.from(new Set(eventData.sessions.map((s: any) => s.date.split('T')[0]))).sort() as string[];
+        setAvailableSessionDates(uniqueDates);
         
-        // Handle session-centric events
-        if (baseEventData.architecture === 'session-centric' && baseEventData.sessions) {
-          // Calculate real-time availability for each session
-          const sessionsWithAvailability = baseEventData.sessions.map(session => ({
-            ...session,
-            tickets: session.tickets.map(ticket => {
-              const soldCount = attendeesList.reduce((count, attendee) => {
-                if (attendee.canCheckInIndependently && 
-                    attendee.ticketType === ticket.name && 
-                    attendee.sessionId === session.id) {
-                  return count + 1;
-                }
-                if (typeof attendee.tickets === 'object' && 
-                    attendee.selectedSession?.id === session.id) {
-                  return count + (attendee.tickets[ticket.name] || 0);
-                }
-                return count;
-              }, 0);
-              
-              return {
-                ...ticket,
-                available_capacity: Math.max(0, ticket.capacity - soldCount)
-              };
-            })
-          }));
-          
-          setAvailableSessions(sessionsWithAvailability);
-          
-          // Extract unique dates from sessions
-          const uniqueDates = Array.from(new Set(sessionsWithAvailability.map(session => session.date))).sort();
-          setAvailableSessionDates(uniqueDates);
-          
-          // If only one date, auto-select it and show sessions
-          if (uniqueDates.length === 1) {
-            setSelectedSessionDate(uniqueDates[0]);
-            const sessionsForDate = sessionsWithAvailability.filter(session => session.date === uniqueDates[0]);
-            setSessionsForSelectedDate(sessionsForDate);
-            
-            // If only one session on that date, auto-select it
-            if (sessionsForDate.length === 1) {
-              setSelectedSession(sessionsForDate[0]);
-            }
+        if (uniqueDates.length === 1) {
+          setSelectedSessionDate(uniqueDates[0]);
+          const sessionsForDate = eventData.sessions.filter((s: any) => s.date.startsWith(uniqueDates[0]));
+          setSessionsForSelectedDate(sessionsForDate);
+          if (sessionsForDate.length === 1) {
+            setSelectedSession(sessionsForDate[0]);
           }
         }
-        // Handle legacy events
-        else {
-          // Calculate real-time availability
-          const ticketsWithRealAvailability = calculateRealTimeAvailability(baseEventData, attendeesList);
-          
-          const eventData: EventData = {
-            ...baseEventData,
-            tickets: ticketsWithRealAvailability
-          };
-
-          setEvent(eventData);
-          
-          // Process dates and time slots
-          const dates = Array.from(new Set(eventData.time_slots.map(slot => slot.date)));
-          setAvailableDates(dates);
-          
-          // If only one date, select it automatically
-          if (dates.length === 1) {
-            setSelectedDate(dates[0]);
-            const slotsForDate = eventData.time_slots.filter(slot => slot.date === dates[0]);
-            setTimeSlots(slotsForDate);
-          }
-        }
-
-        console.log('Real-time availability calculated for', baseEventData.architecture, 'event:', {
-          totalAttendees: attendeesList.length,
-          sessions: baseEventData.sessions?.length || 0,
-          ticketAvailability: baseEventData.architecture === 'session-centric' ? 
-            'per-session' : 
-            baseEventData.tickets?.map(t => ({
-              name: t.name,
-              capacity: t.capacity,
-              available: t.available_capacity,
-              sold: t.capacity - t.available_capacity
-            }))
-        });
-      } else {
-        setError('Event not found');
       }
     } catch (err) {
       setError('Error fetching event details');
@@ -380,9 +203,14 @@ function BookingFlow() {
     const fetchUserDetails = async () => {
       if (auth.currentUser) {
         try {
-          const userDoc = await getDoc(doc(db(), "Users", auth.currentUser.uid));
-          if (userDoc.exists()) {
-            const userData = userDoc.data();
+          const token = await auth.currentUser.getIdToken();
+          const res = await fetch('/api/users/profile', {
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+          
+          if (res.ok) {
+            const dataResponse = await res.json();
+            const userData = dataResponse.user;
             setUserInfo({
               name: userData.name || '',
               email: userData.email || userData.contactEmail || auth.currentUser.email || '',
@@ -398,7 +226,7 @@ function BookingFlow() {
           }
         } catch (err) {
           console.error('Error fetching user details:', err);
-          // Fallback to auth data if Firestore fails
+          // Fallback to auth data if REST API fails
           setUserInfo({
             name: '',
             email: auth.currentUser.email || '',
@@ -421,11 +249,9 @@ function BookingFlow() {
 
   // Session-centric: Update available tickets when session changes
   useEffect(() => {
-    if (selectedSession && event && attendees) {
-      // Recalculate tickets for the selected session
-      const updatedTickets = calculateRealTimeAvailability(event, attendees);
-      // Update the event state with new ticket availability
-      setEvent(prev => prev ? { ...prev, tickets: updatedTickets } : null);
+    if (selectedSession && event) {
+      // With Postgres, the session tickets already have the correct available_capacity
+      setEvent(prev => prev ? { ...prev, tickets: selectedSession.tickets } : null);
     }
   }, [selectedSession]);
 
@@ -524,64 +350,118 @@ function BookingFlow() {
     }
 
     if (!params?.id) return;
+    if (event?.architecture !== 'session-centric' || !selectedSession) {
+      setError('Please select a valid session.');
+      return;
+    }
 
     try {
       setIsPaymentProcessing(true);
       setLoading(true);
 
-      // Prepare booking data - UPDATED for session-centric
-      const bookingData: BookingData = {
-        eventId: params.id,
-        userId: auth.currentUser.uid,
-        name: userInfo.name,
-        email: userInfo.email,
-        phone: userInfo.phone,
-        selectedDate: event?.architecture === 'session-centric' ? selectedSession?.date! : selectedDate!,
-        selectedTimeSlot: event?.architecture === 'session-centric' ? {
-          date: selectedSession?.date!,
-          start_time: selectedSession?.start_time!,
-          end_time: selectedSession?.end_time!,
-          available: true,
-          session_id: selectedSession?.id
-        } : selectedTimeSlot,
-        selectedSession: selectedSession, // NEW: Include session for session-centric events
-        tickets: selectedTickets,
-        totalAmount: getTotalAmount(),
-      };
+      const { loadRazorpayScript } = await import('@/domains/payments/services/razorpay');
+      const isLoaded = await loadRazorpayScript();
+      if (!isLoaded) {
+        throw new Error('Failed to load Razorpay script');
+      }
 
-      // Initiate Razorpay payment
-      await initiateRazorpayPayment(
-        {
-          amount: getTotalAmount(),
+      const totalAmount = getTotalAmount();
+
+      // Create Razorpay Order
+      const orderRes = await fetch('/api/payment/create-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: totalAmount,
           currency: 'INR',
           receipt: `event_${params.id}_${Date.now()}`,
-          notes: {
-            eventId: params.id,
-            userId: auth.currentUser.uid,
-            sessionId: selectedSession?.id || 'legacy',
+        }),
+      });
+
+      const orderData = await orderRes.json();
+      if (!orderRes.ok) throw new Error(orderData.error || 'Failed to create order');
+      const order = orderData.order;
+
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        amount: order.amount,
+        currency: order.currency,
+        name: 'Zest',
+        description: 'Event Booking',
+        order_id: order.id,
+        prefill: {
+          name: userInfo.name,
+          email: userInfo.email,
+          contact: userInfo.phone,
+        },
+        theme: { color: '#c084fc' },
+        handler: async (response: any) => {
+          try {
+            console.log('Payment success, verifying with Postgres API...');
+            
+            // Map selected tickets to items array
+            const items = Object.entries(selectedTickets)
+              .filter(([_, quantity]) => quantity > 0)
+              .map(([ticketName, quantity]) => {
+                const ticketType = selectedSession.tickets.find((t: any) => t.name === ticketName);
+                if (!ticketType || !ticketType.id) {
+                  throw new Error(`Ticket type ${ticketName} not found`);
+                }
+                return { ticketTypeId: ticketType.id, quantity };
+              });
+
+            const bookingPayload = {
+              userId: auth.currentUser!.uid,
+              eventId: params.id as string,
+              sessionId: selectedSession.id,
+              contact: {
+                name: userInfo.name || 'Anonymous',
+                email: userInfo.email || 'no-email@zest.dev',
+                phone: userInfo.phone || '0000000000',
+              },
+              items,
+              payment: {
+                method: 'RAZORPAY',
+                razorpayOrderId: response.razorpay_order_id,
+                razorpayPaymentId: response.razorpay_payment_id,
+                razorpaySignature: response.razorpay_signature,
+              },
+            };
+
+            const bookingRes = await fetch('/api/bookings', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(bookingPayload),
+            });
+
+            const bookingResult = await bookingRes.json();
+
+            if (!bookingRes.ok) {
+              throw new Error(bookingResult.message || bookingResult.error || 'Booking failed');
+            }
+
+            console.log('Postgres booking successful:', bookingResult);
+            router.push(`/booking-confirmation/${bookingResult.bookingId}`);
+          } catch (error: any) {
+            console.error('Booking verification failed:', error);
+            setIsPaymentProcessing(false);
+            setLoading(false);
+            router.push(`/payment-failed?eventId=${params.id}&error=${encodeURIComponent(error.message || 'Verification failed')}`);
+          }
+        },
+        modal: {
+          ondismiss: () => {
+            setIsPaymentProcessing(false);
+            setLoading(false);
           },
         },
-        bookingData,
-        'event',
-        (bookingId: string) => {
-          // Payment successful - keep loading state while navigating
-          console.log('Payment successful, redirecting to confirmation...');
-          router.push(`/booking-confirmation/${bookingId}`);
-          // Don't reset loading state here - let the confirmation page handle it
-        },
-        (error: string) => {
-          // Payment failed or cancelled
-          console.error('Payment failed:', error);
-          setIsPaymentProcessing(false);
-          setLoading(false);
-          // Redirect to payment failed page with error details
-          router.push(`/payment-failed?eventId=${params.id}&error=${encodeURIComponent(error)}`);
-        }
-      );
+      };
 
-    } catch (err) {
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (err: any) {
       console.error('Error initiating booking:', err);
-      setError('Error initiating booking. Please try again.');
+      setError(err.message || 'Error initiating booking. Please try again.');
       setIsPaymentProcessing(false);
       setLoading(false);
     }
@@ -648,20 +528,7 @@ function BookingFlow() {
       )}
 
       <div className={styles.bookingContainer}>
-        <div className={styles.bookingProgress}>
-          <div className={`${styles.progressStep} ${step >= 1 ? styles.active : ''}`}>
-            <FaCalendarAlt />
-            <span>{event.architecture === 'session-centric' ? 'Session' : 'Date & Time'}</span>
-          </div>
-          <div className={`${styles.progressStep} ${step >= 2 ? styles.active : ''}`}>
-            <FaTicketAlt />
-            <span>Tickets</span>
-          </div>
-          <div className={`${styles.progressStep} ${step >= 3 ? styles.active : ''}`}>
-            <FaUser />
-            <span>Review</span>
-          </div>
-        </div>
+        <h2 className={styles.mainTitle}>Select Date & Time</h2>
 
         {step === 1 && (
           <div className={styles.bookingStep}>
@@ -701,14 +568,7 @@ function BookingFlow() {
                   </div>
                 )}
 
-                <button
-                  className={styles.nextButton}
-                  onClick={() => setStep(2)}
-                  disabled={!selectedSession}
-                >
-                  <span>Continue to Tickets</span>
-                  <FaChevronRight />
-                </button>
+
               </>
             ) : (
               /* Legacy Event: Date & Time Selection */
@@ -736,43 +596,13 @@ function BookingFlow() {
                   </div>
                 )}
 
-                <button
-                  className={styles.nextButton}
-                  onClick={() => setStep(2)}
-                  disabled={!selectedTimeSlot}
-                >
-                  <span>Continue to Tickets</span>
-                  <FaChevronRight />
-                </button>
               </>
             )}
-          </div>
-        )}
 
-        {step === 2 && (
-          <div className={styles.bookingStep}>
-            <div className={styles.stepHeader}>
-              <h2>Select Tickets</h2>
-              {event.architecture === 'session-centric' && selectedSession && (
-                <div className={styles.selectedSessionInfo}>
-                  <span>For: {formatTime(selectedSession.start_time)} - {formatTime(selectedSession.end_time)}</span>
-                  <span>{formatDate(selectedSession.date)}</span>
-                </div>
-              )}
-              <div className={styles.refreshSection}>
-                <button 
-                  onClick={handleManualRefresh}
-                  className={styles.refreshButton}
-                  disabled={isRefreshing}
-                >
-                  <FaSync className={isRefreshing ? styles.spinning : ''} />
-                  {isRefreshing ? 'Updating...' : 'Refresh'}
-                </button>
-                <span className={styles.lastUpdate}>
-                  Last updated: {lastRefresh.toLocaleTimeString()}
-                </span>
-              </div>
-            </div>
+            {((event.architecture === 'session-centric' && selectedSession) || 
+              (event.architecture !== 'session-centric' && selectedTimeSlot)) && (
+              <div className={styles.ticketSectionWrapper} style={{ marginTop: '40px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '40px' }}>
+
             
             <div className={styles.ticketTypes}>
               {currentTickets.map((ticket, index) => {
@@ -805,17 +635,7 @@ function BookingFlow() {
                             </span>
                           )}
                         </div>
-                        {!isSoldOut && (
-                          <div className={styles.progressBar}>
-                            <div 
-                              className={styles.progressFill}
-                              style={{ 
-                                width: `${((ticket.capacity - ticket.available_capacity) / ticket.capacity) * 100}%`,
-                                backgroundColor: availability.color
-                              }}
-                            />
-                          </div>
-                        )}
+
                       </div>
                     </div>
                     <div className={styles.ticketQuantity}>
@@ -843,37 +663,22 @@ function BookingFlow() {
             </div>
 
             {Object.keys(selectedTickets).length > 0 && (
-              <div className={styles.selectionSummary}>
-                <h4>Selected Tickets</h4>
-                <div className={styles.selectedTicketsList}>
-                  {Object.entries(selectedTickets).map(([ticketName, quantity]) => {
-                    const ticket = currentTickets.find(t => t.name === ticketName);
-                    return (
-                      <div key={ticketName} className={styles.selectedTicketItem}>
-                        <span>{ticketName} × {quantity}</span>
-                        <span>₹{((ticket?.price || 0) * quantity).toLocaleString()}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-                <div className={styles.totalSelected}>
-                  <strong>Total: ₹{getTotalAmount().toLocaleString()}</strong>
-                </div>
+              <div className={styles.floatingContinueContainer}>
+                <button
+                  className={styles.floatingContinueButton}
+                  onClick={() => setStep(2)}
+                  disabled={getTotalTickets() === 0}
+                >
+                  <span>Continue</span>
+                  <FaChevronRight />
+                </button>
               </div>
             )}
-
-            <button
-              className={styles.nextButton}
-              onClick={() => setStep(3)}
-              disabled={getTotalTickets() === 0}
-            >
-              <span>Continue to Review</span>
-              <FaChevronRight />
-            </button>
           </div>
         )}
-
-        {step === 3 && (
+      </div>
+    )}
+    {step === 2 && (
           <div className={styles.bookingStep}>
             <h2>Booking Summary</h2>
             <div className={styles.bookingSummary}>

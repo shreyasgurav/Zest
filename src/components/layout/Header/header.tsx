@@ -3,8 +3,7 @@
 const logo = '/zest-logo.png';
 import React, { useState, useEffect, useRef } from 'react';
 import { onAuthStateChanged, User } from 'firebase/auth';
-import { auth, db } from '@/infrastructure/firebase';
-import { collection, query, where, getDocs, limit, doc, getDoc } from 'firebase/firestore';
+import { auth } from '@/infrastructure/firebase';
 import PersonLogo from "@/domains/profiles/components/PersonLogo/PersonLogo";
 import styles from "./header.module.css";
 import Link from 'next/link';
@@ -75,8 +74,18 @@ const Header = () => {
         try {
             // Only check organization status if on organization routes
             if (isOrganizationRoute) {
-                const orgDoc = await getDoc(doc(db(), "Organisations", user.uid));
-                setIsOrganization(orgDoc.exists());
+                const token = await user.getIdToken();
+                const response = await fetch('/api/users/pages', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    const hasOrg = data.pages?.some((p: any) => p.type === 'ORGANISATION') || false;
+                    setIsOrganization(hasOrg);
+                } else {
+                    setIsOrganization(false);
+                }
             } else {
                 // For regular user routes, default to false
                 setIsOrganization(false);
@@ -156,10 +165,9 @@ const Header = () => {
         };
     }, [searchQuery]);
 
-    // Optimized search function with correct field names
+    // Optimized search function using Postgres API
     const performSearch = async () => {
         try {
-            const results: SearchResult[] = [];
             const searchLower = searchQuery.toLowerCase().trim();
             
             // Early return if search query is too short
@@ -171,109 +179,14 @@ const Header = () => {
 
             console.log('Searching for:', searchLower);
 
-            // Search Events with correct field names
-            try {
-                const eventsQuery = query(collection(db(), "events"), limit(15));
-                const eventsSnapshot = await getDocs(eventsQuery);
-                
-                eventsSnapshot.forEach(doc => {
-                    const data = doc.data();
-                    const eventTitle = (data.title || data.eventTitle || '').toLowerCase();
-                    const eventVenue = (data.event_venue || data.eventVenue || '').toLowerCase();
-                    const hostingClub = (data.hosting_club || data.hostingClub || '').toLowerCase();
-                    const aboutEvent = (data.about_event || data.aboutEvent || '').toLowerCase();
-                    
-                    if (eventTitle.includes(searchLower) ||
-                        eventVenue.includes(searchLower) ||
-                        hostingClub.includes(searchLower) ||
-                        aboutEvent.includes(searchLower)) {
-                        
-                        results.push({ 
-                            id: doc.id, 
-                            type: 'event', 
-                            title: data.title || data.eventTitle || 'Untitled Event',
-                            description: data.about_event || data.aboutEvent || '',
-                            location: data.event_venue || data.eventVenue || '',
-                            organizationName: data.hosting_club || data.hostingClub || '',
-                            image: data.event_image || '',
-                            date: data.time_slots?.[0]?.date || ''
-                        });
-                    }
-                });
-                console.log('Found', results.filter(r => r.type === 'event').length, 'events');
-            } catch (error) {
-                console.error('Error searching events:', error);
-            }
-
-            // Search Organizations in both collections with correct field names
-            try {
-                // Search in Organisations collection (main one being used)
-                const orgsQuery = query(collection(db(), "Organisations"), limit(15));
-                const orgsSnapshot = await getDocs(orgsQuery);
-                
-                orgsSnapshot.forEach(doc => {
-                    const data = doc.data();
-                    const orgName = (data.name || '').toLowerCase();
-                    const orgUsername = (data.username || '').toLowerCase();
-                    const orgBio = (data.bio || data.description || '').toLowerCase();
-                    
-                    if (orgName.includes(searchLower) ||
-                        orgUsername.includes(searchLower) ||
-                        orgBio.includes(searchLower)) {
-                        
-                        results.push({ 
-                            id: doc.id, 
-                            type: 'organization', 
-                            title: data.name || 'Unknown Organization',
-                            description: data.bio || data.description || '',
-                            image: data.photoURL || data.logo || data.profile_image || '',
-                            username: data.username || '' // Store username for routing
-                        });
-                    }
-                });
-
-                // Also search in organizations collection (if it exists)
-                try {
-                    const orgsQuery2 = query(collection(db(), "organizations"), limit(10));
-                    const orgsSnapshot2 = await getDocs(orgsQuery2);
-                    
-                    orgsSnapshot2.forEach(doc => {
-                        const data = doc.data();
-                        const orgName = (data.organizationName || data.name || '').toLowerCase();
-                        const orgUsername = (data.username || '').toLowerCase();
-                        const orgDescription = (data.description || data.about || '').toLowerCase();
-                        
-                        if (orgName.includes(searchLower) ||
-                            orgUsername.includes(searchLower) ||
-                            orgDescription.includes(searchLower)) {
-                            
-                            results.push({ 
-                                id: doc.id, 
-                                type: 'organization', 
-                                title: data.organizationName || data.name || 'Unknown Organization',
-                                description: data.description || data.about || '',
-                                image: data.logo || data.profile_image || '',
-                                username: data.username || ''
-                            });
-                        }
-                    });
-                } catch (error) {
-                    // organizations collection might not exist, ignore error
-                    console.log('organizations collection not found or empty');
-                }
-
-                console.log('Found', results.filter(r => r.type === 'organization').length, 'organizations');
-            } catch (error) {
-                console.error('Error searching organizations:', error);
-            }
-
-            // Remove duplicates and limit results
-            const uniqueResults = results.filter((result, index, self) => 
-                index === self.findIndex((r) => r.type === result.type && r.id === result.id)
-            );
-
+            const response = await fetch(`/api/search?q=${encodeURIComponent(searchLower)}`);
+            if (!response.ok) throw new Error('Search failed');
+            
+            const data = await response.json();
+            const results = data.results || [];
+            
             // Sort results: prioritize exact matches, then partial matches
-            const sortedResults = uniqueResults.sort((a, b) => {
+            const sortedResults = results.sort((a: SearchResult, b: SearchResult) => {
                 const aTitle = a.title.toLowerCase();
                 const bTitle = b.title.toLowerCase();
                 
@@ -290,7 +203,6 @@ const Header = () => {
             });
 
             setSearchResults(sortedResults.slice(0, 10)); // Limit to top 10 results
-            console.log('Final search results:', sortedResults.slice(0, 10));
         } catch (error) {
             console.error('Error in performSearch:', error);
             setSearchResults([]);
@@ -360,11 +272,6 @@ const Header = () => {
         const loadPopularCities = async () => {
             try {
                 console.log('Loading popular cities from database...');
-                
-                // Set a timeout to prevent hanging
-                const timeoutPromise = new Promise((_, reject) => 
-                    setTimeout(() => reject(new Error('Timeout loading cities')), 5000)
-                );
                 
                 // Using fallback cities during reorganization
                 const cities = popularCities; // Use the already initialized cities

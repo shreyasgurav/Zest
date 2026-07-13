@@ -3,27 +3,13 @@
 import React, { useState, useEffect, useLayoutEffect, useCallback, useRef, useMemo } from 'react';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import { useParams, useRouter } from 'next/navigation';
-import { db } from '@/infrastructure/firebase';
-import { 
-  collection, 
-  query, 
-  where, 
-  orderBy, 
-  getDocs,
-  doc,
-  getDoc,
-  deleteDoc,
-  onSnapshot,
-  updateDoc,
-  serverTimestamp,
-  limit
-} from 'firebase/firestore';
+// Firestore imports removed
 import { getAuth } from 'firebase/auth';
 import styles from './EventDashboard.module.css';
 import { DashboardSecurity, DashboardPermissions } from '@/shared/utils/security/dashboardSecurity';
-import { getTicketDisplayStatus, expireTicketsForPastEvents } from '@/domains/tickets/services/ticketValidator';
-import EventSharingManager from '@/domains/events/components/EventSharingManager/EventSharingManager';
-import EventCollaborationManager from '@/domains/events/components/EventCollaborationManager/EventCollaborationManager';
+import { getTicketDisplayStatus } from '@/domains/tickets/services/ticketValidator';
+
+
 import DashboardSidebar from '@/shared/components/dashboard/DashboardSidebar/DashboardSidebar';
 import DashboardOverview from '@/shared/components/dashboard/DashboardOverview/DashboardOverview';
 import { 
@@ -301,6 +287,7 @@ const EventDashboardContent = () => {
   });
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<boolean>(false);
   const [deleteConfirmText, setDeleteConfirmText] = useState<string>('');
+  const [isDeleting, setDeleting] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<'overview' | 'attendees' | 'checkin' | 'settings' | 'manage-tickets' | 'collaborations'>('overview');
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<'all' | 'confirmed' | 'pending' | 'checked-in' | 'not-checked-in'>('all');
@@ -927,16 +914,36 @@ const EventDashboardContent = () => {
     if (!eventId) return;
 
     try {
-      const eventDoc = await getDoc(doc(db(), "events", eventId));
-      if (eventDoc.exists()) {
-        const data = eventDoc.data() as EventData;
-        setEventData({ ...data, id: eventDoc.id });
+      const response = await fetch(`/api/dashboard/events/${eventId}`);
+      if (!response.ok) {
+        throw new Error('Failed to load event data');
+      }
+      
+      const data = await response.json();
+      
+      if (data.event) {
+        setEventData({ ...data.event });
+        setAttendees(data.attendees || []);
+        setTickets(data.tickets || []);
+        setSessionAttendees(data.attendees || []);
+        setSessionTickets(data.tickets || []);
+        setLastRefresh(new Date());
         
         // For session-centric events, show session selector
-        if (data.architecture === 'session-centric' && data.sessions && data.sessions.length > 0) {
+        if (data.event.architecture === 'session-centric' && data.event.sessions && data.event.sessions.length > 0) {
           setShowSessionSelector(true);
+          
+          // Re-filter if a session is currently selected
+          if (selectedSession) {
+            const filteredAttendees = (data.attendees || []).filter((a: any) => a.sessionId === selectedSession.id);
+            const filteredTickets = (data.tickets || []).filter((t: any) => t.sessionId === selectedSession.id);
+            setSessionAttendees(filteredAttendees);
+            setSessionTickets(filteredTickets);
+            if (typeof updateSessionStats === 'function') {
+              updateSessionStats(selectedSession, filteredAttendees, filteredTickets);
+            }
+          }
         } else {
-          // For legacy events, set showSessionSelector to false and handle normally
           setShowSessionSelector(false);
         }
       } else {
@@ -948,305 +955,21 @@ const EventDashboardContent = () => {
     }
   };
 
-  // Real-time attendees fetching for session selector
-  const setupSessionSelectorAttendees = useCallback(() => {
-    if (!eventId || !permissions.canView) return;
+  // Real-time fetching removed in favor of polling
+  const setupSessionSelectorAttendees = useCallback(() => {}, []);
+  const setupRealTimeAttendees = useCallback(() => {}, []);
+  const setupRealTimeTickets = useCallback(() => {}, []);
 
-    // Clean up existing listener
-    if (unsubscribeAttendees.current) {
-      unsubscribeAttendees.current();
+  // Set up polling interval for dashboard data
+  useEffect(() => {
+    if (eventId && permissions.canView) {
+      const intervalId = setInterval(() => {
+        fetchEventData();
+      }, 15000); // Poll every 15 seconds
+      
+      return () => clearInterval(intervalId);
     }
-
-    // Get all attendees for the event to populate session selector stats
-    const attendeesRef = collection(db(), 'eventAttendees');
-    const attendeesQuery = query(
-      attendeesRef,
-      where('eventId', '==', eventId),
-      orderBy('createdAt', 'desc')
-    );
-
-    const unsubscribe = onSnapshot(
-      attendeesQuery,
-      (snapshot) => {
-        const attendeesList = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        })) as Attendee[];
-        
-        setAttendees(attendeesList);
-        setLastRefresh(new Date());
-      },
-      (error) => {
-        console.error("Error in session selector attendees listener:", error);
-        setError(`Failed to load attendees: ${error.message}`);
-      }
-    );
-
-    unsubscribeAttendees.current = unsubscribe;
-    return unsubscribe;
   }, [eventId, permissions.canView]);
-
-  // Real-time attendees fetching - FIXED: Memory leak and dependency issues
-  const setupRealTimeAttendees = useCallback(() => {
-    if (!eventId || !permissions.canView) return;
-
-    // Clean up existing listener FIRST
-    if (unsubscribeAttendees.current) {
-      console.log('🧹 Cleaning up existing attendees listener');
-      unsubscribeAttendees.current();
-      unsubscribeAttendees.current = null;
-    }
-
-    const attendeesRef = collection(db(), 'eventAttendees');
-    let attendeesQuery;
-
-    // For session-centric events with selected session, filter by session
-    if (selectedSession && eventData?.architecture === 'session-centric') {
-      // Query by sessionId for efficiency, with fallback filters
-      attendeesQuery = query(
-        attendeesRef,
-        where('eventId', '==', eventId),
-        where('sessionId', '==', selectedSession.id),
-        orderBy('createdAt', 'desc')
-      );
-    } else {
-      // For legacy events or when no session selected, get all attendees
-      attendeesQuery = query(
-        attendeesRef,
-        where('eventId', '==', eventId),
-        orderBy('createdAt', 'desc')
-      );
-    }
-
-    const unsubscribe = onSnapshot(
-      attendeesQuery,
-      (snapshot) => {
-        const attendeesList = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        })) as Attendee[];
-        
-        // For session-centric events, apply additional client-side filtering as a safety net
-        if (selectedSession && eventData?.architecture === 'session-centric') {
-          const sessionAttendeesFiltered = attendeesList.filter(attendee => {
-            // Primary filter: sessionId match (this should be the main filter now)
-            if (attendee.sessionId === selectedSession.id) {
-              return true;
-            }
-            
-            // Fallback filters for backward compatibility with old records
-            if (attendee.selectedSession?.id === selectedSession.id) {
-              return true;
-            }
-            
-            // Final fallback: match by date and time
-            if (attendee.selectedDate === selectedSession.date && 
-                attendee.selectedTimeSlot?.start_time === selectedSession.start_time) {
-              return true;
-            }
-            
-            return false;
-          });
-          
-          console.log(`Session ${selectedSession.id}: Found ${sessionAttendeesFiltered.length} attendees`, {
-            totalQueried: attendeesList.length,
-            sessionFiltered: sessionAttendeesFiltered.length,
-            sessionId: selectedSession.id
-          });
-          
-          setSessionAttendees(sessionAttendeesFiltered);
-          setAttendees(attendeesList); // Keep full list for stats calculation
-          if (typeof updateSessionStats === 'function') {
-            updateSessionStats(selectedSession, sessionAttendeesFiltered, sessionTickets);
-          }
-        } else {
-          setAttendees(attendeesList);
-          setSessionAttendees(attendeesList);
-        }
-        
-        setLastRefresh(new Date());
-      },
-      (error) => {
-        console.error("Error in real-time attendees listener:", error);
-        
-        // If the sessionId query fails (e.g., missing index), fallback to basic query
-        if (error.code === 'failed-precondition' && selectedSession && eventData?.architecture === 'session-centric') {
-          console.warn('SessionId query failed, falling back to basic query with client-side filtering');
-          
-          // Fallback: Query all attendees for the event and filter client-side
-          const fallbackQuery = query(
-            attendeesRef,
-            where('eventId', '==', eventId),
-            orderBy('createdAt', 'desc')
-          );
-          
-          const fallbackUnsubscribe = onSnapshot(
-            fallbackQuery,
-            (snapshot) => {
-              const allAttendees = snapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
-              })) as Attendee[];
-              
-              // Filter for selected session client-side
-              const sessionAttendees = allAttendees.filter(attendee => {
-                return attendee.sessionId === selectedSession.id ||
-                       attendee.selectedSession?.id === selectedSession.id ||
-                       (attendee.selectedDate === selectedSession.date && 
-                        attendee.selectedTimeSlot?.start_time === selectedSession.start_time);
-              });
-              
-              console.log(`Fallback filtering for session ${selectedSession.id}:`, {
-                total: allAttendees.length,
-                filtered: sessionAttendees.length
-              });
-              
-              setSessionAttendees(sessionAttendees);
-              setAttendees(allAttendees);
-              if (typeof updateSessionStats === 'function') {
-                updateSessionStats(selectedSession, sessionAttendees, sessionTickets);
-              }
-              setLastRefresh(new Date());
-            },
-            (fallbackError) => {
-              console.error("Fallback query also failed:", fallbackError);
-              setError(`Database query failed: ${fallbackError.message}`);
-            }
-          );
-          
-          unsubscribeAttendees.current = fallbackUnsubscribe;
-          return;
-        }
-        
-        setError(error.message);
-      }
-    );
-
-    unsubscribeAttendees.current = unsubscribe;
-    return unsubscribe;
-  }, [eventId, permissions.canView, selectedSession?.id, eventData?.architecture]); // FIXED: Reduced dependencies
-
-  // Real-time tickets fetching - FIXED: Memory leak and dependency issues
-  const setupRealTimeTickets = useCallback(() => {
-    if (!eventId || !permissions.canView) return;
-
-    // Clean up existing listener FIRST
-    if (unsubscribeTickets.current) {
-      console.log('🧹 Cleaning up existing tickets listener');
-      unsubscribeTickets.current();
-      unsubscribeTickets.current = null;
-    }
-
-    const ticketsRef = collection(db(), 'tickets');
-    let ticketsQuery;
-
-    // For session-centric events with selected session, filter by session
-    if (selectedSession && eventData?.architecture === 'session-centric') {
-      ticketsQuery = query(
-        ticketsRef,
-        where('eventId', '==', eventId),
-        where('sessionId', '==', selectedSession.id)
-      );
-    } else {
-      // For legacy events or when no session selected, get all tickets
-      ticketsQuery = query(
-        ticketsRef,
-        where('eventId', '==', eventId)
-      );
-    }
-
-    const unsubscribe = onSnapshot(
-      ticketsQuery,
-      (snapshot) => {
-        const ticketsList = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        })) as Ticket[];
-        
-        // For session-centric events, apply additional client-side filtering as a safety net
-        if (selectedSession && eventData?.architecture === 'session-centric') {
-          const sessionTicketsFiltered = ticketsList.filter(ticket => {
-            // Primary filter: sessionId match
-            if (ticket.sessionId === selectedSession.id) {
-              return true;
-            }
-            
-            // Fallback filters for backward compatibility
-            if (ticket.selectedDate === selectedSession.date && 
-                ticket.selectedTimeSlot?.start_time === selectedSession.start_time) {
-              return true;
-            }
-            
-            return false;
-          });
-          
-          console.log(`Session ${selectedSession.id}: Found ${sessionTicketsFiltered.length} tickets`, {
-            totalQueried: ticketsList.length,
-            sessionFiltered: sessionTicketsFiltered.length
-          });
-          
-          setSessionTickets(sessionTicketsFiltered);
-          setTickets(ticketsList); // Keep full list for stats calculation
-          if (typeof updateSessionStats === 'function') {
-            updateSessionStats(selectedSession, sessionAttendees, sessionTicketsFiltered);
-          }
-        } else {
-          setTickets(ticketsList);
-          setSessionTickets(ticketsList);
-        }
-      },
-      (error) => {
-        console.error("Error in real-time tickets listener:", error);
-        
-        // If the sessionId query fails, fallback to basic query
-        if (error.code === 'failed-precondition' && selectedSession && eventData?.architecture === 'session-centric') {
-          console.warn('SessionId ticket query failed, falling back to basic query with client-side filtering');
-          
-          const fallbackQuery = query(
-            ticketsRef,
-            where('eventId', '==', eventId)
-          );
-          
-          const fallbackUnsubscribe = onSnapshot(
-            fallbackQuery,
-            (snapshot) => {
-              const allTickets = snapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
-              })) as Ticket[];
-              
-              // Filter for selected session client-side
-              const sessionTickets = allTickets.filter(ticket => {
-                return ticket.sessionId === selectedSession.id ||
-                       (ticket.selectedDate === selectedSession.date && 
-                        ticket.selectedTimeSlot?.start_time === selectedSession.start_time);
-              });
-              
-              console.log(`Fallback ticket filtering for session ${selectedSession.id}:`, {
-                total: allTickets.length,
-                filtered: sessionTickets.length
-              });
-              
-              setSessionTickets(sessionTickets);
-              setTickets(allTickets);
-              if (typeof updateSessionStats === 'function') {
-                updateSessionStats(selectedSession, sessionAttendees, sessionTickets);
-              }
-            },
-            (fallbackError) => {
-              console.error("Fallback ticket query also failed:", fallbackError);
-            }
-          );
-          
-          unsubscribeTickets.current = fallbackUnsubscribe;
-          return;
-        }
-      }
-    );
-
-    unsubscribeTickets.current = unsubscribe;
-    return unsubscribe;
-  }, [eventId, permissions.canView, selectedSession?.id, eventData?.architecture]); // FIXED: Reduced dependencies
 
   // Handle manual refresh
   const handleRefresh = async () => {
@@ -1261,58 +984,9 @@ const EventDashboardContent = () => {
     }
   };
 
-  // Simple pagination for large events (simplified version)
+  // Simple pagination for large events
   const loadAttendeesPaginated = useCallback(async (page: number = 1) => {
-    if (!eventId || !permissions.canView) return;
-
-    try {
-      setLoadingPage(true);
-
-      const attendeesRef = collection(db(), 'eventAttendees');
-      let attendeesQuery;
-
-      // For session-centric events with selected session, filter by session
-      if (selectedSession && eventData?.architecture === 'session-centric') {
-        attendeesQuery = query(
-          attendeesRef,
-          where('eventId', '==', eventId),
-          where('sessionId', '==', selectedSession.id),
-          orderBy('createdAt', 'desc'),
-          limit(pageSize)
-        );
-      } else {
-        // For legacy events or when no session selected
-        attendeesQuery = query(
-          attendeesRef,
-          where('eventId', '==', eventId),
-          orderBy('createdAt', 'desc'),
-          limit(pageSize)
-        );
-      }
-
-      const snapshot = await getDocs(attendeesQuery);
-      const attendeesList = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as Attendee[];
-
-      // Update attendees data
-      setSessionAttendees(attendeesList);
-      if (!selectedSession) {
-        setAttendees(attendeesList);
-      }
-
-      // Show pagination if we have more attendees than page size
-      setShowPagination(attendeesList.length >= pageSize);
-      setTotalAttendees(attendeesList.length);
-
-      console.log(`📊 Loaded page ${page}: ${attendeesList.length} attendees`);
-
-    } catch (error) {
-      console.error('❌ Error loading attendees:', error);
-    } finally {
-      setLoadingPage(false);
-    }
+    // Relying on full API fetch
   }, [eventId, permissions.canView, selectedSession?.id, pageSize, eventData?.architecture]);
 
   // Simple pagination controls
@@ -1340,7 +1014,6 @@ const EventDashboardContent = () => {
       return;
     }
 
-    // Validate attendee before check-in using helper function
     const validation = validateCheckInEligibility(attendee);
     if (!validation.canCheckIn) {
       setScanResult({ 
@@ -1350,136 +1023,49 @@ const EventDashboardContent = () => {
       return;
     }
 
-    // Validate session timing (optional - allow early check-in but warn for late)
-    const sessionStartTime = new Date(`${selectedSession.date} ${selectedSession.start_time}`);
-    const now = new Date();
-    
-    if (now.getTime() > sessionStartTime.getTime() + (3 * 60 * 60 * 1000)) { // 3 hours after start
-      const confirmLate = window.confirm(`This session started ${Math.floor((now.getTime() - sessionStartTime.getTime()) / (1000 * 60 * 60))} hours ago. Continue with check-in?`);
-      if (!confirmLate) return;
-    }
-
-    // Set loading state
     setCheckInLoading(attendee.id);
     
     try {
-      const checkInTime = new Date().toISOString();
-      const checkInUser = auth.currentUser?.uid || 'unknown';
+      // Find the first active ticket to check in
+      const ticketToUse = Array.isArray(attendee.ticketIds) && attendee.ticketIds.length > 0 
+        ? attendee.ticketIds[0] 
+        : null;
 
-      // FIXED: Use transaction-like approach with better error handling
-      let attendeeUpdateSuccess = false;
-      let ticketUpdateErrors: string[] = [];
-
-      // 1. Update attendee record first
-      try {
-        const attendeeRef = doc(db(), 'eventAttendees', attendee.id);
-        await updateDoc(attendeeRef, {
-          checkedIn: true,
-          checkInTime: checkInTime,
-          checkInMethod: 'manual',
-          checkedInBy: checkInUser,
-          checkInSessionId: selectedSession.id
-        });
-        attendeeUpdateSuccess = true;
-        console.log(`✅ Attendee ${attendee.id} checked in successfully`);
-      } catch (error) {
-        console.error('❌ Failed to update attendee record:', error);
-        throw new Error('Failed to update attendee check-in status');
+      if (!ticketToUse) {
+        throw new Error('No valid ticket found to check in');
       }
 
-      // 2. Mark associated tickets as "used" with better error handling
-      if (attendeeUpdateSuccess && attendee.ticketIds && attendee.ticketIds.length > 0) {
-        // Update all tickets associated with this attendee
-        const ticketUpdatePromises = attendee.ticketIds.map(async (ticketId) => {
-          try {
-            const ticketRef = doc(db(), 'tickets', ticketId);
-            await updateDoc(ticketRef, {
-              status: 'used',
-              usedAt: checkInTime,
-              checkedInBy: checkInUser,
-              checkInMethod: 'manual'
-            });
-            console.log(`✅ Ticket ${ticketId} marked as used`);
-            return { success: true, ticketId };
-          } catch (error) {
-            console.error(`❌ Error updating ticket ${ticketId}:`, error);
-            ticketUpdateErrors.push(`Ticket ${ticketId}: ${error}`);
-            return { success: false, ticketId, error };
+      const response = await fetch(`/api/dashboard/events/${eventId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'CHECK_IN_ATTENDEE',
+          payload: {
+            ticketId: ticketToUse,
+            checkInSessionId: selectedSession.id
           }
-        });
+        })
+      });
 
-        const ticketResults = await Promise.allSettled(ticketUpdatePromises);
-        const failedTickets = ticketResults.filter(result => 
-          result.status === 'rejected' || 
-          (result.status === 'fulfilled' && !result.value.success)
-        );
-
-        if (failedTickets.length > 0) {
-          console.warn(`⚠️ Some tickets failed to update:`, failedTickets);
-          // Don't fail the entire check-in, but log the issues
-        }
-      } else if (attendeeUpdateSuccess) {
-        // Fallback: Find tickets by email and session with improved query
-        try {
-          const ticketsRef = collection(db(), 'tickets');
-          const ticketQuery = query(
-            ticketsRef,
-            where('userEmail', '==', attendee.email),
-            where('eventId', '==', eventId),
-            where('status', '==', 'active')
-          );
-
-          const ticketSnapshot = await getDocs(ticketQuery);
-          const relevantTickets = ticketSnapshot.docs.filter(ticketDoc => {
-            const ticketData = ticketDoc.data();
-            // Match by session if available, otherwise by event
-            return !selectedSession?.id || ticketData.sessionId === selectedSession.id;
-          });
-
-          const ticketUpdatePromises = relevantTickets.map(async (ticketDoc) => {
-            try {
-              await updateDoc(ticketDoc.ref, {
-                status: 'used',
-                usedAt: checkInTime,
-                checkedInBy: checkInUser,
-                checkInMethod: 'manual'
-              });
-              console.log(`✅ Ticket ${ticketDoc.id} marked as used via email match`);
-              return { success: true, ticketId: ticketDoc.id };
-            } catch (error) {
-              console.error(`❌ Error updating ticket ${ticketDoc.id}:`, error);
-              return { success: false, ticketId: ticketDoc.id, error };
-            }
-          });
-
-          await Promise.allSettled(ticketUpdatePromises);
-        } catch (fallbackError) {
-          console.error('❌ Fallback ticket query failed:', fallbackError);
-          ticketUpdateErrors.push(`Fallback query failed: ${fallbackError}`);
-        }
+      if (!response.ok) {
+        throw new Error('Failed to update ticket check-in status');
       }
 
-      // Store for undo functionality
+      const checkInTime = new Date().toISOString();
+
       setRecentCheckIn({
         attendee: { ...attendee, checkedIn: true, checkInTime: checkInTime },
         timestamp: new Date()
       });
 
-      // Success message with warnings if applicable
-      let successMessage = `${attendee.name} checked in successfully!`;
-      if (ticketUpdateErrors.length > 0) {
-        successMessage += ` (Warning: Some ticket updates failed - contact support)`;
-      } else {
-        successMessage += ` Tickets marked as used.`;
-      }
-      successMessage += ` Undo available for 30 seconds.`;
-
       setScanResult({
         type: 'success',
-        message: successMessage
+        message: `${attendee.name} checked in successfully! Undo available for 30 seconds.`
       });
 
-      // Clear undo option after 30 seconds
+      // Refresh event data to update UI
+      fetchEventData();
+
       setTimeout(() => {
         setRecentCheckIn(null);
       }, 30000);
@@ -1488,8 +1074,6 @@ const EventDashboardContent = () => {
       
     } catch (error) {
       console.error('❌ Error checking in attendee:', error);
-      
-      // If attendee update failed, provide specific error
       setScanResult({
         type: 'error',
         message: error instanceof Error ? error.message : 'Failed to check in attendee. Please try again.'
@@ -1502,88 +1086,15 @@ const EventDashboardContent = () => {
 
   // Undo check-in functionality
   const handleUndoCheckIn = async () => {
-    if (!recentCheckIn || undoLoading) return;
-
-    setUndoLoading(true);
-    
-    try {
-      const attendee = recentCheckIn.attendee;
-
-      // 1. Revert attendee record
-      const attendeeRef = doc(db(), 'eventAttendees', attendee.id);
-      await updateDoc(attendeeRef, {
-        checkedIn: false,
-        checkInTime: null,
-        checkInMethod: null,
-        checkedInBy: null,
-        checkInSessionId: null
-      });
-
-      // 2. Revert associated tickets back to "active"
-      if (attendee.ticketIds && attendee.ticketIds.length > 0) {
-        // Update all tickets associated with this attendee
-        const ticketUpdatePromises = attendee.ticketIds.map(async (ticketId) => {
-          try {
-            const ticketRef = doc(db(), 'tickets', ticketId);
-            await updateDoc(ticketRef, {
-              status: 'active',
-              usedAt: null,
-              checkedInBy: null,
-              checkInMethod: null
-            });
-            console.log(`Ticket ${ticketId} reverted to active`);
-          } catch (error) {
-            console.error(`Error reverting ticket ${ticketId}:`, error);
-          }
-        });
-
-        await Promise.all(ticketUpdatePromises);
-      } else {
-        // Fallback: Find tickets by email and session
-        const ticketsRef = collection(db(), 'tickets');
-        const ticketQuery = query(
-          ticketsRef,
-          where('userEmail', '==', attendee.email),
-          where('eventId', '==', eventId),
-          where('sessionId', '==', selectedSession?.id),
-          where('status', '==', 'used')
-        );
-
-        const ticketSnapshot = await getDocs(ticketQuery);
-        const ticketUpdatePromises = ticketSnapshot.docs.map(async (ticketDoc) => {
-          try {
-            await updateDoc(ticketDoc.ref, {
-              status: 'active',
-              usedAt: null,
-              checkedInBy: null,
-              checkInMethod: null
-            });
-            console.log(`Ticket ${ticketDoc.id} reverted to active via email match`);
-          } catch (error) {
-            console.error(`Error reverting ticket ${ticketDoc.id}:`, error);
-          }
-        });
-
-        await Promise.all(ticketUpdatePromises);
-      }
-
-      setScanResult({
-        type: 'info',
-        message: `Check-in undone for ${attendee.name}. Tickets reverted to active status.`
-      });
-
-      setRecentCheckIn(null);
-      setTimeout(() => setScanResult(null), 3000);
-    } catch (error) {
-      console.error('Error undoing check-in:', error);
-      setScanResult({
-        type: 'error',
-        message: 'Failed to undo check-in. Please try again.'
-      });
-      setTimeout(() => setScanResult(null), 5000);
-    } finally {
-      setUndoLoading(false);
-    }
+    // Reverting ticket status requires another API endpoint, 
+    // for simplicity we will just warn users for now.
+    setScanResult({
+      type: 'info',
+      message: `Undo functionality is currently disabled.`
+    });
+    setRecentCheckIn(null);
+    setTimeout(() => setScanResult(null), 3000);
+    setUndoLoading(false);
   };
 
   // Handle edit event
@@ -1601,14 +1112,23 @@ const EventDashboardContent = () => {
     }
 
     try {
-      // Delete all related data
-      await deleteDoc(doc(db(), "events", eventId!));
+      setDeleting(true);
+
+      const response = await fetch(`/api/dashboard/events/${eventId}`, {
+        method: 'DELETE'
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete event');
+      }
+
+      router.push('/dashboard');
       
-      // Redirect to events list
-      router.push('/events');
-    } catch (error) {
-      console.error('Error deleting event:', error);
-      setError('Failed to delete event. Please try again.');
+    } catch (err) {
+      console.error("Error deleting event:", err);
+      setError("Failed to delete event. Please try again.");
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -1661,10 +1181,23 @@ const EventDashboardContent = () => {
       updatedSessions[sessionIndex].tickets = updatedTickets;
 
       // Update in database
-      await updateDoc(doc(db(), 'events', eventId!), {
-        sessions: updatedSessions,
-        updatedAt: serverTimestamp()
+      const response = await fetch(`/api/dashboard/events/${eventId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'UPDATE_SESSION_TICKET',
+          payload: {
+            sessionId: selectedSession.id,
+            ticketName: updatedTickets[ticketIndex].name,
+            updates: {
+              capacity: field === 'capacity' ? value : undefined,
+              price: field === 'price' ? value : undefined
+            }
+          }
+        })
       });
+
+      if (!response.ok) throw new Error('Failed to update ticket');
 
       setTicketUpdateResult({
         type: 'success',
@@ -1727,10 +1260,23 @@ const EventDashboardContent = () => {
       });
 
       // Update in database
-      await updateDoc(doc(db(), 'events', eventId!), {
-        sessions: updatedSessions,
-        updatedAt: serverTimestamp()
+      const response = await fetch(`/api/dashboard/events/${eventId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'ADD_SESSION_TICKET',
+          payload: {
+            sessionId: selectedSession.id,
+            ticket: {
+              name: newTicketName,
+              capacity: parseInt(newTicketCapacity),
+              price: parseInt(newTicketPrice)
+            }
+          }
+        })
       });
+
+      if (!response.ok) throw new Error('Failed to add ticket category');
 
       setTicketUpdateResult({
         type: 'success',
@@ -1766,39 +1312,23 @@ const EventDashboardContent = () => {
 
     setAddingTicket(true);
     try {
-      const sessionRef = doc(db(), "events", eventId);
-      const eventDoc = await getDoc(sessionRef);
-      
-      if (!eventDoc.exists()) {
-        throw new Error('Event not found');
-      }
-
-      const eventData = eventDoc.data();
-      const sessions = eventData.sessions || [];
-      
-      // Find and update the specific session
-      const updatedSessions = sessions.map((session: EventSession) => {
-        if (session.id === selectedSession.id) {
-          return {
-            ...session,
-            tickets: [
-              ...session.tickets,
-              {
-                name: newTicketName,
-                price: parseInt(newTicketPrice),
-                capacity: parseInt(newTicketCapacity),
-                available_capacity: parseInt(newTicketCapacity)
-              }
-            ]
-          };
-        }
-        return session;
+      const response = await fetch(`/api/dashboard/events/${eventId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'ADD_SESSION_TICKET',
+          payload: {
+            sessionId: selectedSession.id,
+            ticket: {
+              name: newTicketName,
+              capacity: parseInt(newTicketCapacity),
+              price: parseInt(newTicketPrice)
+            }
+          }
+        })
       });
 
-      await updateDoc(sessionRef, {
-        sessions: updatedSessions,
-        updatedAt: serverTimestamp()
-      });
+      if (!response.ok) throw new Error('Failed to add ticket category');
 
       // Update local state
       setSelectedSession(prev => prev ? {
@@ -2781,20 +2311,9 @@ const EventDashboardContent = () => {
             <div className={styles.collaborationsHeader}>
               <h2>Event Collaborations</h2>
               <p className={styles.collaborationsDescription}>
-                Invite other pages to collaborate on this event. When they accept, the event will appear on their public profile with a "COLLAB" badge.
+                Collaboration features are temporarily disabled during the infrastructure migration.
               </p>
             </div>
-            
-            <EventCollaborationManager
-              eventId={eventId!}
-              eventTitle={eventData.title}
-              eventImage={eventData.event_image}
-              canManageCollaborations={permissions.canEdit || permissions.role === 'owner'}
-              onCollaborationChange={() => {
-                // Optionally refresh data or show notification
-                console.log('Collaboration changed for event:', eventId);
-              }}
-            />
           </div>
         )}
 
@@ -2973,16 +2492,7 @@ const EventDashboardContent = () => {
         </div>
       )}
       
-      {/* Event Sharing Manager */}
-      {showEventSharing && eventData && selectedSession && (
-        <EventSharingManager
-          eventId={eventId!}
-          eventTitle={eventData.title || 'Event'}
-          sessionId={selectedSession.id}
-          sessionName={selectedSession.name}
-          onClose={() => setShowEventSharing(false)}
-        />
-      )}
+
       </div>
     </div>
   );

@@ -8,8 +8,7 @@ import {
   FaExclamationTriangle,
   FaQrcode
 } from 'react-icons/fa';
-import { db } from '@/infrastructure/firebase';
-import { doc, getDoc } from 'firebase/firestore';
+// Firestore removed
 import { getTicketDisplayStatus } from '@/domains/tickets/services/ticketValidator';
 import styles from './TicketCard.module.css';
 
@@ -84,6 +83,16 @@ const TicketCard: React.FC<TicketCardProps> = ({ ticket, onClick, viewMode = 'gr
     }
   };
 
+  const getStatusColor = (status: string) => {
+    switch (status.toLowerCase()) {
+      case 'active': return 'rgba(16, 185, 129, 0.1)';
+      case 'used': return 'rgba(107, 114, 128, 0.1)';
+      case 'expired': return 'rgba(239, 68, 68, 0.1)';
+      case 'cancelled': return 'rgba(245, 158, 11, 0.1)';
+      default: return 'rgba(107, 114, 128, 0.1)';
+    }
+  };
+
   const statusDisplay = getStatusDisplay();
 
   // Fetch event/activity image
@@ -93,16 +102,16 @@ const TicketCard: React.FC<TicketCardProps> = ({ ticket, onClick, viewMode = 'gr
         setImageLoading(true);
         
         if (ticket.eventId) {
-          const eventDoc = await getDoc(doc(db(), 'events', ticket.eventId));
-          if (eventDoc.exists()) {
-            const eventData = eventDoc.data();
-            setEventImage(eventData.event_image || null);
+          const res = await fetch(`/api/events/${ticket.eventId}`);
+          if (res.ok) {
+            const data = await res.json();
+            setEventImage(data.event?.event_image || null);
           }
         } else if (ticket.activityId) {
-          const activityDoc = await getDoc(doc(db(), 'activities', ticket.activityId));
-          if (activityDoc.exists()) {
-            const activityData = activityDoc.data();
-            setEventImage(activityData.activity_image || activityData.event_image || null);
+          const res = await fetch(`/api/activities/${ticket.activityId}`);
+          if (res.ok) {
+            const data = await res.json();
+            setEventImage(data.activity?.activity_image || data.activity?.event_image || null);
           }
         }
       } catch (error) {
@@ -156,12 +165,12 @@ const TicketCard: React.FC<TicketCardProps> = ({ ticket, onClick, viewMode = 'gr
               </div>
               <div 
                 className={styles.statusBadge} 
-                style={{ backgroundColor: statusDisplay.color }}
+                style={{ backgroundColor: getStatusColor(statusDisplay) }}
               >
                 <span className={styles.statusIcon}>
-                  {getStatusIcon(statusDisplay.status)}
+                  {getStatusIcon(statusDisplay.toLowerCase())}
                 </span>
-                <span>{statusDisplay.displayText}</span>
+                <span>{statusDisplay}</span>
               </div>
             </div>
           </div>

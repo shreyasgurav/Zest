@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { db } from '@/infrastructure/firebase';
-import { collection, getDocs, query, orderBy, where } from 'firebase/firestore';
+
 
 export interface Event {
   id: string;
@@ -159,27 +158,17 @@ export function useEvents(options: UseEventsOptions = {}): UseEventsReturn {
         return;
       }
 
-      if (!db) throw new Error('Firebase is not initialized');
-
-      let eventsQuery = query(
-        collection(db(), 'events'),
-        orderBy('createdAt', 'desc')
-      );
-
-      // Add organization filter if specified
+      let url = '/api/events';
       if (organizationId) {
-        eventsQuery = query(
-          collection(db(), 'events'),
-          where('organizationId', '==', organizationId),
-          orderBy('createdAt', 'desc')
-        );
+        url += `?organizationId=${organizationId}`;
       }
 
-      const querySnapshot = await getDocs(eventsQuery);
-      const rawEvents = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error('Failed to fetch events from API');
+      }
+      
+      const rawEvents = await response.json();
 
       // Normalize and process events
       const normalizedEvents = rawEvents.map(normalizeEventData);

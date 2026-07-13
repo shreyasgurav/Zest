@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { expireTicketsForPastEvents } from '@/domains/tickets/services/ticketValidator';
+import prisma from '@/infrastructure/database/prisma';
 
 /**
  * Maintenance endpoint to expire tickets for past events
@@ -28,7 +28,22 @@ export async function POST(request: NextRequest) {
 
     console.log('Starting ticket expiration maintenance job...');
     
-    const result = await expireTicketsForPastEvents();
+    const now = new Date();
+    // In Postgres, we can just update all ACTIVE tickets whose session is in the past
+    // Or events that are in the past
+    const result = await prisma.ticket.updateMany({
+      where: {
+        status: 'ACTIVE',
+        session: {
+          date: {
+            lt: now
+          }
+        }
+      },
+      data: {
+        status: 'EXPIRED'
+      }
+    });
     
     console.log('Ticket expiration job completed:', result);
     
@@ -36,8 +51,8 @@ export async function POST(request: NextRequest) {
       success: true,
       message: 'Ticket expiration job completed',
       result: {
-        ticketsExpired: result.updated,
-        errors: result.errors,
+        ticketsExpired: result.count,
+        errors: [],
         timestamp: new Date().toISOString()
       }
     });

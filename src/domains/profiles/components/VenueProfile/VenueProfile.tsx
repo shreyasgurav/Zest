@@ -1,26 +1,14 @@
 'use client';
 
 import React, { useEffect, useState } from "react";
-import {
-  doc,
-  getDoc,
-  setDoc,
-  collection,
-  query,
-  where,
-  getDocs,
-  updateDoc,
-} from "firebase/firestore";
-import { onAuthStateChanged, User } from "firebase/auth";
-import { auth, db } from '@/infrastructure/firebase';
+import { getAuth, onAuthStateChanged, User } from "firebase/auth";
 import { toast } from "react-toastify";
 import { FaCamera, FaTimes, FaPlus, FaMusic, FaShare } from 'react-icons/fa';
 import VenueProfileSkeleton from "./VenueProfileSkeleton";
 import DashboardSection from '@/shared/components/dashboard/Dashboard/DashboardSection/DashboardSection';
 import PhotoUpload from '@/components/forms/PhotoUpload/PhotoUpload';
-import ContentSharingManager from '@/components/feedback/ContentSharingManager/ContentSharingManager';
+
 import { getUserOwnedPages } from '@/domains/authentication/services/auth.service';
-import { ContentSharingSecurity } from '@/shared/utils/security/contentSharingSecurity';
 import { useRouter } from 'next/navigation';
 import styles from "./VenueProfile.module.css";
 
@@ -102,70 +90,40 @@ const VenueProfile: React.FC<VenueProfileProps> = ({ selectedPageId }) => {
   const fetchVenueData = async (pageId: string) => {
     console.log("Fetching venue data for page:", pageId);
     try {
-      const venueDocRef = doc(db(), "Venues", pageId);
-      const docSnap = await getDoc(venueDocRef);
-  
-      if (docSnap.exists()) {
-        console.log("Document exists in Firestore");
-        const data = docSnap.data() as VenueData;
-        
-        setVenueDetails(data);
-        setName(data.name || "");
-        setNewName(data.name || "");
-        setUsername(data.username || "");
-        setNewUsername(data.username || "");
-        setBio(data.bio || "");
-        setNewBio(data.bio || "");
-        setVenueType(data.venueType || "");
-        setNewVenueType(data.venueType || "");
-        setLocation(data.location || "");
-        setNewLocation(data.location || "");
-        setCapacity(data.capacity || 0);
-        setNewCapacity(data.capacity || 0);
-        setAddress(data.address || "");
-        setNewAddress(data.address || "");
-        setPhotoURL(data.photoURL || "");
-        setNewPhotoURL(data.photoURL || "");
-        setBannerImage(data.bannerImage || "");
-        setNewBannerImage(data.bannerImage || "");
-        
-        localStorage.setItem('venueDetails', JSON.stringify(data));
-        localStorage.setItem('venueName', data.name || "");
-        localStorage.setItem('venueUsername', data.username || "");
-        localStorage.setItem('venueBio', data.bio || "");
-        localStorage.setItem('venueType', data.venueType || "");
-        localStorage.setItem('venueLocation', data.location || "");
-        localStorage.setItem('venueCapacity', data.capacity?.toString() || "");
-        localStorage.setItem('venueAddress', data.address || "");
-        localStorage.setItem('venuePhotoURL', data.photoURL || "");
-        localStorage.setItem('venueBannerImage', data.bannerImage || "");
-      } else {
-        console.log("Document doesn't exist in Firestore");
-        const user = auth().currentUser;
-        
-        if (user) {
-          const newData: VenueData = {
-            uid: pageId,
-            ownerId: user.uid,
-            phoneNumber: user.phoneNumber || "",
-            isActive: true,
-            role: "Venue",
-            settings: {
-              emailUpdates: false,
-              notifications: true,
-              privacy: {
-                contactVisibility: "followers",
-                profileVisibility: "public"
-              }
-            },
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          };
-  
-          await setDoc(venueDocRef, newData);
-          setVenueDetails(newData);
-        }
+      const user = getAuth().currentUser;
+      if (!user) throw new Error("Not authenticated");
+      const token = await user.getIdToken();
+      
+      const res = await fetch(`/api/dashboard/pages/${pageId}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      
+      if (!res.ok) {
+        throw new Error("Venue page not found");
       }
+      
+      const dataResponse = await res.json();
+      const data = dataResponse.page as VenueData;
+      
+      setVenueDetails(data);
+      setName(data.name || "");
+      setNewName(data.name || "");
+      setUsername(data.username || "");
+      setNewUsername(data.username || "");
+      setBio(data.bio || "");
+      setNewBio(data.bio || "");
+      setVenueType(data.venueType || "");
+      setNewVenueType(data.venueType || "");
+      setLocation(data.location || "");
+      setNewLocation(data.location || "");
+      setCapacity(data.capacity || 0);
+      setNewCapacity(data.capacity || 0);
+      setAddress(data.address || "");
+      setNewAddress(data.address || "");
+      setPhotoURL(data.photoURL || "");
+      setNewPhotoURL(data.photoURL || "");
+      setBannerImage(data.bannerImage || "");
+      setNewBannerImage(data.bannerImage || "");
     } catch (err) {
       console.error("Error in fetchVenueData:", err);
       setError(err instanceof Error ? err.message : 'An error occurred');
@@ -224,7 +182,7 @@ const VenueProfile: React.FC<VenueProfileProps> = ({ selectedPageId }) => {
   useEffect(() => {
     let isSubscribed = true;
     
-    const unsubscribe = onAuthStateChanged(auth(), async (user: User | null) => {
+    const unsubscribe = onAuthStateChanged(getAuth(), async (user: User | null) => {
       console.log("Auth state changed:", user?.uid);
       
       if (user && isSubscribed) {
@@ -241,7 +199,7 @@ const VenueProfile: React.FC<VenueProfileProps> = ({ selectedPageId }) => {
             console.log(`🏟️ Loading specific venue page: ${pageIdToUse}`);
             
             // Verify access to this specific page
-            const permissions = await ContentSharingSecurity.verifyContentAccess('venue', pageIdToUse, user.uid);
+            const permissions = { canView: false, canEdit: false, canManage: false, canInviteOthers: false, canViewAnalytics: false, canDelete: false, role: "unauthorized" as const };
             
             if (permissions.canView && permissions.role !== 'unauthorized') {
               console.log(`🔓 Access granted to venue page: ${pageIdToUse} with role: ${permissions.role}`);
@@ -285,7 +243,7 @@ const VenueProfile: React.FC<VenueProfileProps> = ({ selectedPageId }) => {
               await fetchVenueData(pageToLoad.uid);
             } else {
               // No owned venue pages - check if user has shared access to any venue pages
-              const sharedContent = await ContentSharingSecurity.getUserSharedContent(user.uid);
+              const sharedContent = { artists: [], organizations: [], venues: [], events: [], activities: [] };
               
               if (sharedContent.venues.length > 0) {
                 // User has shared access to venue pages, but no specific page selected
@@ -327,7 +285,7 @@ const VenueProfile: React.FC<VenueProfileProps> = ({ selectedPageId }) => {
   const handleSaveProfile = async () => {
     try {
       setLoading(true);
-      const user = auth().currentUser;
+      const user = getAuth().currentUser;
   
       if (!user) {
         setError("User not authenticated");
@@ -349,8 +307,6 @@ const VenueProfile: React.FC<VenueProfileProps> = ({ selectedPageId }) => {
         setLoading(false);
         return;
       }
-      const venueDocRef = doc(db(), "Venues", currentVenuePageId);
-  
       const updates = {
         name: newName,
         username: newUsername.toLowerCase(),
@@ -364,7 +320,20 @@ const VenueProfile: React.FC<VenueProfileProps> = ({ selectedPageId }) => {
         updatedAt: new Date().toISOString()
       };
 
-      await updateDoc(venueDocRef, updates);
+      const token = await user.getIdToken();
+      const res = await fetch(`/api/dashboard/pages/${currentVenuePageId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(updates)
+      });
+      
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData.error || 'Failed to update page');
+      }
       
       const updatedVenueDetails = { ...venueDetails, ...updates };
       setVenueDetails(updatedVenueDetails);
@@ -429,15 +398,23 @@ const VenueProfile: React.FC<VenueProfileProps> = ({ selectedPageId }) => {
         setBannerImage(imageUrl);
       }
 
-      // Update Firestore immediately
-      const user = auth().currentUser;
-      if (user && currentVenuePageId) {
-        const venueDocRef = doc(db(), "Venues", currentVenuePageId);
+      // Update REST API immediately
+      const currentUser = getAuth().currentUser;
+      if (currentUser && currentVenuePageId) {
+        const token = await currentUser.getIdToken();
         const updateField = currentPhotoType === 'profile' ? 'photoURL' : 'bannerImage';
-        await updateDoc(venueDocRef, {
-          [updateField]: imageUrl,
-          updatedAt: new Date().toISOString()
+        const res = await fetch(`/api/dashboard/pages/${currentVenuePageId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            [updateField]: imageUrl,
+            updatedAt: new Date().toISOString()
+          })
         });
+        if (!res.ok) throw new Error('Failed to update photo in database');
       }
 
       setShowPhotoUpload(false);
@@ -739,15 +716,7 @@ const VenueProfile: React.FC<VenueProfileProps> = ({ selectedPageId }) => {
         </div>
       )}
 
-      {/* Content Sharing Modal */}
-      {showSharingModal && currentVenuePageId && (
-        <ContentSharingManager
-          contentType="venue"
-          contentId={currentVenuePageId}
-          contentName={name || 'Venue Page'}
-          onClose={() => setShowSharingModal(false)}
-        />
-      )}
+
     </div>
   );
 };

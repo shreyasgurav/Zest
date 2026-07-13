@@ -2,9 +2,6 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { getFirestore, doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
-import { EventContentCollaborationService } from '@/domains/events/services/content-collaboration.service';
-import { EventCleanupService } from '@/domains/events/services/event-cleanup.service';
 import styles from './PublicOrganisationProfile.module.css';
 import { EventProfileCard } from '@/components/ui/EventCard';
 
@@ -51,64 +48,20 @@ const PublicOrganisationProfile = () => {
     }
 
     try {
-      const db = getFirestore();
-      
-      // First, find the organization by username
-      const orgsQuery = query(
-        collection(db, "Organisations"),
-        where("username", "==", username.toLowerCase())
-      );
-      const orgSnapshot = await getDocs(orgsQuery);
-      
-      if (orgSnapshot.empty) {
-        setError("Organization not found");
-        setLoading(false);
-        return;
+      const response = await fetch(`/api/pages/${username}`);
+      if (!response.ok) {
+        throw new Error('Organization not found');
       }
 
-      const orgDoc = orgSnapshot.docs[0];
-      const orgData = orgDoc.data() as OrganisationData;
-      orgData.uid = orgDoc.id;
-      setOrgDetails(orgData);
-
-      // Fetch event IDs created by this organization page
-      // Try both new creator.pageId and legacy organizationId for backward compatibility
-      const [newEventsSnapshot, legacyEventsSnapshot] = await Promise.all([
-        getDocs(query(
-          collection(db, "events"),
-          where("creator.pageId", "==", orgDoc.id)
-        )),
-        getDocs(query(
-          collection(db, "events"),
-          where("organizationId", "==", orgDoc.id)
-        ))
-      ]);
+      const data = await response.json();
       
-      // Combine and deduplicate events
-      const allEventDocs = [...newEventsSnapshot.docs, ...legacyEventsSnapshot.docs];
-      const uniqueEventDocs = allEventDocs.filter((doc, index, self) => 
-        index === self.findIndex(d => d.id === doc.id)
-      );
-      
-      // Get owned event IDs
-      const ownedIds = uniqueEventDocs.map(doc => doc.id);
-      
-      // Get collaborated event IDs
-      const collaboratedIds = await EventContentCollaborationService.getCollaboratedEvents(
-        orgDoc.id, 
-        'organization'
-      );
-      
-      // Combine owned and collaborated events (remove duplicates)
-      const allEventIds = Array.from(new Set([...ownedIds, ...collaboratedIds]));
-      setEventIds(allEventIds);
-      setCollaboratedEventIds(collaboratedIds);
-
-      // 🧹 Background cleanup: Remove any orphaned collaborations
-      try {
-        await EventCleanupService.cleanupOrphanedData();
-      } catch (cleanupError) {
-        console.log('Background cleanup completed with some warnings:', cleanupError);
+      if (data.page && data.page.type === 'organisation') {
+        setOrgDetails(data.page as OrganisationData);
+        setEventIds(data.events.map((e: any) => e.id));
+        setEvents(data.events || []);
+        setCollaboratedEventIds(data.collaboratedEvents || []);
+      } else {
+        setError("Organization not found");
       }
 
       setError(null);
@@ -154,34 +107,7 @@ const PublicOrganisationProfile = () => {
     };
   }, [username]);
 
-  useEffect(() => {
-    const fetchEvents = async () => {
-      // Combine all event IDs first
-      const allEventIds = Array.from(new Set([...eventIds, ...collaboratedEventIds]));
-      
-      if (!allEventIds.length) return;
 
-      try {
-        const db = getFirestore();
-        const eventDocs = await Promise.all(
-          allEventIds.map(id => getDoc(doc(db, 'events', id)))
-        );
-
-        const eventsData = eventDocs
-          .filter(doc => doc.exists())
-          .map(doc => ({
-            id: doc.id,
-            ...doc.data()
-          })) as EventData[];
-
-        setEvents(eventsData);
-      } catch (error) {
-        console.error('Error fetching events:', error);
-      }
-    };
-
-    fetchEvents();
-  }, [eventIds, collaboratedEventIds]);
 
   const renderContent = () => {
     if (!orgDetails) return null;

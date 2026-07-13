@@ -3,10 +3,9 @@
 import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "@/infrastructure/firebase";
+
 import { isOrganizationSession, getUserOwnedPages } from "@/domains/authentication/services/auth.service";
-import { ContentSharingSecurity } from "@/shared/utils/security/contentSharingSecurity";
+
 import styles from "./create.module.css";
 
 const CreateType = () => {
@@ -53,20 +52,12 @@ const CreateType = () => {
                              ownedPages.organizations.length > 0 || 
                              ownedPages.venues.length > 0;
 
-        // Also check for shared pages with editor+ access
-        const sharedPages = await ContentSharingSecurity.getUserSharedContent(user.uid);
-        const hasSharedPages = sharedPages.artists.length > 0 || 
-                              sharedPages.organizations.length > 0 || 
-                              sharedPages.venues.length > 0;
-
-        const hasAnyPages = hasOwnedPages || hasSharedPages;
+        const hasAnyPages = hasOwnedPages;
 
         if (hasAnyPages) {
-          console.log("✅ User has pages (owned or shared), allowing access to create page", {
+          console.log("✅ User has pages, allowing access to create page", {
             owned: hasOwnedPages,
-            shared: hasSharedPages,
-            ownedCount: ownedPages.artists.length + ownedPages.organizations.length + ownedPages.venues.length,
-            sharedCount: sharedPages.artists.length + sharedPages.organizations.length + sharedPages.venues.length
+            ownedCount: ownedPages.artists.length + ownedPages.organizations.length + ownedPages.venues.length
           });
           setIsAuthorized(true);
         } else {

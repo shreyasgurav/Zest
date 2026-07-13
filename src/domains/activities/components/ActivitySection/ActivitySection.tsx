@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import { db } from "@/infrastructure/firebase";
-import { collection, getDocs, query, orderBy } from "firebase/firestore";
+
 import useEmblaCarousel from "embla-carousel-react";
 import ActivityBox from "./ActivityBox/ActivityBox";
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
@@ -184,20 +183,20 @@ const ActivitySection = () => {
         //   return;
         // }
 
-        if (!db) throw new Error('Firebase is not initialized');
-
-        console.log('Fetching activities from Firestore...');
-        const activitiesCollectionRef = collection(db(), "activities");
-        // Try without orderBy first to see if that's the issue
-        const querySnapshot = await getDocs(activitiesCollectionRef);
+        console.log('Fetching activities from API...');
+        const response = await fetch('/api/activities');
         
-        console.log(`Found ${querySnapshot.docs.length} activity documents in Firestore`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch activities from API');
+        }
         
-        const activitiesData = querySnapshot.docs.map(doc => {
-          const data = doc.data();
-          console.log('Processing activity document:', doc.id, data);
+        const rawActivities = await response.json();
+        console.log(`Found ${rawActivities.length} activities`);
+        
+        const activitiesData = rawActivities.map((data: any) => {
+          console.log('Processing activity:', data.id, data);
           return {
-            id: doc.id,
+            id: data.id,
             name: data.name || data.activityName || '',
             location: data.location || data.activityLocation || '',
             city: data.city || '',

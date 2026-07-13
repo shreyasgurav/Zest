@@ -1,22 +1,15 @@
 'use client';
 
 import React, { useEffect, useState } from "react";
-import {
-  doc,
-  getDoc,
-  updateDoc,
-} from "firebase/firestore";
 import { onAuthStateChanged, User, getAuth } from "firebase/auth";
-import { getFirestore } from 'firebase/firestore';
 import { toast } from "react-toastify";
 import { FaCamera, FaTimes, FaBuilding, FaPlus, FaShare } from 'react-icons/fa';
 import OrganisationProfileSkeleton from "./OrganisationProfileSkeleton";
 import DashboardSection from '@/shared/components/dashboard/Dashboard/DashboardSection/DashboardSection';
 import PhotoUpload from '@/components/forms/PhotoUpload/PhotoUpload';
-import ContentSharingManager from '@/components/feedback/ContentSharingManager/ContentSharingManager';
+
 import { useRouter } from 'next/navigation';
 import { getUserOwnedPages } from '@/domains/authentication/services/auth.service';
-import { ContentSharingSecurity } from '@/shared/utils/security/contentSharingSecurity';
 import styles from "./OrganisationProfile.module.css";
 
 interface OrganisationData {
@@ -80,50 +73,34 @@ const OrganisationProfile: React.FC<OrganisationProfileProps> = ({ selectedPageI
   const fetchOrgData = async (pageId: string) => {
     console.log("Fetching organization data for page:", pageId);
     try {
-      const db = getFirestore();
-      const orgDocRef = doc(db, "Organisations", pageId);
-      const docSnap = await getDoc(orgDocRef);
-  
-      if (docSnap.exists()) {
-        console.log("Document exists in Firestore");
-        const data = docSnap.data();
-        
-        if (!data.ownerId) {
-          throw new Error("Organization page missing owner information");
-        }
-        
-        const orgData: OrganisationData = {
-          uid: docSnap.id,
-          ownerId: data.ownerId,
-          name: data.name || "",
-          username: data.username || "",
-          bio: data.bio || "",
-          photoURL: data.photoURL || "",
-          bannerImage: data.bannerImage || "",
-          phoneNumber: data.phoneNumber || "",
-          isActive: data.isActive || true,
-          role: data.role || "Organisation",
-          createdAt: data.createdAt || "",
-          updatedAt: data.updatedAt || "",
-          settings: data.settings || {}
-        };
-        
-        setOrgDetails(orgData);
-        setName(orgData.name || "");
-        setNewName(orgData.name || "");
-        setUsername(orgData.username || "");
-        setNewUsername(orgData.username || "");
-        setBio(orgData.bio || "");
-        setNewBio(orgData.bio || "");
-        setPhotoURL(orgData.photoURL || "");
-        setNewPhotoURL(orgData.photoURL || "");
-        setBannerImage(orgData.bannerImage || "");
-        setNewBannerImage(orgData.bannerImage || "");
-        
-        setError(null);
-      } else {
+      const user = getAuth().currentUser;
+      if (!user) throw new Error("Not authenticated");
+      const token = await user.getIdToken();
+      
+      const res = await fetch(`/api/dashboard/pages/${pageId}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      
+      if (!res.ok) {
         throw new Error("Organization page not found");
       }
+      
+      const dataResponse = await res.json();
+      const orgData = dataResponse.page as OrganisationData;
+      
+      setOrgDetails(orgData);
+      setName(orgData.name || "");
+      setNewName(orgData.name || "");
+      setUsername(orgData.username || "");
+      setNewUsername(orgData.username || "");
+      setBio(orgData.bio || "");
+      setNewBio(orgData.bio || "");
+      setPhotoURL(orgData.photoURL || "");
+      setNewPhotoURL(orgData.photoURL || "");
+      setBannerImage(orgData.bannerImage || "");
+      setNewBannerImage(orgData.bannerImage || "");
+      
+      setError(null);
     } catch (err) {
       console.error("Error in fetchOrgData:", err);
       setError(err instanceof Error ? err.message : 'An error occurred');
@@ -206,7 +183,7 @@ const OrganisationProfile: React.FC<OrganisationProfileProps> = ({ selectedPageI
             console.log(`🏢 Loading specific organization page: ${pageIdToUse}`);
             
             // Verify access to this specific page
-            const permissions = await ContentSharingSecurity.verifyContentAccess('organization', pageIdToUse, user.uid);
+            const permissions = { canView: false, canEdit: false, canManage: false, canInviteOthers: false, canViewAnalytics: false, canDelete: false, role: "unauthorized" as const };
             
             if (permissions.canView && permissions.role !== 'unauthorized') {
               console.log(`🔓 Access granted to organization page: ${pageIdToUse} with role: ${permissions.role}`);
@@ -249,7 +226,7 @@ const OrganisationProfile: React.FC<OrganisationProfileProps> = ({ selectedPageI
               await fetchOrgData(pageToLoad.uid);
             } else {
               // No owned organization pages - check if user has shared access to any organization pages
-              const sharedContent = await ContentSharingSecurity.getUserSharedContent(user.uid);
+              const sharedContent = { artists: [], organizations: [], venues: [], events: [], activities: [] };
               
               if (sharedContent.organizations.length > 0) {
                 // User has shared access to organization pages, but no specific page selected
@@ -320,9 +297,6 @@ const OrganisationProfile: React.FC<OrganisationProfileProps> = ({ selectedPageI
         return;
       }
       
-      const db = getFirestore();
-      const orgDocRef = doc(db, "Organisations", currentOrgPageId);
-  
       const updates = {
         name: newName.trim(),
         username: newUsername.toLowerCase().trim(),
@@ -332,7 +306,20 @@ const OrganisationProfile: React.FC<OrganisationProfileProps> = ({ selectedPageI
         updatedAt: new Date().toISOString()
       };
 
-      await updateDoc(orgDocRef, updates);
+      const token = await user.getIdToken();
+      const res = await fetch(`/api/dashboard/pages/${currentOrgPageId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(updates)
+      });
+      
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData.error || 'Failed to update page');
+      }
       
       if (orgDetails) {
         const updatedOrgDetails: OrganisationData = { 
@@ -373,13 +360,23 @@ const OrganisationProfile: React.FC<OrganisationProfileProps> = ({ selectedPageI
       }
 
       if (currentOrgPageId) {
-        const db = getFirestore();
-        const orgDocRef = doc(db, "Organisations", currentOrgPageId);
-        const updateField = currentPhotoType === 'profile' ? 'photoURL' : 'bannerImage';
-        await updateDoc(orgDocRef, {
-          [updateField]: imageUrl,
-          updatedAt: new Date().toISOString()
-        });
+        const currentUser = getAuth().currentUser;
+        if (currentUser) {
+          const token = await currentUser.getIdToken();
+          const updateField = currentPhotoType === 'profile' ? 'photoURL' : 'bannerImage';
+          const res = await fetch(`/api/dashboard/pages/${currentOrgPageId}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+              [updateField]: imageUrl,
+              updatedAt: new Date().toISOString()
+            })
+          });
+          if (!res.ok) throw new Error('Failed to update photo in database');
+        }
       }
 
       setShowPhotoUpload(false);
@@ -637,15 +634,7 @@ const OrganisationProfile: React.FC<OrganisationProfileProps> = ({ selectedPageI
         </div>
       </div>
 
-      {/* Content Sharing Modal */}
-      {showSharingModal && currentOrgPageId && (
-        <ContentSharingManager
-          contentType="organization"
-          contentId={currentOrgPageId}
-          contentName={name || 'Organization Page'}
-          onClose={() => setShowSharingModal(false)}
-        />
-      )}
+
     </div>
   );
 };

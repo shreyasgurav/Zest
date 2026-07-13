@@ -1,13 +1,9 @@
 'use client';
 
 import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
-import { db, storage } from "@/infrastructure/firebase";
-import { collection, addDoc, doc, getDoc, serverTimestamp } from "firebase/firestore";
-// Using local storage instead of Firebase Storage for demo
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getUserOwnedPages } from "@/domains/authentication/services/auth.service";
-import { ContentSharingSecurity } from "@/shared/utils/security/contentSharingSecurity";
 import styles from "./CreateActivity.module.css";
 // @ts-ignore
 import PlacesAutocomplete, { Suggestion } from 'react-places-autocomplete';
@@ -284,26 +280,8 @@ const CreateActivity = () => {
             if (hasSpecificPageAccess) accessLevel = 'owner';
           }
 
-          // If not owned, check for shared access
-          if (!hasSpecificPageAccess) {
-            console.log(`🔍 User doesn't own ${creatorType} page ${creatorPageId}, checking shared access...`);
-            
-            try {
-              const contentType = creatorType === 'organisation' || creatorType === 'organization' ? 'organization' : creatorType as 'artist' | 'venue';
-              const permissions = await ContentSharingSecurity.verifyContentAccess(contentType, creatorPageId, user.uid);
-              
-              // Editor and Admin can create content
-              if (permissions.canEdit && (permissions.role === 'editor' || permissions.role === 'admin' || permissions.role === 'owner')) {
-                hasSpecificPageAccess = true;
-                accessLevel = permissions.role;
-                console.log(`✅ User has ${permissions.role} access to ${creatorType} page, can create activities`);
-              } else {
-                console.log(`❌ User has ${permissions.role} access, insufficient for creating activities`);
-              }
-            } catch (error) {
-              console.error('Error checking shared access:', error);
-            }
-          }
+          // Shared access check removed — content sharing was migrated out.
+          // Only page owners can create activities.
 
           if (!hasSpecificPageAccess) {
             setAuthError(`You don't have permission to create activities as ${creatorName}. You need at least Editor access to this ${creatorType} page.`);
@@ -363,20 +341,21 @@ const CreateActivity = () => {
           setOrgName(decodeURIComponent(creatorName));
           setOrgUsername(decodeURIComponent(creatorUsername));
         } else {
-          // Fallback to organization lookup (legacy behavior)
-          const orgDoc = await getDoc(doc(db(), "Organisations", auth.currentUser.uid));
-          if (orgDoc.exists()) {
-            const data = orgDoc.data();
-            setOrgName(data.name || "");
-            setOrgUsername(data.username || "");
+          // Fallback to organization lookup from Postgres
+          const ownedPages = await getUserOwnedPages(auth.currentUser.uid);
+          const defaultOrg = ownedPages.organizations[0];
+          
+          if (defaultOrg) {
+            setOrgName(defaultOrg.name || "");
+            setOrgUsername(defaultOrg.username || "");
             setCreatorInfo({
               type: 'organisation',
-              pageId: auth.currentUser.uid,
-              name: data.name || "",
-              username: data.username || ""
+              pageId: defaultOrg.uid,
+              name: defaultOrg.name || "",
+              username: defaultOrg.username || ""
             });
-            localStorage.setItem('orgName', data.name || "");
-            localStorage.setItem('orgUsername', data.username || "");
+            localStorage.setItem('orgName', defaultOrg.name || "");
+            localStorage.setItem('orgUsername', defaultOrg.username || "");
           }
         }
       } catch (error) {
@@ -575,17 +554,28 @@ const CreateActivity = () => {
           username: orgUsername,
           userId: auth.currentUser!.uid
         },
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
         status: 'active',
         image_upload_status: imageUploadError ? 'failed' : (imageUrl ? 'success' : 'none')
       };
 
       console.log("Activity data prepared:", activityData);
-      const activitiesCollectionRef = collection(db(), "activities");
-      console.log("Adding document to Firestore...");
-      await addDoc(activitiesCollectionRef, activityData);
-      console.log("Activity created successfully in Firestore");
+      
+      const response = await fetch('/api/activities', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(activityData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to create activity');
+      }
+
+      console.log("Activity created successfully via API");
       
       if (imageUploadError) {
         setMessage(`Activity created successfully! Note: ${imageUploadErrorMessage} You can try uploading the image again later.`);

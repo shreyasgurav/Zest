@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { auth, db } from '@/infrastructure/firebase';
+import { auth } from '@/infrastructure/firebase';
 import { signOut, User, onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc } from 'firebase/firestore';
+// No firestore imports needed
 import { useRouter } from 'next/navigation';
 import { FaTicketAlt, FaUser, FaSignOutAlt, FaBuilding, FaMicrophone, FaMapMarkerAlt, FaPlus, FaShareAlt, FaQrcode, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { getUserOwnedPages, ArtistData, OrganizationData, VenueData, clearAllSessions } from '@/domains/authentication/services/auth.service';
-import { ContentSharingSecurity } from '@/shared/utils/security/contentSharingSecurity';
-import { EventCollaborationSecurity } from '@/domains/events/services/collaboration.service';
+
 import styles from "./PersonLogo.module.css";
 
 interface UserData {
@@ -48,12 +47,17 @@ function PersonLogo() {
             setUser(currentUser);
             if (currentUser) {
                 try {
-                    // Load the user's personal profile data
-                    const userDoc = await getDoc(doc(db(), "Users", currentUser.uid));
+                    // Load the user's personal profile data from the REST API
+                    const token = await currentUser.getIdToken();
+                    const res = await fetch('/api/users/profile', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    
                     let personalData: UserData;
                     
-                    if (userDoc.exists()) {
-                        personalData = userDoc.data() as UserData;
+                    if (res.ok) {
+                        const dataResponse = await res.json();
+                        personalData = dataResponse.user as UserData;
                         console.log('👤 Loaded personal user data:', personalData);
                         setUserData(personalData);
                     } else {
@@ -68,93 +72,10 @@ function PersonLogo() {
                         };
                         setUserData(personalData);
                     }
-                    
-                    // Auto-accept any pending invitations for this user's phone number
-                    const userPhone = personalData.phone || currentUser.phoneNumber;
-                    if (userPhone) {
-                        console.log('👤 Checking for pending invitations for phone:', userPhone);
-                        
-                        try {
-                            // Accept pending content invitations (page sharing)
-                            const pendingInvitations = await ContentSharingSecurity.getUserPendingInvitations(userPhone);
-                            console.log('👤 Found pending content invitations:', pendingInvitations);
-                            
-                            for (const invitation of pendingInvitations) {
-                                if (invitation.id) {
-                                    const result = await ContentSharingSecurity.acceptInvitation(
-                                        invitation.id,
-                                        currentUser.uid,
-                                        personalData.name || currentUser.displayName || 'User'
-                                    );
-                                    if (result.success) {
-                                        console.log('👤 Auto-accepted content invitation:', invitation.id);
-                                    }
-                                }
-                            }
-                            
-                            // 🚨 FIX: Auto-accept event invitations for better UX (since check-in access is direct now)
-                            const pendingEventInvitations = await EventCollaborationSecurity.getUserPendingInvitations(userPhone);
-                            console.log('👤 Found pending event invitations:', pendingEventInvitations);
-                            
-                            // Auto-accept event invitations (they are only created for unregistered users)
-                            for (const invitation of pendingEventInvitations) {
-                                if (invitation.id) {
-                                    const result = await EventCollaborationSecurity.acceptEventInvitation(
-                                        invitation.id,
-                                        currentUser.uid,
-                                        personalData.name || currentUser.displayName || 'User'
-                                    );
-                                    if (result.success) {
-                                        console.log('👤 Auto-accepted event invitation:', invitation.eventTitle);
-                                    }
-                                }
-                            }
-                            
-                        } catch (error) {
-                            console.error('Error processing pending invitations:', error);
-                        }
-                    }
-                    
                     // Load all pages the user owns (for pages section)
                     const pages = await getUserOwnedPages(currentUser.uid);
                     setOwnedPages(pages);
                     console.log('👤 Loaded owned pages:', pages);
-                    
-                    // Load shared pages (pages where user has been given access)
-                    const shared = await ContentSharingSecurity.getUserSharedContent(currentUser.uid);
-                    setSharedPages(shared);
-                    console.log('👤 Loaded shared pages:', shared);
-                    
-                    // Load check-in events (events where user has check-in access)
-                    console.log('👤 Loading check-in events...');
-                    const sharedEvents = await EventCollaborationSecurity.getUserSharedEvents(currentUser.uid);
-                    setCheckinEvents(sharedEvents.checkinEvents);
-                    console.log('👤 Loaded check-in events:', sharedEvents.checkinEvents);
-                    
-                    // 🚨 DEBUG: If no check-in events found, log user info for debugging
-                    if (sharedEvents.checkinEvents.length === 0) {
-                        console.log('👤 No check-in events found. Debug info:');
-                        console.log('  - User ID:', currentUser.uid);
-                        console.log('  - User phone from personalData:', personalData.phone);
-                        console.log('  - User phone from auth:', currentUser.phoneNumber);
-                        console.log('  - All user data:', personalData);
-                        
-                        // Try a small delay and retry once
-                        setTimeout(async () => {
-                            try {
-                                console.log('👤 Retrying getUserSharedEvents...');
-                                const retrySharedEvents = await EventCollaborationSecurity.getUserSharedEvents(currentUser.uid);
-                                if (retrySharedEvents.checkinEvents.length > 0) {
-                                    setCheckinEvents(retrySharedEvents.checkinEvents);
-                                    console.log('👤 Retry found check-in events:', retrySharedEvents.checkinEvents);
-                                } else {
-                                    console.log('👤 Retry also found no check-in events');
-                                }
-                            } catch (retryError) {
-                                console.error('👤 Retry failed:', retryError);
-                            }
-                        }, 3000);
-                    }
                 } catch (error) {
                     console.error("Error fetching user data:", error);
                     // Fallback to Firebase Auth data

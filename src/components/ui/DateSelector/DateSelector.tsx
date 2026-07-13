@@ -77,7 +77,7 @@ export default function DateSelector({ onDateSelect, availableDates, selectedDat
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.title}>SELECT DATE & TIME</h2>
+
 
       <div className={styles.calendarContainer}>
         <div className={styles.datesList}>

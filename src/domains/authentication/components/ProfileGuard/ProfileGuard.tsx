@@ -3,8 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { onAuthStateChanged, User } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
-import { auth, db } from '@/infrastructure/firebase';
+import { auth } from '@/infrastructure/firebase';
 import { isProfileComplete as checkProfileComplete, getMissingProfileFields } from '@/domains/authentication/services/auth.service';
 
 interface ProfileGuardProps {
@@ -66,11 +65,14 @@ const ProfileGuard: React.FC<ProfileGuardProps> = ({ children }) => {
         }
 
         // For protected user pages, check user profile completeness
-        const userRef = doc(db(), "Users", currentUser.uid);
-        const userSnap = await getDoc(userRef);
+        const token = await currentUser.getIdToken();
+        const response = await fetch('/api/users/profile', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
         
-        if (userSnap.exists()) {
-          const userData = userSnap.data();
+        if (response.ok) {
+          const result = await response.json();
+          const userData = result.user;
           
           // Use centralized profile completion check
           const hasCompleteProfile = checkProfileComplete(userData);
@@ -84,8 +86,8 @@ const ProfileGuard: React.FC<ProfileGuardProps> = ({ children }) => {
             router.push('/login');
           }
         } else {
-          // User document doesn't exist
-          console.log("🚫 No user document found, redirecting to login...");
+          // User document doesn't exist or API failed
+          console.log("🚫 No user document found or API error, redirecting to login...");
           setIsProfileComplete(false);
           router.push('/login');
         }

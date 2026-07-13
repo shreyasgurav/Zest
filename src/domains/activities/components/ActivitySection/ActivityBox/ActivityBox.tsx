@@ -3,8 +3,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { getAuth } from 'firebase/auth';
-import { db } from '@/infrastructure/firebase';
-import { deleteDoc, doc } from 'firebase/firestore';
 import { MapPin, Calendar, Trash2, Users, Clock, Tag, Dumbbell, Palette, Music, Trophy, Heart, ChefHat, Code, BookOpen, Camera } from 'lucide-react';
 import styles from './ActivityBox.module.css';
 
@@ -207,7 +205,14 @@ export default function ActivityBox({ activity, onDelete }: ActivityBoxProps) {
 
     try {
       if (window.confirm("Are you sure you want to delete this activity?")) {
-        await deleteDoc(doc(db(), "activities", activity.id));
+        const response = await fetch(`/api/activities/${activity.id}`, {
+          method: 'DELETE',
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to delete activity');
+        }
+
         if (onDelete) {
           onDelete(activity.id);
         }

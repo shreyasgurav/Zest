@@ -43,19 +43,20 @@
 .monthLabel {
   font-size: 14px;
   font-weight: 600;
-  color: #6366f1;
+  color: #d1d5db;
   writing-mode: vertical-rl;
   text-orientation: mixed;
+  transform: rotate(180deg);
   letter-spacing: 1px;
   height: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  background: rgba(99, 102, 241, 0.1);
+  background: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
   padding: 0 6px;
-  border: 1px solid rgba(99, 102, 241, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .dateCard {
@@ -93,17 +94,17 @@
 
 .dateCard:hover:not(.disabled) {
   background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(139, 92, 246, 0.3);
+  border-color: rgba(255, 255, 255, 0.3);
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
 
 .dateCard.selected {
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(168, 139, 250, 0.15));
-  border-color: rgba(139, 92, 246, 0.4);
-  color: #c4b5fd;
+  background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+  border-color: rgba(255, 255, 255, 0.5);
+  color: #111827;
   box-shadow: 
-    0 8px 25px rgba(139, 92, 246, 0.2),
+    0 8px 25px rgba(255, 255, 255, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
   transform: translateY(-2px);
 }
@@ -141,11 +142,11 @@
 
 .selected .dayName {
   opacity: 1;
-  color: #c4b5fd;
+  color: #374151;
 }
 
 .selected .dateNumber {
-  color: #ffffff;
+  color: #111827;
 }
 
 /* Responsive design */

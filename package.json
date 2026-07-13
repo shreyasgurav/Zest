@@ -8,9 +8,21 @@
     "start": "next start",
     "lint": "next lint",
     "security-test": "node scripts/test-security.js",
-    "security-audit": "npm run security-test --report-only"
+    "security-audit": "npm run security-test --report-only",
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
+    "db:migrate": "prisma migrate dev",
+    "db:generate": "prisma generate",
+    "db:seed": "tsx prisma/seed.ts",
+    "db:studio": "prisma studio",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
+    "@prisma/client": "^6.19.3",
     "@radix-ui/react-slot": "^1.2.3",
     "@vercel/analytics": "^1.5.0",
     "autoprefixer": "^10.4.21",
@@ -20,6 +32,7 @@
     "embla-carousel-react": "^8.6.0",
     "firebase": "^11.8.1",
     "firebase-admin": "^13.4.0",
+    "ioredis": "^5.11.1",
     "lucide-react": "^0.515.0",
     "next": "14.1.0",
     "postcss": "^8.5.4",
@@ -36,7 +49,8 @@
     "react-places-autocomplete": "^7.3.0",
     "react-toastify": "^11.0.5",
     "swiper": "^11.2.8",
-    "tailwind-merge": "^3.3.1"
+    "tailwind-merge": "^3.3.1",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -46,7 +60,10 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.3.3",
+    "prisma": "^6.19.3",
     "tailwindcss": "^4.1.8",
-    "typescript": "^5"
+    "tsx": "^4.23.0",
+    "typescript": "^5",
+    "vitest": "^4.1.9"
   }
 }

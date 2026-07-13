@@ -10,9 +10,8 @@ import {
   signInWithPhoneNumber, 
   ConfirmationResult 
 } from "firebase/auth"
-import { auth, db } from "@/infrastructure/firebase"
+import { auth } from "@/infrastructure/firebase"
 import { ArrowLeft } from "lucide-react"
-import { doc, getDoc, setDoc, updateDoc, collection, query, where, getDocs } from "firebase/firestore"
 import { toast } from "react-toastify"
 import PhoneInput from 'react-phone-number-input'
 import 'react-phone-number-input/style.css'
@@ -211,15 +210,16 @@ export default function LoginPage() {
         return;
       }
 
-      // This is USER LOGIN - only check and create USER profiles
       console.log("🔵 User login page - checking USER profiles only");
-
-      // Check user profile for regular users
-      const userRef = doc(db(), "Users", user.uid)
-      const userSnap = await getDoc(userRef)
       
-      if (userSnap.exists()) {
-        const userData = userSnap.data()
+      const token = await user.getIdToken();
+      const response = await fetch('/api/users/profile', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        const userData = data.user;
         
         // Use centralized profile completion check
         if (isProfileComplete(userData)) {
@@ -236,7 +236,7 @@ export default function LoginPage() {
           setFormData({
             name: userData.name || user.displayName || "",
             username: userData.username || "",
-            contactEmail: userData.contactEmail || "",
+            contactEmail: userData.email || "",
           })
           setShowPostLoginForm(true)
           return
@@ -249,7 +249,7 @@ export default function LoginPage() {
       setFormData({
         name: user.displayName || "",
         username: "",
-        contactEmail: "",
+        contactEmail: user.email || "",
       })
       setShowPostLoginForm(true)
     } catch (error) {
@@ -436,49 +436,29 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
     if (!validateForm() || !currentUser) return
 
     setIsSubmitting(true)
-
     try {
-      // Check username availability
-      const isUsernameAvailable = await checkUsernameAvailability(formData.username)
-      if (!isUsernameAvailable) {
-        setErrors({ username: "Username is already taken" })
-        setIsSubmitting(false)
-        return
-      }
-
-      const userRef = doc(db(), "Users", currentUser.uid)
-      const updateData = {
-        name: formData.name.trim(),
-        username: formData.username.toLowerCase().trim(),
-        contactEmail: formData.contactEmail.trim(),
-        email: formData.contactEmail.trim(), // Also save as email for booking compatibility
-        phone: currentUser.phoneNumber || "", // Ensure phone is always saved
-        updatedAt: new Date().toISOString(),
-      }
-
-      // Verify profile will be complete after update
-      if (!isProfileComplete({ ...updateData })) {
-        const missingFields = getMissingProfileFields({ ...updateData });
-        console.error("❌ Profile would still be incomplete after update:", missingFields);
-        toast.error("Please fill in all required fields");
-        setIsSubmitting(false);
-        return;
-      }
-
-      const userSnap = await getDoc(userRef)
-      if (userSnap.exists()) {
-        await updateDoc(userRef, updateData)
-      } else {
-        await setDoc(userRef, {
-          uid: currentUser.uid,
-          photoURL: currentUser.photoURL || "",
-          createdAt: new Date().toISOString(),
-          ...updateData
+      const token = await currentUser.getIdToken();
+      
+      const response = await fetch('/api/users/profile', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          name: formData.name.trim(),
+          username: formData.username.toLowerCase().trim(),
+          contactEmail: formData.contactEmail.trim(),
+          phone: currentUser.phoneNumber || "",
+          photo: currentUser.photoURL || ""
         })
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update profile");
       }
 
       console.log("✅ Profile completed successfully!");

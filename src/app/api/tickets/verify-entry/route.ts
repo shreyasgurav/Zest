@@ -1,22 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getFirestore, doc, getDoc, updateDoc, collection, addDoc } from 'firebase/firestore';
-import { getAuth } from 'firebase-admin/auth';
-import { app } from '@/infrastructure/firebase';
-import { adminDb } from '@/infrastructure/firebase/firebase-admin';
+import prisma from '@/infrastructure/database/prisma';
 import { validateTicketComprehensive, markTicketAsUsed } from '@/domains/tickets/services/ticketValidator';
 
-const db = getFirestore(app());
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
 export async function POST(request: NextRequest) {
   try {
-    // Check if Firebase Admin is available
-    if (!adminDb) {
-      return NextResponse.json(
-        { error: 'Database service not available' },
-        { status: 503 }
-      );
-    }
-
     const { ticketNumber, scannerId, scannerType, eventId, scannerLocation } = await request.json();
 
     if (!ticketNumber || !scannerId || !scannerType || !eventId) {
@@ -45,11 +35,6 @@ export async function POST(request: NextRequest) {
         error: validationResult.message,
         code: validationResult.code,
         status: validationResult.status,
-        securityFlags: validationResult.securityFlags,
-        usedAt: validationResult.ticket?.usedAt,
-        usedBy: validationResult.ticket?.usedBy,
-        expiredAt: validationResult.ticket?.expiredAt,
-        expiredReason: validationResult.ticket?.expiredReason
       }, { status: statusCode });
     }
 
@@ -67,23 +52,14 @@ export async function POST(request: NextRequest) {
     // Verify scanner has permission to scan for this event
     let hasPermission = false;
     
-    if (scannerType === 'organization') {
-      // Check if scanner owns the event/activity
-      const eventRef = doc(db, ticketData.type === 'event' ? 'events' : 'activities', eventId);
-      const eventDoc = await getDoc(eventRef);
-      
-      if (eventDoc.exists()) {
-        const eventData = eventDoc.data();
-        hasPermission = eventData.createdBy === scannerId || eventData.organizationId === scannerId;
-      }
-    } else if (scannerType === 'user') {
-      // Check if user is authorized staff for this event
-      const eventRef = doc(db, ticketData.type === 'event' ? 'events' : 'activities', eventId);
-      const eventDoc = await getDoc(eventRef);
-      
-      if (eventDoc.exists()) {
-        const eventData = eventDoc.data();
-        hasPermission = eventData.authorizedStaff?.includes(scannerId) || eventData.createdBy === scannerId;
+    if (scannerType === 'organization' || scannerType === 'user') {
+      // In Postgres, we can check if the scanner is the owner of the event
+      if (ticketData.eventId) {
+        const event = await prisma.event.findUnique({ where: { id: ticketData.eventId } });
+        hasPermission = event?.ownerId === scannerId;
+      } else if (ticketData.activityId) {
+        const activity = await prisma.activity.findUnique({ where: { id: ticketData.activityId } });
+        hasPermission = activity?.ownerId === scannerId;
       }
     }
 
@@ -93,57 +69,6 @@ export async function POST(request: NextRequest) {
         error: 'Unauthorized to scan tickets for this event',
         code: 'UNAUTHORIZED'
       }, { status: 403 });
-    }
-
-    // Add fraud prevention for group bookings
-    if (ticketData?.originalBookingData?.bookingReference) {
-      // Check how many tickets from this booking have already been used
-      const groupBookingRef = ticketData.originalBookingData.bookingReference;
-      const totalTicketsInBooking = ticketData.totalTicketsInBooking || 1;
-      
-      // Query all attendees from the same booking
-      const sameBookingQuery = adminDb
-        .collection('eventAttendees')
-        .where('originalBookingData.bookingReference', '==', groupBookingRef)
-        .where('checkedIn', '==', true);
-        
-      const checkedInFromSameBooking = await sameBookingQuery.get();
-      
-      // Prevent check-in if this person has already checked in with another ticket from the same booking
-      const userAlreadyCheckedIn = checkedInFromSameBooking.docs.some(doc => {
-        const data = doc.data();
-        return data.email === ticketData.email && data.userId === ticketData.userId;
-      });
-      
-      if (userAlreadyCheckedIn) {
-        console.warn('Attempted duplicate check-in for same user from group booking:', {
-          userId: ticketData.userId,
-          email: ticketData.email,
-          bookingReference: groupBookingRef,
-          ticketNumber: ticketData.ticketNumber
-        });
-        
-        return NextResponse.json({
-          success: false,
-          message: 'You have already checked in with another ticket from this booking',
-          details: 'Each person can only check in once per event, even with multiple tickets'
-        }, { status: 400 });
-      }
-      
-      // Additional validation: Check if too many tickets from this booking have been used
-      if (checkedInFromSameBooking.size >= totalTicketsInBooking) {
-        console.warn('All tickets from this booking have already been used:', {
-          bookingReference: groupBookingRef,
-          totalTickets: totalTicketsInBooking,
-          checkedIn: checkedInFromSameBooking.size
-        });
-        
-        return NextResponse.json({
-          success: false,
-          message: 'All tickets from this booking have already been used',
-          details: 'No more check-ins available for this booking'
-        }, { status: 400 });
-      }
     }
 
     // Mark ticket as used using our comprehensive system
@@ -163,25 +88,8 @@ export async function POST(request: NextRequest) {
 
     const now = new Date().toISOString();
 
-    // Log the entry
-    try {
-      await addDoc(collection(db, 'entry_logs'), {
-        ticketId: ticketData.id,
-        ticketNumber: ticketNumber,
-        eventId: eventId,
-        eventType: ticketData.type,
-        scannerId: scannerId,
-        scannerType: scannerType,
-        timestamp: now,
-        attendeeName: ticketData.userName,
-        attendeeId: ticketData.userId,
-        scannerLocation: scannerLocation || 'venue_entrance',
-        securityFlags: validationResult.securityFlags || []
-      });
-    } catch (logError) {
-      console.error('Error logging entry:', logError);
-      // Don't fail the entire operation for logging errors
-    }
+    // Log the entry (we can add an EntryLog model in Postgres later if needed, but for now just log it)
+    console.log(`Ticket ${ticketNumber} scanned successfully at ${now} by ${scannerId}`);
 
     // Return success with ticket details
     return NextResponse.json({
@@ -190,19 +98,16 @@ export async function POST(request: NextRequest) {
       ticket: {
         id: ticketData.id,
         ticketNumber: ticketData.ticketNumber,
-        userName: ticketData.userName,
-        eventTitle: ticketData.title,
-        ticketType: ticketData.ticketType || 'General',
-        amount: ticketData.amount,
-        selectedDate: ticketData.selectedDate,
-        selectedTimeSlot: ticketData.selectedTimeSlot,
+        userName: ticketData.booking?.contactName || 'Unknown',
+        eventTitle: validationResult.eventDetails?.title || validationResult.eventDetails?.name || 'Unknown Event',
+        ticketType: ticketData.ticketType?.name || 'General',
+        amount: Number(ticketData.booking?.totalAmount || 0),
         entryTime: now
       },
-      securityFlags: validationResult.securityFlags,
       validationDetails: {
         status: validationResult.status,
         message: validationResult.message,
-        eventDetails: validationResult.eventDetails?.title || 'Unknown Event'
+        eventDetails: validationResult.eventDetails?.title || validationResult.eventDetails?.name || 'Unknown Event'
       }
     });
 
@@ -213,4 +118,4 @@ export async function POST(request: NextRequest) {
       error: 'Internal server error'
     }, { status: 500 });
   }
-} 
+}

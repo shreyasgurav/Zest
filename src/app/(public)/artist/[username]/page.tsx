@@ -2,12 +2,9 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { getFirestore, doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/infrastructure/firebase';
 import { checkPageOwnership } from '@/domains/authentication/services/auth.service';
-import { EventContentCollaborationService } from '@/domains/events/services/content-collaboration.service';
-import { EventCleanupService } from '@/domains/events/services/event-cleanup.service';
 import { EventProfileCard } from '@/components/ui/EventCard';
 import styles from './PublicArtistProfile.module.css';
 
@@ -61,84 +58,25 @@ const PublicArtistProfile = () => {
       }
 
       try {
-        const db = getFirestore();
-        
-        // First, find the artist by username
-        const artistsQuery = query(
-          collection(db, "Artists"),
-          where("username", "==", username.toLowerCase())
-        );
-        const artistSnapshot = await getDocs(artistsQuery);
-        
-        if (artistSnapshot.empty) {
-          setError("Artist not found");
-          setLoading(false);
-          return;
+        const response = await fetch(`/api/pages/${username}`);
+        if (!response.ok) {
+          throw new Error('Artist not found');
         }
 
-        const artistDoc = artistSnapshot.docs[0];
-        const artistData = artistDoc.data() as ArtistData;
-        artistData.uid = artistDoc.id;
-        setArtistDetails(artistData);
-
-        // Fetch event IDs created by this artist page
-        // Try both new creator.pageId and legacy organizationId for backward compatibility
-        const [newEventsSnapshot, legacyEventsSnapshot] = await Promise.all([
-          getDocs(query(
-            collection(db, "events"),
-            where("creator.pageId", "==", artistDoc.id)
-          )),
-          getDocs(query(
-            collection(db, "events"),
-            where("organizationId", "==", artistData.ownerId || "")
-          ))
-        ]);
+        const data = await response.json();
         
-        // Combine and deduplicate events
-        const allEventDocs = [...newEventsSnapshot.docs, ...legacyEventsSnapshot.docs];
-        const uniqueEventDocs = allEventDocs.filter((doc, index, self) => 
-          index === self.findIndex(d => d.id === doc.id)
-        );
-        
-        // Filter legacy events to only include those that might belong to this artist
-        const filteredEventDocs = uniqueEventDocs.filter(doc => {
-          const data = doc.data();
-          // If it has creator info, check if it's this artist page
-          if (data.creator) {
-            return data.creator.pageId === artistDoc.id;
+        if (data.page && data.page.type === 'artist') {
+          setArtistDetails(data.page as ArtistData);
+          setEvents(data.events || []);
+          
+          if (currentUser && data.page.ownerId === currentUser.uid) {
+            setCanManage(true);
+          } else {
+            setCanManage(false);
           }
-          // For legacy events, only include if they were created by the same user who owns this artist page
-          return data.organizationId === artistData.ownerId;
-        });
-        
-        // Get owned event IDs
-        const ownedIds = filteredEventDocs.map(doc => doc.id);
-        
-        // Get collaborated event IDs
-        const collaboratedIds = await EventContentCollaborationService.getCollaboratedEvents(
-          artistDoc.id, 
-          'artist'
-        );
-        
-        // Combine owned and collaborated events (remove duplicates)
-        const allEventIds = Array.from(new Set([...ownedIds, ...collaboratedIds]));
-        setOwnedEventIds(allEventIds);
-        setCollaboratedEventIds(collaboratedIds); // Keep collaborated IDs separate for COLLAB badge
-
-        // 🧹 Background cleanup: Remove any orphaned collaborations
-        try {
-          await EventCleanupService.cleanupOrphanedData();
-        } catch (cleanupError) {
-          console.log('Background cleanup completed with some warnings:', cleanupError);
+        } else {
+           setError("Artist not found");
         }
-
-        // Check if current user can manage this page
-        if (currentUser && artistData.uid) {
-          const canEdit = await checkPageOwnership(currentUser.uid, 'artist', artistData.uid);
-          setCanManage(canEdit);
-        }
-
-        setError(null);
       } catch (err) {
         console.error("Error fetching artist data:", err);
         setError(err instanceof Error ? err.message : 'An error occurred');
@@ -149,35 +87,6 @@ const PublicArtistProfile = () => {
 
     fetchArtistData();
   }, [username, currentUser]);
-
-  useEffect(() => {
-    const fetchEvents = async () => {
-      // Combine all event IDs first
-      const allEventIds = Array.from(new Set([...ownedEventIds, ...collaboratedEventIds]));
-      
-      if (!allEventIds.length) return;
-
-      try {
-        const db = getFirestore();
-        const eventDocs = await Promise.all(
-          allEventIds.map(id => getDoc(doc(db, 'events', id)))
-        );
-
-        const eventsData = eventDocs
-          .filter(doc => doc.exists())
-          .map(doc => ({
-            id: doc.id,
-            ...doc.data()
-          })) as EventData[];
-
-        setEvents(eventsData);
-      } catch (error) {
-        console.error('Error fetching events:', error);
-      }
-    };
-
-    fetchEvents();
-  }, [ownedEventIds, collaboratedEventIds]);
 
   const handleManage = () => {
     // Redirect to management interface

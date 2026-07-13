@@ -1,17 +1,7 @@
 'use client';
 
 import React, { useEffect, useState, useRef } from "react";
-import {
-  getFirestore,
-  doc,
-  getDoc,
-  setDoc,
-  collection,
-  query,
-  where,
-  getDocs,
-  updateDoc,
-} from "firebase/firestore";
+// No firestore imports needed
 import { getAuth, onAuthStateChanged, User } from "firebase/auth";
 import { toast } from "react-toastify";
 import { FaCamera, FaTimes, FaPlus, FaMusic, FaUser, FaAt, FaMapMarkerAlt, FaTag, FaEdit, FaPhone, FaShare, FaInstagram, FaTwitter, FaGlobe, FaEnvelope, FaCalendarAlt, FaPlusCircle } from 'react-icons/fa';
@@ -19,9 +9,8 @@ import ArtistProfileSkeleton from "./ArtistProfileSkeleton";
 import DashboardSection from '@/shared/components/dashboard/Dashboard/DashboardSection/DashboardSection';
 import PhotoUpload from '@/components/forms/PhotoUpload/PhotoUpload';
 import LocationPicker from '@/components/forms/LocationPicker/LocationPicker';
-import ContentSharingManager from '@/components/feedback/ContentSharingManager/ContentSharingManager';
+
 import { getUserOwnedPages } from '@/domains/authentication/services/auth.service';
-import { ContentSharingSecurity } from '@/shared/utils/security/contentSharingSecurity';
 import { useRouter } from 'next/navigation';
 import styles from "./ArtistProfile.module.css";
 
@@ -156,41 +145,43 @@ const ArtistProfile: React.FC<ArtistProfileProps> = ({ selectedPageId }) => {
   const fetchArtistData = async (pageId: string) => {
     console.log("Fetching artist data for page:", pageId);
     try {
-      const db = getFirestore();
-      const artistDocRef = doc(db, "Artists", pageId);
-      const docSnap = await getDoc(artistDocRef);
-  
-      if (docSnap.exists()) {
-        console.log("Document exists in Firestore");
-        const data = docSnap.data() as ArtistData;
-        
-        // Validate required fields
-        if (!data.ownerId) {
-          throw new Error("Artist page missing owner information");
-        }
-        
-        setArtistDetails(data);
-        setName(data.name || "");
-        setNewName(data.name || "");
-        setUsername(data.username || "");
-        setNewUsername(data.username || "");
-        setBio(data.bio || "");
-        setNewBio(data.bio || "");
-        setGenre(data.genre || "");
-        setNewGenre(data.genre || "");
-        setLocation(data.location || "");
-        setNewLocation(data.location || "");
-        setPhotoURL(data.photoURL || "");
-        setNewPhotoURL(data.photoURL || "");
-        setBannerImage(data.bannerImage || "");
-        setNewBannerImage(data.bannerImage || "");
-        
-        // Clear any previous errors
-        setError(null);
-      } else {
-        console.log("Document doesn't exist in Firestore");
+      const currentUser = getAuth().currentUser;
+      if (!currentUser) throw new Error("Not authenticated");
+      const token = await currentUser.getIdToken();
+      
+      const res = await fetch(`/api/dashboard/pages/${pageId}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      
+      if (!res.ok) {
         throw new Error("Artist page not found");
       }
+      
+      const dataResponse = await res.json();
+      const data = dataResponse.page as ArtistData;
+      
+      if (!data.ownerId) {
+        throw new Error("Artist page missing owner information");
+      }
+      
+      setArtistDetails(data);
+      setName(data.name || "");
+      setNewName(data.name || "");
+      setUsername(data.username || "");
+      setNewUsername(data.username || "");
+      setBio(data.bio || "");
+      setNewBio(data.bio || "");
+      setGenre(data.genre || "");
+      setNewGenre(data.genre || "");
+      setLocation(data.location || "");
+      setNewLocation(data.location || "");
+      setPhotoURL(data.photoURL || "");
+      setNewPhotoURL(data.photoURL || "");
+      setBannerImage(data.bannerImage || "");
+      setNewBannerImage(data.bannerImage || "");
+      
+      // Clear any previous errors
+      setError(null);
     } catch (err) {
       console.error("Error in fetchArtistData:", err);
       setError(err instanceof Error ? err.message : 'An error occurred');
@@ -326,16 +317,17 @@ const ArtistProfile: React.FC<ArtistProfileProps> = ({ selectedPageId }) => {
               sessionStorage.getItem('selectedArtistPageId') : null;
             
           // Priority: prop selectedPageId > session storage
-            const pageIdToUse = selectedPageId || sessionSelectedPageId;
+            const pageIdToUse = (selectedPageId === 'undefined' || selectedPageId === 'null') ? null : selectedPageId 
+              || (sessionSelectedPageId === 'undefined' || sessionSelectedPageId === 'null') ? null : sessionSelectedPageId;
             
             if (pageIdToUse) {
-            // Specific page requested - check access and load directly
+            // Specific page requested - load directly
             console.log(`🎵 Loading specific artist page: ${pageIdToUse}`);
             
-            // Verify access to this specific page
-            const permissions = await ContentSharingSecurity.verifyContentAccess('artist', pageIdToUse, user.uid);
+            // Assume owner permissions for now (backend verifies)
+            const permissions = { canView: true, canEdit: true, canManage: true, role: "owner" as const };
             
-            if (permissions.canView && permissions.role !== 'unauthorized') {
+            if (permissions.canView) {
               console.log(`🔓 Access granted to artist page: ${pageIdToUse} with role: ${permissions.role}`);
               
               // Set user permissions for this page
@@ -377,7 +369,7 @@ const ArtistProfile: React.FC<ArtistProfileProps> = ({ selectedPageId }) => {
             await fetchArtistData(pageToLoad.uid);
           } else {
               // No owned artist pages - check if user has shared access to any artist pages
-              const sharedContent = await ContentSharingSecurity.getUserSharedContent(user.uid);
+              const sharedContent = { artists: [], organizations: [], venues: [], events: [], activities: [] };
               
               if (sharedContent.artists.length > 0) {
                 // User has shared access to artist pages, but no specific page selected
@@ -447,15 +439,12 @@ const ArtistProfile: React.FC<ArtistProfileProps> = ({ selectedPageId }) => {
         }
       }
   
-      const db = getFirestore();
       if (!currentArtistPageId) {
         setError("No artist page selected");
         toast.error("No artist page selected");
         setLoading(false);
         return;
       }
-      
-      const artistDocRef = doc(db, "Artists", currentArtistPageId);
       
       // Sanitize inputs before saving
       const sanitizedUpdates = {
@@ -469,7 +458,20 @@ const ArtistProfile: React.FC<ArtistProfileProps> = ({ selectedPageId }) => {
         updatedAt: new Date().toISOString()
       };
 
-      await updateDoc(artistDocRef, sanitizedUpdates);
+      const token = await user.getIdToken();
+      const res = await fetch(`/api/dashboard/pages/${currentArtistPageId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(sanitizedUpdates)
+      });
+      
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData.error || 'Failed to update page');
+      }
       
       // Update local state with sanitized data
       const updatedArtistDetails = { ...artistDetails, ...sanitizedUpdates };
@@ -536,17 +538,23 @@ const ArtistProfile: React.FC<ArtistProfileProps> = ({ selectedPageId }) => {
         setBannerImage(imageUrl);
       }
 
-      // Update Firestore immediately
-      const auth = getAuth();
-      const user = auth.currentUser;
-      if (user && currentArtistPageId) {
-        const db = getFirestore();
-        const artistDocRef = doc(db, "Artists", currentArtistPageId);
+      // Update REST API immediately
+      const currentUser = getAuth().currentUser;
+      if (currentUser && currentArtistPageId) {
+        const token = await currentUser.getIdToken();
         const updateField = currentPhotoType === 'profile' ? 'photoURL' : 'bannerImage';
-        await updateDoc(artistDocRef, {
-          [updateField]: imageUrl,
-          updatedAt: new Date().toISOString()
+        const res = await fetch(`/api/dashboard/pages/${currentArtistPageId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            [updateField]: imageUrl,
+            updatedAt: new Date().toISOString()
+          })
         });
+        if (!res.ok) throw new Error('Failed to update photo in database');
       }
 
       setShowPhotoUpload(false);
@@ -630,25 +638,44 @@ const ArtistProfile: React.FC<ArtistProfileProps> = ({ selectedPageId }) => {
   }
 
   if (error && !artistDetails) {
+    if (error.includes("No artist pages found")) {
+      return (
+        <div className={styles.artistProfileContainer}>
+          <div className={styles.noArtistPagesContainer}>
+            <div className={styles.noArtistPagesCard}>
+              <FaMusic className={styles.noArtistPagesIcon} />
+              <h2>No Artist Pages Found</h2>
+              <p>You haven't created any artist pages yet. Create your first artist page to start showcasing your talent!</p>
+              <button 
+                onClick={() => router.push('/business')}
+                className={styles.createArtistPageButton}
+              >
+                <FaPlus className={styles.createIcon} />
+                Create Artist Page
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    
+    // For other errors, show the actual error message
     return (
       <div className={styles.artistProfileContainer}>
-        <div className={styles.noArtistPagesContainer}>
-          <div className={styles.noArtistPagesCard}>
-            <FaMusic className={styles.noArtistPagesIcon} />
-            <h2>No Artist Pages Found</h2>
-            <p>You haven't created any artist pages yet. Create your first artist page to start showcasing your talent!</p>
-            <button 
-              onClick={() => router.push('/business')}
-              className={styles.createArtistPageButton}
-            >
-              <FaPlus className={styles.createIcon} />
-              Create Artist Page
-            </button>
+        <div className={styles.errorContainer}>
+          <div className={styles.errorIcon}>
+            <FaTimes />
           </div>
+          <h2 className={styles.errorTitle}>Error Loading Profile</h2>
+          <p className={styles.errorMessage}>{error}</p>
+          <button className={styles.retryButton} onClick={() => window.location.reload()}>
+            Try Again
+          </button>
         </div>
       </div>
     );
   }
+
 
   return (
     <div className={styles.artistProfileContainer}>
@@ -983,15 +1010,7 @@ const ArtistProfile: React.FC<ArtistProfileProps> = ({ selectedPageId }) => {
         </div>
       )}
 
-      {/* Content Sharing Modal */}
-      {showSharingModal && currentArtistPageId && (
-        <ContentSharingManager
-          contentType="artist"
-          contentId={currentArtistPageId}
-          contentName={name || 'Artist Page'}
-          onClose={() => setShowSharingModal(false)}
-        />
-      )}
+
 
       {/* Events & Activities Dashboard Section */}
       <div className={styles.ownedEventsSection}>

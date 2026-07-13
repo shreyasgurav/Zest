@@ -4,8 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { CheckCircle, Calendar, Clock, MapPin, Ticket, CreditCard, User, Home, Copy } from 'lucide-react';
-import { db } from '@/infrastructure/firebase';
-import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import styles from './BookingConfirmation.module.css';
 
@@ -102,57 +100,33 @@ const BookingConfirmation = () => {
       }
 
       try {
-        // First check if it's an event booking by booking ID
-        const eventBookingDoc = await getDoc(doc(db(), "eventAttendees", params.id));
+        const token = await auth.currentUser.getIdToken();
+        const res = await fetch(`/api/bookings/${params.id}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
         
-        if (eventBookingDoc.exists()) {
-          // It's an event booking
+        if (!res.ok) {
+          throw new Error('Booking not found');
+        }
+
+        const data = await res.json();
+        
+        if (data.type === 'event') {
           setBookingType('event');
-          const bookingData: EventBookingData = {
-            id: eventBookingDoc.id,
-            ...eventBookingDoc.data()
-          } as EventBookingData;
-          setEventBooking(bookingData);
-          
-          // Fetch event details
-          const eventDoc = await getDoc(doc(db(), "events", bookingData.eventId));
-          if (eventDoc.exists()) {
-            const eventData: EventData = {
-              id: eventDoc.id,
-              title: eventDoc.data().title || eventDoc.data().eventTitle || '',
-              event_venue: eventDoc.data().event_venue || eventDoc.data().eventVenue || ''
-            };
-            setEvent(eventData);
-          }
+          setEventBooking(data.booking);
+          setEvent(data.eventDetails);
+        } else if (data.type === 'activity') {
+          setBookingType('activity');
+          setActivityBooking(data.booking);
+          setActivity(data.activityDetails);
         } else {
-          // Check if it's an activity booking
-          const activityBookingDoc = await getDoc(doc(db(), "activityAttendees", params.id));
-          
-          if (activityBookingDoc.exists()) {
-            setBookingType('activity');
-            const bookingData: ActivityBookingData = {
-              id: activityBookingDoc.id,
-              ...activityBookingDoc.data()
-            } as ActivityBookingData;
-            setActivityBooking(bookingData);
-            
-            // Fetch activity details
-            const activityDoc = await getDoc(doc(db(), "activities", bookingData.activityId));
-            if (activityDoc.exists()) {
-              const activityData: ActivityData = {
-                id: activityDoc.id,
-                name: activityDoc.data().name || '',
-                location: activityDoc.data().location || ''
-              };
-              setActivity(activityData);
-            }
-          } else {
-            setError("Booking not found");
-          }
+          setError("Booking not found");
         }
       } catch (err) {
-        console.error("Error fetching booking:", err);
-        setError("Error fetching booking details");
+        console.error("Error fetching booking details:", err);
+        setError("Failed to load booking details");
       } finally {
         setLoading(false);
       }

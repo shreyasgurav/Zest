@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { doc, getDoc } from 'firebase/firestore';
-import { db } from '@/infrastructure/firebase';
+
 
 // Custom Event interface to avoid conflict with DOM Event
 interface EventData {
@@ -122,20 +121,24 @@ export const useEventData = (
         retryCount: retryAttempt 
       };
 
-      const eventDoc = await getDoc(doc(db(), 'events', eventId));
+      const response = await fetch(`/api/events/${eventId}`);
       
-      if (!eventDoc.exists()) {
-        // 🧹 Event not found - mark as deleted and invalidate cache
-        console.log(`🗑️ Event not found: ${eventId} - marking as deleted`);
-        invalidateEventCache(eventId);
-        setIsDeleted(true);
-        setEvent(null);
-        setError(new Error('Event not found - it may have been deleted'));
-        setIsLoading(false);
-        return;
+      if (!response.ok) {
+        if (response.status === 404) {
+          // 🧹 Event not found - mark as deleted and invalidate cache
+          console.log(`🗑️ Event not found: ${eventId} - marking as deleted`);
+          invalidateEventCache(eventId);
+          setIsDeleted(true);
+          setEvent(null);
+          setError(new Error('Event not found - it may have been deleted'));
+          setIsLoading(false);
+          return;
+        }
+        throw new Error('Failed to fetch event data');
       }
 
-      const data = { id: eventDoc.id, ...eventDoc.data() } as EventData;
+      const eventDoc = await response.json();
+      const data = (eventDoc.event || eventDoc) as EventData;
       
       // Update cache
       eventCache[eventId] = {
@@ -223,13 +226,11 @@ export const prefetchEvent = async (eventId: string): Promise<any> => {
       return cachedEntry.data;
     }
 
-    const eventDoc = await getDoc(doc(db(), 'events', eventId));
+    const response = await fetch(`/api/events/${eventId}`);
     
-    if (eventDoc.exists()) {
-      const eventData = {
-        id: eventDoc.id,
-        ...eventDoc.data()
-      };
+    if (response.ok) {
+      const eventDoc = await response.json();
+      const eventData = { ...eventDoc };
 
       eventCache[eventId] = {
         data: eventData,

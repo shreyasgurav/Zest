@@ -10,9 +10,9 @@ import {
   signInWithPhoneNumber, 
   ConfirmationResult 
 } from "firebase/auth"
-import { auth, db } from "@/infrastructure/firebase"
+import { auth } from "@/infrastructure/firebase"
 import { ArrowLeft } from "lucide-react"
-import { doc, getDoc, setDoc, updateDoc, collection, query, where, getDocs } from "firebase/firestore"
+
 import { toast } from "react-toastify"
 import PhoneInput from 'react-phone-number-input'
 import 'react-phone-number-input/style.css'
@@ -215,11 +215,14 @@ export default function LoginPage() {
       console.log("🔵 User login page - checking USER profiles only");
 
       // Check user profile for regular users
-      const userRef = doc(db(), "Users", user.uid)
-      const userSnap = await getDoc(userRef)
+      const token = await user.getIdToken()
+      const response = await fetch('/api/users/profile', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
       
-      if (userSnap.exists()) {
-        const userData = userSnap.data()
+      if (response.ok) {
+        const result = await response.json()
+        const userData = result.user
         
         // Use centralized profile completion check
         if (isProfileComplete(userData)) {
@@ -450,7 +453,7 @@ export default function LoginPage() {
         return
       }
 
-      const userRef = doc(db(), "Users", currentUser.uid)
+
       const updateData = {
         name: formData.name.trim(),
         username: formData.username.toLowerCase().trim(),
@@ -469,16 +472,21 @@ export default function LoginPage() {
         return;
       }
 
-      const userSnap = await getDoc(userRef)
-      if (userSnap.exists()) {
-        await updateDoc(userRef, updateData)
-      } else {
-        await setDoc(userRef, {
-          uid: currentUser.uid,
-          photoURL: currentUser.photoURL || "",
-          createdAt: new Date().toISOString(),
-          ...updateData
+      const token = await currentUser.getIdToken();
+      const response = await fetch('/api/users/profile', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          ...updateData,
+          photo: currentUser.photoURL || ""
         })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update profile via API');
       }
 
       console.log("✅ Profile completed successfully!");

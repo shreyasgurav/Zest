@@ -1,8 +1,6 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { collection, query, getDocs, orderBy, limit } from 'firebase/firestore';
-import { db } from '@/infrastructure/firebase';
 import styles from './activities.module.css';
 import { Calendar, MapPin, Clock, Building2, Music, PartyPopper, Palette, Beer, Mountain, Trophy, Users, Sun, Sparkles, User, Heart } from 'lucide-react';
 import Link from 'next/link';
@@ -142,25 +140,18 @@ export default function ActivitiesPage() {
         try {
           console.log('Activities page: Starting to fetch activities...');
           
-          // Try without orderBy first to see if that's the issue
-          const activitiesCollectionRef = collection(db(), "activities");
-          const querySnapshot = await getDocs(activitiesCollectionRef);
+          const response = await fetch('/api/activities');
+          if (!response.ok) {
+            throw new Error('Failed to fetch activities');
+          }
           
-          console.log(`Activities page: Found ${querySnapshot.docs.length} activity documents in Firestore`);
+          const data = await response.json();
+          const activitiesData = data.activities || [];
           
-          const activitiesData = querySnapshot.docs.map(doc => {
-            const data = doc.data();
-            console.log('Activities page: Processing activity document:', doc.id, data);
-            return {
-              id: doc.id,
-              ...data
-            };
-          }) as Activity[];
-          
-          console.log('Activities page: Mapped activities data:', activitiesData);
+          console.log('Activities page: Fetched activities from Postgres:', activitiesData);
           
           // Sort activities by date (most recent first) - handle both timestamp and date objects
-          const sortedActivities = activitiesData.sort((a, b) => {
+          const sortedActivities = activitiesData.sort((a: Activity, b: Activity) => {
             const aDate = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.createdAt || 0);
             const bDate = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.createdAt || 0);
             return bDate.getTime() - aDate.getTime();

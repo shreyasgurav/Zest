@@ -2,11 +2,10 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import { db } from '@/infrastructure/firebase';
-import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
+// Firestore imports removed
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
 import { isOrganizationSession } from '@/domains/authentication/services/auth.service';
-import { EventContentCollaborationService, EventContentCollaboration } from '@/domains/events/services/content-collaboration.service';
+
 import styles from './EventProfile.module.css';
 import { FaBookmark, FaCalendarAlt, FaMapMarkerAlt, FaLanguage, FaClock, FaUsers, FaInfo, FaTicketAlt, FaRupeeSign } from 'react-icons/fa';
 import { MapPin } from 'lucide-react';
@@ -130,7 +129,7 @@ interface EventData {
     username: string;
     userId: string;
   };
-  collaborations?: EventContentCollaboration[];
+  collaborations?: any[];
 }
 
 function EventProfile() {
@@ -145,7 +144,7 @@ function EventProfile() {
   const [isOrganization, setIsOrganization] = useState<boolean>(false);
   const [profileLoading, setProfileLoading] = useState<boolean>(true);
   const [creatorProfile, setCreatorProfile] = useState<CreatorProfile | null>(null);
-  const [collaborations, setCollaborations] = useState<EventContentCollaboration[]>([]);
+  const [collaborations, setCollaborations] = useState<any[]>([]);
   const [allCreatorProfiles, setAllCreatorProfiles] = useState<CreatorProfile[]>([]);
   const [showCollaboratorsPopup, setShowCollaboratorsPopup] = useState(false);
   const [ticketAvailability, setTicketAvailability] = useState<TicketType[]>([]);
@@ -160,15 +159,7 @@ function EventProfile() {
         const orgSession = isOrganizationSession();
         
         if (orgSession) {
-          // Check if organization profile exists
-          try {
-            const orgRef = doc(db(), "Organisations", currentUser.uid);
-            const orgSnap = await getDoc(orgRef);
-            setIsOrganization(orgSnap.exists());
-          } catch (error) {
-            console.error("Error checking organization profile:", error);
-            setIsOrganization(false);
-          }
+          setIsOrganization(true);
         } else {
           // This is a user session
           setIsOrganization(false);
@@ -182,22 +173,9 @@ function EventProfile() {
     return () => unsubscribe();
   }, []);
 
-  // Calculate real-time ticket availability - UPDATED for session-centric
+  // Calculate real-time ticket availability - UPDATED for session-centric (using API data)
   const calculateTicketAvailability = async (eventData: EventData) => {
     try {
-      // Fetch actual attendees to calculate real availability
-      const attendeesRef = collection(db(), 'eventAttendees');
-      const attendeesQuery = query(
-        attendeesRef,
-        where('eventId', '==', eventData.id)
-      );
-
-      const snapshot = await getDocs(attendeesQuery);
-      const attendees = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as Attendee[];
-
       let allTickets: TicketType[] = [];
 
       // Handle session-centric events
@@ -224,53 +202,13 @@ function EventProfile() {
         });
 
         allTickets = Array.from(ticketMap.values());
-
-        // Calculate real-time availability for session-centric
-        const updatedTickets = allTickets.map(ticket => {
-          const soldCount = attendees.reduce((count, attendee) => {
-            // Handle individual attendee records (new format)
-            if (attendee.canCheckInIndependently && attendee.ticketType === ticket.name) {
-              return count + 1;
-            }
-            // Handle group booking records (old format)
-            if (typeof attendee.tickets === 'object' && attendee.tickets) {
-              return count + (attendee.tickets[ticket.name] || 0);
-            }
-            return count;
-          }, 0);
-          
-          return {
-            ...ticket,
-            available_capacity: Math.max(0, ticket.capacity - soldCount)
-          };
-        });
-
-        setTicketAvailability(updatedTickets);
-        return updatedTickets;
+        setTicketAvailability(allTickets);
+        return allTickets;
       } 
       // Handle legacy events
       else if (eventData.tickets && eventData.tickets.length > 0) {
-        const updatedTickets = eventData.tickets.map(ticket => {
-          const soldCount = attendees.reduce((count, attendee) => {
-            // Handle individual attendee records (new format)
-            if (attendee.canCheckInIndependently && attendee.ticketType === ticket.name) {
-              return count + 1;
-            }
-            // Handle group booking records (old format)
-            if (typeof attendee.tickets === 'object' && attendee.tickets) {
-              return count + (attendee.tickets[ticket.name] || 0);
-            }
-            return count;
-          }, 0);
-          
-          return {
-            ...ticket,
-            available_capacity: Math.max(0, ticket.capacity - soldCount)
-          };
-        });
-
-        setTicketAvailability(updatedTickets);
-        return updatedTickets;
+        setTicketAvailability(eventData.tickets);
+        return eventData.tickets;
       }
 
       setTicketAvailability([]);
@@ -476,62 +414,18 @@ function EventProfile() {
       if (!params?.id) return;
 
       try {
-        const eventDoc = doc(db(), "events", params.id);
-        const eventSnapshot = await getDoc(eventDoc);
-        
-        if (eventSnapshot.exists()) {
-          const data = eventSnapshot.data();
-          const eventData: EventData = {
-            id: eventSnapshot.id,
-            title: data.title || data.eventTitle || '',
-            eventTitle: data.eventTitle,
-            event_type: data.event_type,
-            type: data.type,
-            architecture: data.architecture || 'legacy',
-            eventDateTime: data.event_date_time || data.eventDateTime,
-            event_venue: data.event_venue || data.eventVenue || '',
-            eventVenue: data.eventVenue,
-            eventRegistrationLink: data.event_registration_link || data.eventRegistrationLink,
-            hosting_club: data.hosting_club || data.hostingClub || '',
-            hostingClub: data.hostingClub,
-            organization_username: data.organization_username || '',
-            about_event: data.about_event || data.aboutEvent || '',
-            aboutEvent: data.aboutEvent,
-            event_image: data.event_image || data.eventImage || '',
-            eventImage: data.eventImage,
-            event_categories: data.event_categories || [],
-            eventCategories: data.eventCategories || [],
-            event_languages: data.event_languages || '',
-            event_duration: data.event_duration || '',
-            event_age_limit: data.event_age_limit || '',
-            
-            // Legacy fields
-            time_slots: data.time_slots || [],
-            tickets: data.tickets || [],
-            
-            // Session-centric fields
-            sessions: data.sessions || [],
-            venue_type: data.venue_type || 'global',
-            total_sessions: data.total_sessions || 0,
-            total_capacity: data.total_capacity || 0,
-            
-            event_guides: data.event_guides || {},
-            creator: data.creator || null,
-            collaborations: data.collaborations || []
-          };
+        const response = await fetch(`/api/events/${params.id}`);
+        if (response.ok) {
+          const { event: data } = await response.json();
           
-          setEvent(eventData);
+          setEvent(data);
           
           // Calculate ticket availability
-          await calculateTicketAvailability(eventData);
+          await calculateTicketAvailability(data);
           
-          // Fetch collaborations and all creator profiles
-          const eventCollaborations = await fetchCollaborations(eventData.id);
-          await fetchAllCreatorProfiles(eventData, eventCollaborations);
-          
-          // Fetch creator profile if creator exists (for backward compatibility)
-          if (eventData.creator) {
-            fetchCreatorProfile(eventData.creator);
+          // Legacy check for backward compatibility (if needed)
+          if (data.creator) {
+            setAllCreatorProfiles([data.creator]);
           }
         } else {
           setError("Event not found");
@@ -553,135 +447,22 @@ function EventProfile() {
   };
 
   const fetchCreatorProfile = async (creator: any) => {
-    if (!creator) return;
-    
-    try {
-      let collectionName = '';
-      switch (creator.type) {
-        case 'artist':
-          collectionName = 'Artists';
-          break;
-        case 'organisation':
-          collectionName = 'Organisations';
-          break;
-        case 'venue':
-          collectionName = 'Venues';
-          break;
-        default:
-          return;
-      }
-      
-      const creatorDoc = doc(db(), collectionName, creator.pageId);
-      const creatorSnapshot = await getDoc(creatorDoc);
-      
-      if (creatorSnapshot.exists()) {
-        const data = creatorSnapshot.data();
-        setCreatorProfile({
-          photoURL: data.photoURL || data.profileImage || '',
-          profileImage: data.profileImage || data.photoURL || '',
-          name: data.name || creator.name,
-          username: data.username || creator.username,
-          type: creator.type,
-          pageId: creator.pageId
-        });
-      }
-    } catch (error) {
-      console.error('Error fetching creator profile:', error);
-    }
+    // Legacy stub, no longer fetches from Firestore
+    // since data is passed down from Postgres API directly.
+    return;
   };
 
   const fetchCollaborations = async (eventId: string) => {
-    try {
-      const eventCollaborations = await EventContentCollaborationService.getEventCollaborations(eventId);
-      setCollaborations(eventCollaborations);
-      return eventCollaborations;
-    } catch (error) {
-      console.error('Error fetching collaborations:', error);
-      return [];
-    }
+    // Collaborations stub for UI compatibility
+    return [];
   };
 
-  const fetchAllCreatorProfiles = async (event: EventData, collaborations: EventContentCollaboration[]) => {
-    try {
-      const profiles: CreatorProfile[] = [];
-      
-      // Add main creator if exists
-      if (event.creator) {
-        try {
-          let collectionName = '';
-          switch (event.creator.type) {
-            case 'artist':
-              collectionName = 'Artists';
-              break;
-            case 'organisation':
-              collectionName = 'Organisations';
-              break;
-            case 'venue':
-              collectionName = 'Venues';
-              break;
-            default:
-              return;
-          }
-          
-          const creatorDoc = doc(db(), collectionName, event.creator.pageId);
-          const creatorSnapshot = await getDoc(creatorDoc);
-          
-          if (creatorSnapshot.exists()) {
-            const data = creatorSnapshot.data();
-            profiles.push({
-              photoURL: data.photoURL || data.profileImage || '',
-              profileImage: data.profileImage || data.photoURL || '',
-              name: data.name || event.creator.name,
-              username: data.username || event.creator.username,
-              type: event.creator.type,
-              pageId: event.creator.pageId
-            });
-          }
-        } catch (error) {
-          console.error('Error fetching main creator profile:', error);
-        }
-      }
-      
-      // Add collaborator profiles
-      for (const collaboration of collaborations) {
-        try {
-          let collectionName = '';
-          switch (collaboration.collaboratorPageType) {
-            case 'artist':
-              collectionName = 'Artists';
-              break;
-            case 'organization':
-              collectionName = 'Organisations';
-              break;
-            case 'venue':
-              collectionName = 'Venues';
-              break;
-            default:
-              continue;
-          }
-          
-          const collaboratorDoc = doc(db(), collectionName, collaboration.collaboratorPageId);
-          const collaboratorSnapshot = await getDoc(collaboratorDoc);
-          
-          if (collaboratorSnapshot.exists()) {
-            const data = collaboratorSnapshot.data();
-            profiles.push({
-              photoURL: data.photoURL || data.profileImage || '',
-              profileImage: data.profileImage || data.photoURL || '',
-              name: data.name || collaboration.collaboratorPageName,
-              username: data.username || collaboration.collaboratorPageUsername,
-              type: collaboration.collaboratorPageType === 'organization' ? 'organisation' : collaboration.collaboratorPageType,
-              pageId: collaboration.collaboratorPageId
-            });
-          }
-        } catch (error) {
-          console.error('Error fetching collaborator profile:', error);
-        }
-      }
-      
-      setAllCreatorProfiles(profiles);
-    } catch (error) {
-      console.error('Error fetching all creator profiles:', error);
+  const fetchAllCreatorProfiles = async (event: EventData, collaborations: any[]) => {
+    // Stub for legacy UI compatibility
+    if (event.creator) {
+      setAllCreatorProfiles([event.creator]);
+    } else {
+      setAllCreatorProfiles([]);
     }
   };
 

@@ -2,7 +2,7 @@
 
 .bookingFlow {
   background: transparent;
-  min-height: 100vh;
+  min-height: calc(100vh - 80px); /* Account for header to prevent unnecessary scroll */
   padding: 24px;
   display: flex;
   flex-direction: column;
@@ -26,123 +26,41 @@
 }
 
 .bookingContainer {
-  max-width: 1200px;
+  max-width: 800px;
   width: 100%;
   margin: 0 auto;
-  background: rgba(255, 255, 255, 0.02);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 24px;
-  box-shadow: 
-    0 25px 50px -12px rgba(0, 0, 0, 0.3),
-    0 0 0 1px rgba(255, 255, 255, 0.03);
-  padding: 48px;
-  margin-top: 80px;
+  padding: 24px 0;
+  margin-top: 40px;
   position: relative;
 }
 
 .bookingContainer::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-  border-radius: 24px 24px 0 0;
-  pointer-events: none;
+  display: none;
 }
 
-/* Progress Steps */
-.bookingProgress {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 48px;
-  padding: 0 20px;
-  position: relative;
-}
-
-.bookingProgress::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 20%;
-  right: 20%;
-  height: 2px;
-  background: linear-gradient(90deg, 
-    rgba(255, 255, 255, 0.1) 0%, 
-    rgba(255, 255, 255, 0.05) 100%
-  );
-  transform: translateY(-50%);
-  z-index: 0;
-}
-
-.progressStep {
-  background: rgba(255, 255, 255, 0.03);
-  color: rgba(255, 255, 255, 0.6);
-  padding: 16px 24px;
-  border-radius: 50px;
+/* Main Title */
+.mainTitle {
+  font-size: 20px;
   font-weight: 600;
-  font-size: 13px;
-  position: relative;
-  z-index: 1;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(15px);
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
+  color: #fff;
+  margin-bottom: 32px;
+  text-align: center;
+  letter-spacing: 0.5px;
 }
 
-.progressStep svg {
-  font-size: 16px;
-  transition: all 0.3s ease;
-  opacity: 0.7;
-}
-
-.progressStep.active {
-  background: linear-gradient(135deg, #8b5cf6, #a78bfa);
-  color: white;
-  border-color: rgba(139, 92, 246, 0.3);
-  box-shadow: 
-    0 8px 25px rgba(139, 92, 246, 0.25),
-    0 0 0 1px rgba(255, 255, 255, 0.1);
-  transform: scale(1.05);
-}
-
-.progressStep.active svg {
-  transform: scale(1.1);
-  opacity: 1;
+.ticketSectionWrapper {
+  animation: fadeIn 0.4s ease-out;
 }
 
 /* Booking Steps */
 .bookingStep {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 20px;
-  padding: 40px;
-  box-shadow: 
-    0 10px 30px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  margin-bottom: 32px;
-  backdrop-filter: blur(20px);
+  padding: 24px 0;
+  margin-bottom: 24px;
   position: relative;
-  overflow: hidden;
 }
 
 .bookingStep::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-  border-radius: 20px 20px 0 0;
-  pointer-events: none;
+  display: none;
 }
 
 .bookingStep h2 {
@@ -299,11 +217,11 @@
 }
 
 .dateOption.selected {
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(168, 139, 250, 0.15));
-  border-color: rgba(139, 92, 246, 0.4);
-  color: #c4b5fd;
+  background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+  border-color: rgba(255, 255, 255, 0.5);
+  color: #111827;
   box-shadow: 
-    0 8px 25px rgba(139, 92, 246, 0.2),
+    0 8px 25px rgba(255, 255, 255, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
@@ -350,18 +268,18 @@
 
 .slotOption:hover:not(:disabled) {
   background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(139, 92, 246, 0.3);
+  border-color: rgba(255, 255, 255, 0.3);
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
   color: rgba(255, 255, 255, 0.9);
 }
 
 .slotOption.selected {
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(168, 139, 250, 0.15));
-  border-color: rgba(139, 92, 246, 0.4);
-  color: #c4b5fd;
+  background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+  border-color: rgba(255, 255, 255, 0.5);
+  color: #111827;
   box-shadow: 
-    0 8px 25px rgba(139, 92, 246, 0.2),
+    0 8px 25px rgba(255, 255, 255, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
   transform: translateY(-2px);
 }
@@ -374,43 +292,28 @@
   border-color: rgba(255, 255, 255, 0.03);
 }
 
-/* Ticket Types */
 .ticketTypes {
-  display: grid;
-  gap: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
 }
 
 .ticketType {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 20px;
-  padding: 28px;
+  background: transparent;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 24px 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  backdrop-filter: blur(20px);
-  position: relative;
-  overflow: hidden;
+  transition: background 0.2s ease;
 }
 
-.ticketType::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-  border-radius: 20px 20px 0 0;
-  pointer-events: none;
+.ticketType:last-child {
+  border-bottom: none;
 }
 
 .ticketType:hover:not(.soldOut) {
-  background: rgba(255, 255, 255, 0.04);
-  transform: translateY(-3px);
-  border-color: rgba(255, 255, 255, 0.15);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .ticketDetails {
@@ -459,22 +362,7 @@
 }
 
 .availabilityInfo {
-  margin-top: 12px;
-}
-
-.progressBar {
-  width: 100%;
-  height: 6px;
-  background: rgba(60, 60, 60, 0.8);
-  border-radius: 3px;
-  overflow: hidden;
   margin-top: 8px;
-}
-
-.progressFill {
-  height: 100%;
-  border-radius: 3px;
-  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .ticketQuantity {
@@ -570,70 +458,49 @@
 }
 
 /* Enhanced Selection Summary */
-.selectionSummary {
-  background: linear-gradient(135deg, 
-    rgba(139, 92, 246, 0.03), 
-    rgba(168, 139, 250, 0.03)
-  );
-  border: 1px solid rgba(139, 92, 246, 0.15);
-  border-radius: 20px;
-  padding: 28px;
-  margin: 32px 0;
-  backdrop-filter: blur(20px);
-  position: relative;
-  overflow: hidden;
-}
-
-.selectionSummary::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.3), transparent);
-  border-radius: 20px 20px 0 0;
-  pointer-events: none;
-}
-
-.selectionSummary h4 {
-  color: #c4b5fd;
-  margin-bottom: 20px;
-  font-size: 18px;
-  font-weight: 600;
+/* Floating Continue Button */
+.floatingContinueContainer {
+  position: fixed;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 10px;
+  animation: slideUp 0.3s ease-out;
 }
 
-.selectedTicketsList {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 20px;
+@keyframes slideUp {
+  from { transform: translate(-50%, 20px); opacity: 0; }
+  to { transform: translate(-50%, 0); opacity: 1; }
 }
 
-.selectedTicketItem {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 0;
-  color: #e5e5e5;
-  font-weight: 500;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.selectedTicketItem:last-child {
-  border-bottom: none;
-}
-
-.totalSelected {
-  padding-top: 20px;
-  border-top: 1px solid rgba(99, 102, 241, 0.3);
-  color: #a5a6f6;
-  font-size: 20px;
+.floatingContinueButton {
+  background: #ffffff;
+  color: #000000;
+  border: none;
+  border-radius: 50px;
+  padding: 16px 36px;
+  font-size: 16px;
   font-weight: 700;
-  text-align: right;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.floatingContinueButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+.floatingContinueButton:disabled {
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 20px);
 }
 
 /* Enhanced Booking Summary */
@@ -833,8 +700,8 @@
 /* Enhanced Buttons */
 .nextButton,
 .backButton {
-  background: linear-gradient(135deg, #8b5cf6, #a78bfa);
-  color: white;
+  background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+  color: #111827;
   border: none;
   border-radius: 16px;
   padding: 16px 32px;
@@ -848,8 +715,8 @@
   gap: 12px;
   min-width: 160px;
   box-shadow: 
-    0 8px 25px rgba(139, 92, 246, 0.25),
-    0 0 0 1px rgba(255, 255, 255, 0.05);
+    0 8px 25px rgba(255, 255, 255, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
   text-transform: uppercase;
   letter-spacing: 0.8px;
   position: relative;
@@ -876,10 +743,10 @@
 
 .nextButton:hover,
 .backButton:hover {
-  background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+  background: linear-gradient(135deg, #e5e7eb, #d1d5db);
   transform: translateY(-2px);
   box-shadow: 
-    0 12px 35px rgba(139, 92, 246, 0.35),
+    0 12px 30px rgba(255, 255, 255, 0.2),
     0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
@@ -1243,17 +1110,17 @@
 
 .sessionOption:hover {
   background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(16, 185, 129, 0.3);
+  border-color: rgba(255, 255, 255, 0.3);
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
 
 .sessionOption.selected {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.15));
-  border-color: rgba(16, 185, 129, 0.4);
-  color: #10b981;
+  background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+  border-color: rgba(255, 255, 255, 0.5);
+  color: #111827;
   box-shadow: 
-    0 8px 25px rgba(16, 185, 129, 0.2),
+    0 8px 25px rgba(255, 255, 255, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
   transform: translateY(-2px);
 }

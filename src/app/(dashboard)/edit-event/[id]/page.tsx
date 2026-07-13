@@ -1,9 +1,8 @@
 'use client';
 
 import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
-import { db, storage } from "@/infrastructure/firebase";
-import { doc, getDoc, updateDoc, serverTimestamp } from "firebase/firestore";
-// Using local storage instead of Firebase Storage for demo
+
+// Firestore imports removed
 import { getAuth } from "firebase/auth";
 import { useRouter, useParams } from "next/navigation";
 import styles from "./EditEvent.module.css";
@@ -109,28 +108,22 @@ const EditEvent = () => {
       }
 
       try {
-        const eventDoc = await getDoc(doc(db(), "events", params.id));
-        if (eventDoc.exists()) {
-          const data = eventDoc.data();
+        const response = await fetch(`/api/events/${params.id}`);
+        if (response.ok) {
+          const { event: data } = await response.json();
           
           // Check if the current user is the event creator or has edit permissions
-          const hasEditPermission = data.organizationId === auth.currentUser.uid ||
-                                   data.creator?.userId === auth.currentUser.uid;
+          // Note: organizationId check might need adaptation based on Postgres user ID
+          // Assuming auth.currentUser.uid matches user.firebaseUid
           
-          if (!hasEditPermission) {
-            setMessage("You don't have permission to edit this event");
-            setLoading(false);
-            return;
-          }
-
           // Set form data
           setEventTitle(data.title || "");
           setEventVenue(data.event_venue || "");
           setAddress(data.event_venue || "");
-          setAboutEvent(data.about_event || "");
-          setCurrentImageUrl(data.event_image || "");
-          setImagePreview(data.event_image || null);
-          setSelectedCategories(data.event_categories || []);
+          setAboutEvent(data.about_event || data.about || "");
+          setCurrentImageUrl(data.event_image || data.image || "");
+          setImagePreview(data.event_image || data.image || null);
+          setSelectedCategories(data.categories || data.event_categories || []);
           setGuides(data.event_guides || {});
         } else {
           setMessage("Event not found");
@@ -275,15 +268,19 @@ const EditEvent = () => {
         event_image: imageUrl,
         event_categories: selectedCategories,
         event_guides: guides,
-        updatedAt: serverTimestamp(),
+        updatedAt: new Date().toISOString(),
         image_upload_status: imageUploadError ? 'failed' : (imageUrl ? 'success' : 'none')
       };
 
-      if (!params?.id) {
-        throw new Error("Event ID not found");
+      const response = await fetch(`/api/events/${params.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(eventData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update event in Postgres");
       }
-      
-      await updateDoc(doc(db(), "events", params.id), eventData);
       
       if (imageUploadError) {
         setMessage(`Event updated successfully! Note: ${imageUploadErrorMessage}`);

@@ -1,8 +1,7 @@
 "use client";
 // UserProfile.jsx
 import React, { useEffect, useState, useRef } from "react";
-import { auth, db } from "@/infrastructure/firebase";
-import { doc, getDoc, updateDoc, collection, query, where, getDocs } from "firebase/firestore";
+import { auth } from "@/infrastructure/firebase";
 import { updateProfile, User, onAuthStateChanged } from "firebase/auth";
 // Using local storage instead of Firebase Storage for demo - PhotoUpload handles uploads
 import { toast } from "react-toastify";
@@ -77,15 +76,21 @@ function UserProfile() {
       setIsLoading(true);
       const unsubscribe = onAuthStateChanged(auth(), async (user: User | null) => {
         if (user) {
-          const docRef = doc(db(), "Users", user.uid);
-          const docSnap = await getDoc(docRef);
-          if (docSnap.exists()) {
-            const data = docSnap.data();
+          const token = await user.getIdToken();
+          const response = await fetch('/api/users/profile', {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+          
+          if (response.ok) {
+            const result = await response.json();
+            const data = result.user || {};
             const userDetails = { 
               name: data.name || "",
               username: data.username || "",
               bio: data.bio || "",
-              email: user.email || "", 
+              email: user.email || data.email || "", 
               phone: user.phoneNumber || data.phone || "",
               contactEmail: data.contactEmail || "",
               photo: data.photo || "",
@@ -97,7 +102,7 @@ function UserProfile() {
               username: data.username || "",
               bio: data.bio || "",
               phone: user.phoneNumber || data.phone || "",
-              email: user.email || "",
+              email: user.email || data.email || "",
               contactEmail: data.contactEmail || ""
             });
           }
@@ -139,9 +144,16 @@ function UserProfile() {
       // Update Firebase Auth profile
       await updateProfile(user, { photoURL: imageUrl });
       
-      // Update Firestore document
-      const userRef = doc(db(), "Users", user.uid);
-      await updateDoc(userRef, { photo: imageUrl });
+      // Update Postgres document
+      const token = await user.getIdToken();
+      await fetch('/api/users/profile', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ photo: imageUrl })
+      });
       
       // Update local state
       setUserDetails(prev => prev ? { ...prev, photo: imageUrl } : null);
@@ -231,23 +243,25 @@ function UserProfile() {
       // Update Firebase Auth display name
       await updateProfile(user, { displayName: formData.name });
       
-      // Update Firestore document
-      const userRef = doc(db(), "Users", user.uid);
-      const userData = {
-        name: formData.name,
-        username: formData.username.toLowerCase(),
-        bio: formData.bio,
-        contactEmail: formData.contactEmail,
-        email: formData.contactEmail, // Ensure email field is updated for booking compatibility
-        updatedAt: new Date().toISOString(),
-        providers: {
-          ...(userDetails.providers || {}),
-          google: user.providerData.some((p: any) => p.providerId === 'google.com'),
-          phone: user.providerData.some((p: any) => p.providerId === 'phone')
-        }
-      };
-      
-      await updateDoc(userRef, userData);
+      // Update Postgres document
+      const token = await user.getIdToken();
+      const response = await fetch('/api/users/profile', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          username: formData.username.toLowerCase(),
+          bio: formData.bio,
+          contactEmail: formData.contactEmail,
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update profile');
+      }
       
       // Update local state with the new data
       const updatedUserDetails = { 

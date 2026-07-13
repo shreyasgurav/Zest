@@ -2,12 +2,9 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { getFirestore, doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/infrastructure/firebase';
 import { checkPageOwnership } from '@/domains/authentication/services/auth.service';
-import { EventContentCollaborationService } from '@/domains/events/services/content-collaboration.service';
-import { EventCleanupService } from '@/domains/events/services/event-cleanup.service';
 import { EventProfileCard } from '@/components/ui/EventCard';
 import PublicVenueProfileSkeleton from './PublicVenueProfileSkeleton';
 import styles from './PublicVenueProfile.module.css';
@@ -56,58 +53,25 @@ const PublicVenueProfile = () => {
       }
 
       try {
-        const db = getFirestore();
-        
-        // First, find the venue by username
-        const venuesQuery = query(
-          collection(db, "Venues"),
-          where("username", "==", username.toLowerCase())
-        );
-        const venueSnapshot = await getDocs(venuesQuery);
-        
-        if (venueSnapshot.empty) {
-          setError("Venue not found");
-          setLoading(false);
-          return;
+        const response = await fetch(`/api/pages/${username}`);
+        if (!response.ok) {
+          throw new Error('Venue not found');
         }
 
-        const venueDoc = venueSnapshot.docs[0];
-        const venueData = venueDoc.data() as VenueData;
-        venueData.uid = venueDoc.id;
-        setVenueDetails(venueData);
-
-        // Fetch events for this venue
-        const eventsQuery = query(
-          collection(db, "events"),
-          where("creator.pageId", "==", venueDoc.id)
-        );
-        const eventsSnapshot = await getDocs(eventsQuery);
+        const data = await response.json();
         
-        // Get owned event IDs
-        const ownedIds = eventsSnapshot.docs.map(doc => doc.id);
-        
-        // Get collaborated event IDs
-        const collaboratedIds = await EventContentCollaborationService.getCollaboratedEvents(
-          venueDoc.id, 
-          'venue'
-        );
-        
-        // Combine owned and collaborated events (remove duplicates)
-        const allEventIds = Array.from(new Set([...ownedIds, ...collaboratedIds]));
-        setEventIds(allEventIds);
-        setCollaboratedEventIds(collaboratedIds);
-
-        // 🧹 Background cleanup: Remove any orphaned collaborations
-        try {
-          await EventCleanupService.cleanupOrphanedData();
-        } catch (cleanupError) {
-          console.log('Background cleanup completed with some warnings:', cleanupError);
-        }
-
-        // Check if current user can manage this page
-        if (currentUser && venueData.uid) {
-          const canEdit = await checkPageOwnership(currentUser.uid, 'venue', venueData.uid);
-          setCanManage(canEdit);
+        if (data.page && data.page.type === 'venue') {
+          setVenueDetails(data.page as VenueData);
+          setEventIds(data.events.map((e: any) => e.id));
+          setCollaboratedEventIds(data.collaboratedEvents || []);
+          
+          if (currentUser && data.page.ownerId === currentUser.uid) {
+            setCanManage(true);
+          } else {
+            setCanManage(false);
+          }
+        } else {
+           setError("Venue not found");
         }
 
         setError(null);

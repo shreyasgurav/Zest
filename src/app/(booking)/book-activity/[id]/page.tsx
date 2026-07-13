@@ -2,12 +2,11 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { db } from '@/infrastructure/firebase';
-import { doc, getDoc, collection, updateDoc, query, where, getDocs } from 'firebase/firestore';
+// Firestore imports removed
 import { getAuth } from 'firebase/auth';
 import { FaCalendarAlt, FaClock, FaMapMarkerAlt, FaUsers, FaLanguage, FaChevronLeft, FaChevronRight, FaCreditCard, FaSync, FaExclamationTriangle } from 'react-icons/fa';
 import styles from './ActivityBookingFlow.module.css';
-import { initiateRazorpayPayment, BookingData } from '@/domains/payments/services/razorpay';
+import { loadRazorpayScript } from '@/domains/payments/services/razorpay';
 import dynamic from 'next/dynamic';
 import type { CalendarProps } from 'react-calendar';
 const Calendar = dynamic(() => import('react-calendar'), { ssr: false });
@@ -110,31 +109,7 @@ function ActivityBookingFlow() {
     });
   };
 
-  // Fetch activity bookings for real-time availability calculation
-  const fetchActivityBookings = async () => {
-    if (!params?.id) return [];
-
-    try {
-      const bookingsRef = collection(db(), 'activity_bookings');
-      const bookingsQuery = query(
-        bookingsRef,
-        where('activityId', '==', params.id)
-      );
-
-      const snapshot = await getDocs(bookingsQuery);
-      const bookingsList = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as ActivityBooking[];
-      
-      return bookingsList;
-    } catch (err) {
-      console.error("Error fetching activity bookings:", err);
-      return [];
-    }
-  };
-
-  // Fetch activity details with real-time updates
+  // Fetch activity details with real-time updates from Postgres API
   const fetchActivity = async (showRefreshIndicator = false) => {
     if (!params?.id) return;
 
@@ -145,26 +120,21 @@ function ActivityBookingFlow() {
         setLoading(true);
       }
       
-      // Fetch activity data and bookings in parallel
-      const [activityDoc, bookingsList] = await Promise.all([
-        getDoc(doc(db(), "activities", params.id)),
-        fetchActivityBookings()
-      ]);
-      
-      if (activityDoc.exists()) {
-        const data = activityDoc.data();
-        const baseActivityData = {
-          id: activityDoc.id,
-          ...data
-        } as ActivityData;
+      const response = await fetch(`/api/activities/${params.id}`);
+      if (!response.ok) {
+        throw new Error('Failed to load activity');
+      }
 
-        setActivity(baseActivityData);
-        setActivityBookings(bookingsList);
+      const data = await response.json();
+      
+      if (data.activity) {
+        setActivity(data.activity as ActivityData);
+        setActivityBookings(data.bookings || []);
         setLastRefresh(new Date());
 
         console.log('Real-time activity availability calculated:', {
-          totalBookings: bookingsList.length,
-          totalSpots: bookingsList.reduce((sum, booking) => sum + booking.tickets, 0)
+          totalBookings: data.bookings?.length || 0,
+          totalSpots: (data.bookings || []).reduce((sum: number, booking: any) => sum + (booking.tickets || 0), 0)
         });
       } else {
         setError("Activity not found");
@@ -320,46 +290,89 @@ function ActivityBookingFlow() {
       setLoading(true);
 
       // Get user profile data
-      const userDoc = await getDoc(doc(db(), "Users", user.uid));
-      const userData = userDoc.exists() ? userDoc.data() : null;
+      const token = await user.getIdToken();
+      const res = await fetch('/api/users/profile', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const userData = res.ok ? (await res.json()).user : null;
 
-      const bookingData: BookingData = {
-        activityId: activity.id,
-        userId: user.uid,
-        name: userData?.name || user.displayName || '',
-        email: userData?.email || userData?.contactEmail || user.email || '',
-        phone: userData?.phone || '',
-        selectedDate,
-        selectedTimeSlot,
-        tickets: ticketQuantity,
-        totalAmount: totalAmount,
+      const contact = {
+        name: userData?.name || user.displayName || 'Anonymous',
+        email: userData?.email || userData?.contactEmail || user.email || 'no-email@zest.dev',
+        phone: userData?.phone || '0000000000',
       };
 
-      // Initiate Razorpay payment
-      await initiateRazorpayPayment(
-        {
-          amount: totalAmount, // Corrected: amount is in rupees
+      const isLoaded = await loadRazorpayScript();
+      if (!isLoaded) throw new Error('Failed to load Razorpay script');
+
+      // Create Razorpay order
+      const orderRes = await fetch('/api/payment/create-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: totalAmount,
           currency: 'INR',
           receipt: `activity_${activity.id}_${Date.now()}`,
-          notes: {
-            activityId: activity.id,
-            userId: user.uid,
+        }),
+      });
+      const orderData = await orderRes.json();
+      if (!orderRes.ok) throw new Error(orderData.error || 'Failed to create order');
+      const order = orderData.order;
+
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        amount: order.amount,
+        currency: order.currency,
+        name: 'Zest',
+        description: 'Activity Booking',
+        order_id: order.id,
+        prefill: { name: contact.name, email: contact.email, contact: contact.phone },
+        theme: { color: '#c084fc' },
+        handler: async (response: any) => {
+          try {
+            // Persist the booking atomically in Postgres.
+            const bookingPayload = {
+              userId: user.uid,
+              activityId: activity.id,
+              date: selectedDate,
+              startTime: selectedTimeSlot.start_time,
+              endTime: selectedTimeSlot.end_time,
+              quantity: ticketQuantity,
+              contact,
+              payment: {
+                method: 'RAZORPAY',
+                razorpayOrderId: response.razorpay_order_id,
+                razorpayPaymentId: response.razorpay_payment_id,
+                razorpaySignature: response.razorpay_signature,
+              },
+            };
+
+            const bookingRes = await fetch('/api/bookings/activity', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(bookingPayload),
+            });
+            const bookingResult = await bookingRes.json();
+            if (!bookingRes.ok) {
+              throw new Error(bookingResult.message || bookingResult.error || 'Booking failed');
+            }
+
+            router.push(`/booking-confirmation/${bookingResult.bookingId}`);
+          } catch (err: any) {
+            console.error('Booking failed:', err);
+            setLoading(false);
+            router.push(`/payment-failed?activityId=${activity.id}&error=${encodeURIComponent(err.message || 'Verification failed')}`);
+          }
+        },
+        modal: {
+          ondismiss: () => {
+            setLoading(false);
           },
         },
-        bookingData,
-        'activity',
-        (bookingId: string) => {
-          // Payment successful, navigate to confirmation page
-          router.push(`/booking-confirmation/${bookingId}`);
-        },
-        (error: string) => {
-          // Payment failed or cancelled
-          console.error('Payment failed:', error);
-          setLoading(false);
-          // Redirect to payment failed page with error details
-          router.push(`/payment-failed?activityId=${activity.id}&error=${encodeURIComponent(error)}`);
-        }
-      );
+      };
+
+      const rzp = new (window as any).Razorpay(options);
+      rzp.open();
 
     } catch (err) {
       console.error("Error initiating booking:", err);

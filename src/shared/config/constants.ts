@@ -19,28 +19,7 @@ export const API_CONFIG = {
   retryDelay: 1000,
 } as const;
 
-// Firebase Configuration
-export const FIREBASE_CONFIG = {
-  collections: {
-    users: 'Users',
-    artists: 'Artists',
-    organizations: 'Organisations',
-    venues: 'Venues',
-    events: 'events',
-    activities: 'activities',
-    tickets: 'tickets',
-    eventAttendees: 'eventAttendees',
-    activityAttendees: 'activityAttendees',
-  },
-  storage: {
-    buckets: {
-      images: 'images',
-      events: 'events',
-      profiles: 'profiles',
-      activities: 'activities',
-    },
-  },
-} as const;
+
 
 // Event Configuration
 export const EVENT_CONFIG = {

@@ -12,31 +12,20 @@ import {
 } from '@/lib';
 
 import {
-  firestoreService,
-  storageService,
   authService,
   auth as firebaseAuth,
-  db,
   // storage - removed for local storage demo
 } from '@/infrastructure';
 
-import {
-  collection,
-  addDoc,
-  serverTimestamp,
-  doc,
-  getDoc
-} from 'firebase/firestore';
-
 // Using local storage instead of Firebase Storage for demo
 
+// Firestore imports removed
 import {
   getAuth,
   onAuthStateChanged
 } from 'firebase/auth';
 
 import { getUserOwnedPages } from "@/domains/authentication/services/auth.service";
-import { ContentSharingSecurity } from "@/shared/utils/security/contentSharingSecurity";
 import styles from "./CreateEvent.module.css";
 
 // Interface definitions for this component
@@ -137,26 +126,8 @@ const CreateEvent = () => {
             if (hasSpecificPageAccess) accessLevel = 'owner';
           }
 
-          // If not owned, check for shared access
-          if (!hasSpecificPageAccess) {
-            console.log(`🔍 User doesn't own ${creatorType} page ${creatorPageId}, checking shared access...`);
-            
-            try {
-              const contentType = creatorType === 'organisation' || creatorType === 'organization' ? 'organization' : creatorType as 'artist' | 'venue';
-              const permissions = await ContentSharingSecurity.verifyContentAccess(contentType, creatorPageId, user.uid);
-              
-              // Editor and Admin can create content
-              if (permissions.canEdit && (permissions.role === 'editor' || permissions.role === 'admin' || permissions.role === 'owner')) {
-                hasSpecificPageAccess = true;
-                accessLevel = permissions.role;
-                console.log(`✅ User has ${permissions.role} access to ${creatorType} page, can create events`);
-              } else {
-                console.log(`❌ User has ${permissions.role} access, insufficient for creating events`);
-              }
-            } catch (error) {
-              console.error('Error checking shared access:', error);
-            }
-          }
+          // Shared access check removed — content sharing was migrated out.
+          // Only page owners can create events.
 
           if (!hasSpecificPageAccess) {
             setAuthError(`You don't have permission to create events as ${creatorName}. You need at least Editor access to this ${creatorType} page.`);
@@ -216,20 +187,21 @@ const CreateEvent = () => {
           setOrgName(decodeURIComponent(creatorName));
           setOrgUsername(decodeURIComponent(creatorUsername));
         } else {
-          // Fallback to organization lookup (legacy behavior)
-          const orgDoc = await getDoc(doc(db(), "Organisations", auth.currentUser.uid));
-          if (orgDoc.exists()) {
-            const data = orgDoc.data();
-            setOrgName(data.name || "");
-            setOrgUsername(data.username || "");
+          // Fallback to organization lookup from Postgres
+          const ownedPages = await getUserOwnedPages(auth.currentUser.uid);
+          const defaultOrg = ownedPages.organizations[0];
+          
+          if (defaultOrg) {
+            setOrgName(defaultOrg.name || "");
+            setOrgUsername(defaultOrg.username || "");
             setCreatorInfo({
               type: 'organisation',
-              pageId: auth.currentUser.uid,
-              name: data.name || "",
-              username: data.username || ""
+              pageId: defaultOrg.uid,
+              name: defaultOrg.name || "",
+              username: defaultOrg.username || ""
             });
-            localStorage.setItem('orgName', data.name || "");
-            localStorage.setItem('orgUsername', data.username || "");
+            localStorage.setItem('orgName', defaultOrg.name || "");
+            localStorage.setItem('orgUsername', defaultOrg.username || "");
           }
         }
       } catch (error) {
@@ -581,22 +553,32 @@ const CreateEvent = () => {
           username: orgUsername,
           userId: auth.currentUser.uid
         },
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
         status: 'active',
         image_upload_status: imageUploadError ? 'failed' : (imageUrl ? 'success' : 'none')
       };
 
-      console.log('Creating event with data:', { 
+      console.log('Creating event with Postgres API:', { 
         ...eventData, 
         event_image: imageUrl ? 'URL present' : 'No image',
         image_upload_status: eventData.image_upload_status 
       });
 
-      // Create event document
-      const eventsCollectionRef = collection(db(), "events");
-      const docRef = await addDoc(eventsCollectionRef, eventData);
-      console.log('Event created with ID:', docRef.id);
+      // Create event via API
+      const response = await fetch('/api/events', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(eventData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to create event in Postgres');
+      }
+
+      const responseData = await response.json();
+      console.log('Event created with Postgres ID:', responseData.eventId);
       
       if (imageUploadError) {
         setMessage(`Event created successfully! Note: ${imageUploadErrorMessage} You can try uploading the image again later.`);

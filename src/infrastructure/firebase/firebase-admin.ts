@@ -56,17 +56,6 @@ if (!admin.apps.length) {
   }
 }
 
-// Only create adminDb if Firebase Admin is initialized
-let adminDb: admin.firestore.Firestore | null = null;
-
-try {
-  if (admin.apps.length > 0) {
-    adminDb = admin.firestore();
-    // Admin SDK should bypass security rules automatically
-    // No need to manually configure emulator settings
-  }
-} catch (error) {
-  console.warn('Firebase Admin Firestore not available:', error);
-}
-
-export { adminDb }; 
+// Firestore has been fully migrated to PostgreSQL (Prisma). The Admin SDK is
+// retained ONLY for server-side Firebase Auth (verifying ID tokens).
+export { admin }; 

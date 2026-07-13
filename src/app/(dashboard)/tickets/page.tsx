@@ -365,9 +365,9 @@ const TicketsPage = () => {
                 </div>
                 <div 
                   className={styles.fullTicketStatus}
-                  style={{ backgroundColor: getStatusColor(getTicketStatus(selectedTicket).status) }}
+                  style={{ backgroundColor: getStatusColor(getTicketStatus(selectedTicket)) }}
                 >
-                  {getTicketStatus(selectedTicket).displayText.toUpperCase()}
+                  {getTicketStatus(selectedTicket).toUpperCase()}
                 </div>
               </div>
 

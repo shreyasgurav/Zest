@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import { db } from "@/infrastructure/firebase";
-import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import useEmblaCarousel from "embla-carousel-react";
 import { EventCarouselCard } from "@/components/ui/EventCard";
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
@@ -118,24 +116,19 @@ const EventsSection = () => {
         setLoading(true);
         setError(null);
 
-        if (!db) throw new Error('Firebase is not initialized');
-
-        const eventsCollectionRef = collection(db(), "events");
-        const q = query(eventsCollectionRef, orderBy("createdAt", "desc"));
-        const querySnapshot = await getDocs(q);
+        const response = await fetch('/api/events?limit=20');
+        if (!response.ok) throw new Error("Failed to fetch events");
         
-        // Fetch minimal data needed for filtering
-        const eventsData = querySnapshot.docs.map(doc => {
-          const data = doc.data();
-          return {
-            id: doc.id,
-            event_categories: data.event_categories || [],
-            eventCategories: data.eventCategories || [],
-            event_venue: data.event_venue || '',
-            eventVenue: data.eventVenue || '',
-            venue_coordinates: data.venue_coordinates
-          } as EventFilterData;
-        });
+        const data = await response.json();
+        
+        const eventsData = (data.events || []).map((event: any) => ({
+          id: event.id,
+          event_categories: event.event_categories || event.eventCategories || [],
+          eventCategories: event.event_categories || event.eventCategories || [],
+          event_venue: event.event_venue || event.eventVenue || '',
+          eventVenue: event.event_venue || event.eventVenue || '',
+          venue_coordinates: event.venue_coordinates || null
+        })) as EventFilterData[];
         
         setAllEvents(eventsData);
         setError(null);

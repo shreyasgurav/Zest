@@ -3,8 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { db } from '@/infrastructure/firebase';
-import { doc, getDoc } from 'firebase/firestore';
+// Firestore imports removed
 import styles from './ActivityProfile.module.css';
 import { FaBookmark, FaMapMarkerAlt, FaLanguage, FaClock, FaUsers, FaCalendarAlt, FaMoneyBillWave, FaTags } from 'react-icons/fa';
 import ActivityProfileSkeleton from './ActivityProfileSkeleton';
@@ -60,15 +59,10 @@ function ActivityProfile() {
       if (!params?.id) return;
 
       try {
-        const activityDoc = doc(db(), "activities", params.id);
-        const activitySnapshot = await getDoc(activityDoc);
-        
-        if (activitySnapshot.exists()) {
-          const data = activitySnapshot.data();
-          setActivity({
-            id: activitySnapshot.id,
-            ...data
-          } as ActivityData);
+        const response = await fetch(`/api/activities/${params.id}`);
+        if (response.ok) {
+          const { activity: data } = await response.json();
+          setActivity(data);
         } else {
           setError("Activity not found");
         }

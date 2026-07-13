@@ -3,8 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { onAuthStateChanged } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
-import { auth, db } from '@/infrastructure/firebase';
+import { auth } from '@/infrastructure/firebase';
 import { 
   FaQrcode, 
   FaCheckCircle, 
@@ -82,22 +81,20 @@ const TicketScannerPage = () => {
       setLoading(true);
       
       // First try events collection
-      let eventRef = doc(db(), 'events', eventId);
-      let eventDoc = await getDoc(eventRef);
+      let response = await fetch(`/api/events/${eventId}`);
       
       // If not found, try activities collection
-      if (!eventDoc.exists()) {
-        eventRef = doc(db(), 'activities', eventId);
-        eventDoc = await getDoc(eventRef);
+      if (!response.ok) {
+        response = await fetch(`/api/activities/${eventId}`);
       }
 
-      if (!eventDoc.exists()) {
+      if (!response.ok) {
         setIsAuthorized(false);
         setLoading(false);
         return;
       }
 
-      const eventData = eventDoc.data();
+      const eventData = await response.json();
       setEventDetails(eventData);
 
       // Check if user is authorized to scan for this event
